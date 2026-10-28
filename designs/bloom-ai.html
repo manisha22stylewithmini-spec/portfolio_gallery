@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloom — AI Floral Design</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Source+Serif+4:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = { theme: { extend: { fontFamily: { display: ['Poppins', 'sans-serif'], serif: ['Source Serif 4', 'serif'] } } } };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+  <style>
+    :root { --radius: 1rem; }
+    html, body { margin: 0; background: #000; font-family: 'Poppins', sans-serif; -webkit-font-smoothing: antialiased; }
+    h1, h2, h3 { font-weight: 500; }
+    h1 em, h1 i, h1 .italic, h2 em, h2 i, h2 .italic, h3 em, h3 i, h3 .italic { font-family: 'Source Serif 4', serif; }
+
+    .liquid-glass {
+      background: rgba(255,255,255,0.01);
+      background-blend-mode: luminosity;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: none;
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .liquid-glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.4px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%, transparent 40%, transparent 60%, rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .liquid-glass-strong {
+      background: rgba(255,255,255,0.01);
+      background-blend-mode: luminosity;
+      backdrop-filter: blur(50px);
+      -webkit-backdrop-filter: blur(50px);
+      border: none;
+      box-shadow: 4px 4px 4px rgba(0,0,0,0.05), inset 0 1px 1px rgba(255,255,255,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .liquid-glass-strong::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.4px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 20%, transparent 40%, transparent 60%, rgba(255,255,255,0.2) 80%, rgba(255,255,255,0.5) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .back-link {
+      position: fixed; left: 12px; bottom: 12px; z-index: 70;
+      font: 12px system-ui, sans-serif; color: #fff;
+      padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(255,255,255,.18); backdrop-filter: blur(6px);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+
+  <script type="text/babel" data-presets="react">
+    const Icon = ({ size = 20, className, children }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
+    );
+    const Menu = (p) => <Icon {...p}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></Icon>;
+    const Download = (p) => <Icon {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></Icon>;
+    const ArrowRight = (p) => <Icon {...p}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></Icon>;
+    const Sparkles = (p) => <Icon {...p}><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/></Icon>;
+    const Wand2 = (p) => <Icon {...p}><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></Icon>;
+    const BookOpen = (p) => <Icon {...p}><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></Icon>;
+    const Twitter = (p) => <Icon {...p}><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></Icon>;
+    const Linkedin = (p) => <Icon {...p}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></Icon>;
+    const Instagram = (p) => <Icon {...p}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></Icon>;
+
+    // Stand-in for the unsupplied /logo.png
+    const Logo = ({ size }) => (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="#fff">
+        <ellipse cx="16" cy="8" rx="4.5" ry="7" /><ellipse cx="16" cy="24" rx="4.5" ry="7" />
+        <ellipse cx="8" cy="16" rx="7" ry="4.5" /><ellipse cx="24" cy="16" rx="7" ry="4.5" />
+        <circle cx="16" cy="16" r="3" fill="#222" />
+      </svg>
+    );
+
+    const hov = 'hover:scale-105 transition-transform';
+    const iconBox = 'w-8 h-8 rounded-full bg-white/10 flex items-center justify-center';
+
+    function Left() {
+      return (
+        <div className="relative w-full lg:w-[52%] min-h-screen flex flex-col p-4 lg:p-6">
+          <div className="liquid-glass-strong absolute inset-4 lg:inset-6 rounded-3xl" />
+          <div className="relative z-10 flex flex-col flex-1 px-6 lg:px-10 py-6">
+            <nav className="flex items-center justify-between">
+              <div className="flex items-center gap-2"><Logo size={32} /><span className="font-display font-semibold text-2xl tracking-tighter text-white">bloom</span></div>
+              <button className={`liquid-glass rounded-full px-4 py-2 flex items-center gap-2 text-sm text-white ${hov}`}><Menu size={16} />Menu</button>
+            </nav>
+
+            <div className="flex-1 flex flex-col items-center justify-center text-center gap-6 py-12">
+              <Logo size={80} />
+              <h1 className="font-display text-6xl lg:text-7xl tracking-[-0.05em] text-white leading-[1.05]">
+                Innovating the<br /><em className="font-serif text-white/80">spirit of bloom</em> AI
+              </h1>
+              <button className={`liquid-glass-strong rounded-full pl-6 pr-2 py-2 flex items-center gap-3 text-white text-sm hover:scale-105 active:scale-95 transition-transform`}>
+                Explore Now <span className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center"><Download size={14} /></span>
+              </button>
+              <div className="flex flex-wrap justify-center gap-2">
+                {['Artistic Gallery', 'AI Generation', '3D Structures'].map((t) => <span key={t} className={`liquid-glass rounded-full px-4 py-1.5 text-xs text-white/80 ${hov}`}>{t}</span>)}
+              </div>
+            </div>
+
+            <div className="text-center">
+              <p className="text-xs tracking-widest uppercase text-white/50 mb-3">Visionary Design</p>
+              <p className="text-xl text-white/90 mb-4"><span className="font-display">"We imagined a</span> <span className="font-serif italic">realm with no</span> <span className="font-display">ending."</span></p>
+              <div className="flex items-center justify-center gap-3 text-xs tracking-widest text-white/50">
+                <span className="w-10 h-px bg-white/30" />MARCUS AURELIO<span className="w-10 h-px bg-white/30" />
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function Right() {
+      return (
+        <div className="hidden lg:flex w-[48%] flex-col p-6 gap-6">
+          <div className="flex items-center justify-between">
+            <div className="liquid-glass rounded-full pl-4 pr-2 py-2 flex items-center gap-3">
+              {[Twitter, Linkedin, Instagram].map((I, i) => <a key={i} href="#" className="text-white hover:text-white/80 transition-colors"><I size={18} /></a>)}
+              <span className={`${iconBox} ml-1`}><ArrowRight size={14} className="text-white" /></span>
+            </div>
+            <button className={`liquid-glass rounded-full px-4 py-2 flex items-center gap-2 text-sm text-white ${hov}`}>
+              <span className={iconBox}><Sparkles size={14} /></span>Account
+            </button>
+          </div>
+
+          <div className={`liquid-glass rounded-3xl p-5 w-56 ${hov}`}>
+            <h3 className="text-white text-base mb-1">Enter our ecosystem</h3>
+            <p className="text-white/60 text-xs leading-relaxed">Join a community of designers shaping what grows next.</p>
+          </div>
+
+          <div className="mt-auto liquid-glass rounded-[2.5rem] p-4 flex flex-col gap-4">
+            <div className="grid grid-cols-2 gap-4">
+              {[[Wand2, 'Processing', 'Turn a sketch into a living composition.'], [BookOpen, 'Growth Archive', 'Browse every stage of a bloom.']].map(([I, t, d]) => (
+                <div key={t} className={`liquid-glass rounded-3xl p-5 ${hov}`}>
+                  <span className={`${iconBox} mb-3`}><I size={16} className="text-white" /></span>
+                  <h3 className="text-white text-sm mb-1">{t}</h3>
+                  <p className="text-white/60 text-xs leading-relaxed">{d}</p>
+                </div>
+              ))}
+            </div>
+            <div className={`liquid-glass rounded-3xl p-3 flex items-center gap-4 ${hov}`}>
+              <div className="w-24 h-16 rounded-2xl shrink-0" style={{ background: 'radial-gradient(circle at 30% 35%, #f3c6d6, #b86a8a 45%, #3b2a3a)' }} />
+              <div className="flex-1 min-w-0">
+                <h3 className="text-white text-sm">Advanced Plant Sculpting</h3>
+                <p className="text-white/60 text-xs">Shape petals and stems with generative tools.</p>
+              </div>
+              <button className={`${iconBox} text-white text-lg ${hov}`} aria-label="Add">+</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(
+      <div className="relative min-h-screen">
+        <video autoPlay loop muted playsInline className="fixed inset-0 w-full h-full object-cover z-0"
+          src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260315_073750_51473149-4350-4920-ae24-c8214286f323.mp4" />
+        <div className="relative z-10 flex min-h-screen"><Left /><Right /></div>
+      </div>
+    );
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+  <style>.embed .back-link { display: none !important; }</style>
+</body>
+</html>

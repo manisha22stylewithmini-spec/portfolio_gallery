@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SynapseX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&family=Anton+SC&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    const mono = ['"Space Mono"', 'monospace'];
+    tailwind.config = { theme: { extend: { fontFamily: { sans: mono, serif: mono, mono } } } };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Space Mono", monospace; }
+    html, body { background: #000; color: #fff; overflow-x: hidden; overflow-y: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    .anton { font-family: 'Anton SC', sans-serif !important; }
+    .back-link {
+      position: fixed; left: 12px; bottom: 12px; z-index: 70;
+      font: 12px system-ui, sans-serif !important; color: #fff;
+      padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(255,255,255,.18); backdrop-filter: blur(6px);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef } = React;
+    const V = (id) => `https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/${id}.mp4`;
+    const HERO = V('hf_20260622_083515_290e5a10-0b95-41af-a5e2-32b6389baa4d');
+    const SECOND = V('hf_20260622_092455_089c54f8-3b03-4966-9df1-e9746063d0ef');
+    const METRICS = V('hf_20260622_095810_ecea3dd2-fc5e-4e41-8696-4219290b6589');
+    const TECH = V('hf_20260622_095750_32a52ce0-2005-45c9-9093-41f03fde9530');
+    const FOOTER = V('hf_20260622_080203_fd7f4f85-3a86-4837-8192-85e7bfe68e75');
+    const EASE = 'cubic-bezier(0.215, 0.610, 0.355, 1.000)';
+    const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~|}{[]:;?><';
+    const rnd = () => CHARS[Math.floor(Math.random() * CHARS.length)];
+
+    // Fade/slide in when scrolled into view (stands in for framer-motion whileInView)
+    function Reveal({ children, y = 30, duration = 0.8, delay = 0, amount = 0.3, className = '', style }) {
+      const ref = useRef(null);
+      const [on, setOn] = useState(false);
+      useEffect(() => {
+        const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setOn(true); io.disconnect(); } }, { threshold: amount });
+        io.observe(ref.current);
+        return () => io.disconnect();
+      }, []);
+      return <div ref={ref} className={className} style={{ ...style, opacity: on ? 1 : 0, transform: on ? 'none' : `translateY(${y}px)`, transition: `opacity ${duration}s ${EASE} ${delay}s, transform ${duration}s ${EASE} ${delay}s` }}>{children}</div>;
+    }
+
+    function ScrambleIn({ text, delay, triggered }) {
+      const [out, setOut] = useState(' ');
+      useEffect(() => {
+        if (!triggered) return;
+        let iv;
+        const t = setTimeout(() => {
+          let revealed = 0;
+          iv = setInterval(() => {
+            revealed += 0.5;
+            const r = Math.floor(revealed);
+            let s = '';
+            for (let i = 0; i < text.length; i++) {
+              if (text[i] === ' ') s += ' ';
+              else if (i < r) s += text[i];
+              else if (i < r + 3) s += rnd();
+            }
+            setOut(s || ' ');
+            if (r >= text.length) { clearInterval(iv); setOut(text); }
+          }, 25);
+        }, delay);
+        return () => { clearTimeout(t); clearInterval(iv); };
+      }, [triggered]);
+      return <span>{triggered ? out : ' '}</span>;
+    }
+
+    function ScrambleText({ text, isHovered, className }) {
+      const [out, setOut] = useState(text);
+      useEffect(() => {
+        if (!isHovered) { setOut(text); return; }
+        let f = 0;
+        const iv = setInterval(() => {
+          f++;
+          const r = Math.floor(f / 4);
+          setOut(text.split('').map((c, i) => (c === ' ' ? ' ' : i < r ? c : rnd())).join(''));
+          if (r >= text.length) { clearInterval(iv); setOut(text); }
+        }, 25);
+        return () => clearInterval(iv);
+      }, [isHovered, text]);
+      return <span className={className}>{out}</span>;
+    }
+
+    const Logo = ({ size = 18, className = 'text-white' }) => (
+      <svg width={size} height={size} viewBox="-50 -50 100 100" fill="currentColor" className={className}>
+        {[0, 90, 180, 270].map((a) => (
+          <path key={a} transform={`rotate(${a})`} d="M 1.5,23 L 1.5,33 C 1.5,38.5 6,43 11.5,43 L 16.5,43 C 22,43 26.5,38.5 26.5,33 Q 28,28 33,26.5 C 38.5,26.5 43,22 43,16.5 L 43,11.5 C 43,6 38.5,1.5 33,1.5 L 23,1.5 Q 12,12 1.5,23 Z" />
+        ))}
+      </svg>
+    );
+
+    function Hamburger({ open, mobile }) {
+      const w = mobile ? 15 : 18, h = mobile ? 10 : 12, t = mobile ? 1.2 : 1.5;
+      const bar = { position: 'absolute', left: 0, width: '100%', height: t, background: '#fff', borderRadius: 2, transition: 'all 300ms cubic-bezier(0.34,1.56,0.64,1)' };
+      return (
+        <span style={{ position: 'relative', width: w, height: h, display: 'block' }}>
+          <span style={{ ...bar, top: open ? h / 2 - t / 2 : 0, transform: open ? 'rotate(45deg)' : 'none' }} />
+          <span style={{ ...bar, top: h / 2 - t / 2, opacity: open ? 0 : 1, transform: open ? 'scaleX(0)' : 'none' }} />
+          <span style={{ ...bar, top: open ? h / 2 - t / 2 : h - t, transform: open ? 'rotate(-45deg)' : 'none' }} />
+        </span>
+      );
+    }
+
+    function Navbar({ visible }) {
+      const [open, setOpen] = useState(false);
+      const [hov, setHov] = useState(null);
+      const go = (n) => { scrollTo({ top: innerHeight * n, behavior: 'smooth' }); setOpen(false); };
+      const glass = 'bg-white/15 backdrop-blur-md';
+      const spring = 'transition-[width] duration-500 ease-[cubic-bezier(0.34,1.3,0.64,1)]';
+      const links = [['About', 1], ['Metrics', 2]];
+      return (
+        <nav className="fixed top-0 left-0 w-full h-20 z-50 flex items-center justify-between px-4 sm:px-6 md:px-8" style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.8s' }}>
+          <div className="flex gap-2">
+            <button className={`${open ? 'hidden md:flex' : 'flex'} items-center gap-2 h-9 sm:h-12 px-3 sm:px-5 ${glass} rounded-[10px] sm:rounded-[14px] hover:bg-white/20 transition-colors overflow-hidden`}>
+              <Logo size={18} /><span className="text-[13px] sm:text-base font-medium tracking-tight">SynapseX</span>
+            </button>
+            <div className={`${glass} h-9 sm:h-12 rounded-[10px] sm:rounded-[14px] flex items-center overflow-hidden ${spring}`} style={{ width: open ? 290 : 48 }}>
+              <button onClick={() => setOpen(!open)} aria-label="Menu"
+                className={`flex shrink-0 items-center justify-center transition-all ${open ? 'w-9 h-9 rounded-[11px] bg-white/10 hover:bg-white/20 ml-1.5' : 'w-12 h-12 rounded-[14px]'}`}>
+                <Hamburger open={open} mobile={false} />
+              </button>
+              <div className="flex items-center gap-6 pl-5 whitespace-nowrap transition-all duration-300" style={{ opacity: open ? 1 : 0, transform: open ? 'none' : 'translateX(15px)', pointerEvents: open ? 'auto' : 'none' }}>
+                {links.map(([l, n]) => (
+                  <button key={l} onMouseEnter={() => setHov(l)} onMouseLeave={() => setHov(null)} onClick={() => go(n)} className="text-base text-white/85 hover:text-white">
+                    <ScrambleText text={l} isHovered={hov === l} />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <button onMouseEnter={() => setHov('dl')} onMouseLeave={() => setHov(null)}
+            className="h-9 sm:h-12 px-3.5 sm:px-6 bg-white text-black rounded-full flex items-center gap-2 text-[13px] sm:text-base hover:bg-[#e2e2e6] hover:scale-[1.03] active:scale-[0.97] transition">
+            <i className="bi bi-apple" /><ScrambleText text="Download" isHovered={hov === 'dl'} />
+          </button>
+        </nav>
+      );
+    }
+
+    function Hero({ entrance }) {
+      const vref = useRef(null);
+      useEffect(() => {
+        const v = vref.current;
+        let pending = 0, seeking = false, last = null;
+        const apply = () => {
+          if (seeking || !v.duration) return;
+          const target = Math.max(0, Math.min(v.duration, v.currentTime + pending));
+          pending = 0;
+          if (Math.abs(target - v.currentTime) < 0.001) return;
+          seeking = true; v.currentTime = target;
+        };
+        const onSeeked = () => { seeking = false; if (pending) apply(); };
+        const onMove = (e) => {
+          if (last !== null && v.duration) { pending += ((e.clientX - last) / innerWidth) * v.duration * 0.8; apply(); }
+          last = e.clientX;
+        };
+        v.addEventListener('seeked', onSeeked);
+        addEventListener('mousemove', onMove);
+        return () => { v.removeEventListener('seeked', onSeeked); removeEventListener('mousemove', onMove); };
+      }, []);
+      const h1 = 'text-white font-light leading-[0.95] tracking-[-0.03em] text-[clamp(40px,10vw,100px)]';
+      return (
+        <section className="relative h-screen h-[100dvh] w-full overflow-hidden flex flex-col px-4 sm:px-6 md:px-8 pt-20 sm:pt-24 pb-8 sm:pb-12">
+          <video ref={vref} src={HERO} muted playsInline preload="auto" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute inset-0 pointer-events-none opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+          <div className="anton absolute inset-x-0 text-center uppercase pointer-events-none select-none"
+            style={{ top: 'calc(50% + 50px)', transform: 'translateY(-50%)', fontSize: 'clamp(120px, 30vw, 521px)', letterSpacing: -4, lineHeight: 1, opacity: 0.1,
+              background: 'radial-gradient(circle, rgba(142,127,148,0) 0%, #8E7F94 70%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', color: 'transparent' }}>
+            TRANSCENDENCE
+          </div>
+          <div className="relative z-10 flex flex-col flex-1" style={{ opacity: entrance ? 1 : 0, transition: 'opacity 1s' }}>
+            <div className="flex-1" />
+            <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+              <div className="flex flex-col gap-4">
+                <h1 className={h1}><ScrambleIn text="Brain" delay={200} triggered={entrance} /><br /><ScrambleIn text="And Body" delay={500} triggered={entrance} /></h1>
+                <p className="max-w-sm text-[13px] sm:text-[15px] text-white/60 leading-relaxed" style={{ opacity: entrance ? 1 : 0, transform: entrance ? 'none' : 'translateY(25px)', transition: `all 0.9s ${EASE} 0.2s` }}>
+                  Built at the intersection of neuroscience and artificial intelligence. SynapseX continuously maps neural pathways, cognitive load, and physiological states into a single adaptive intelligence layer.
+                </p>
+              </div>
+              <h1 className={`${h1} text-left md:text-right`}><ScrambleIn text="One" delay={700} triggered={entrance} /><br /><ScrambleIn text="Network" delay={1000} triggered={entrance} /></h1>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function Cinematic() {
+      const secRef = useRef(null);
+      const [p, setP] = useState(0);
+      useEffect(() => {
+        let target = 0, smooth = 0, raf = 0;
+        const read = () => {
+          const r = secRef.current.getBoundingClientRect();
+          target = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight + r.height)));
+        };
+        const loop = () => { smooth += (target - smooth) * 0.06; setP(smooth); raf = requestAnimationFrame(loop); };
+        read(); addEventListener('scroll', read, { passive: true }); raf = requestAnimationFrame(loop);
+        return () => { cancelAnimationFrame(raf); removeEventListener('scroll', read); };
+      }, []);
+      const y = 60 + (-120 - 60) * p;
+      const op = Math.min(1, Math.max(0, (p - 0.3) / 0.2));
+      return (
+        <section ref={secRef} className="relative h-screen h-[100dvh] w-full overflow-hidden flex items-center justify-center">
+          <video src={SECOND} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute top-0 left-0 right-0 h-[180px] z-10" style={{ background: 'linear-gradient(#010103, transparent)' }} />
+          <div className="relative z-20 max-w-5xl" style={{ perspective: 400 }}>
+            <p className="font-sans font-normal text-[22px] sm:text-[30px] md:text-[36px] lg:text-[42px] text-white leading-[1.35] tracking-[-0.02em] select-none px-6 sm:px-12 text-center"
+              style={{ opacity: op, transform: `rotateX(24deg) translateY(${y}px) translateZ(15px)` }}>
+              A neural-AI interface built on the architecture of the human nervous system. SynapseX translates synaptic activity into computational intelligence. Every signal becomes measurable, structured, and visible. It continuously reconstructs internal state as a dynamic neural map. Biological noise is filtered into actionable cognitive patterns.
+            </p>
+          </div>
+        </section>
+      );
+    }
+
+    function Metrics() {
+      const items = [['2.4ms', 'Synaptic Latency'], ['99.7%', 'Signal Accuracy'], ['140B', 'Neural Parameters']];
+      return (
+        <section className="relative min-h-screen w-full overflow-hidden flex items-center justify-center">
+          <video src={METRICS} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative z-10 w-full max-w-6xl pt-32 pb-32 px-6">
+            <Reveal duration={1.2} y={0}><p className="text-white/40 text-[13px] sm:text-[14px] tracking-[0.2em] uppercase mb-20 text-center">Performance Metrics</p></Reveal>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8 text-center">
+              {items.map(([v, l], i) => (
+                <Reveal key={v} y={30} delay={i * 0.15}>
+                  <div className="text-white text-[clamp(48px,10vw,96px)] font-light tracking-[-0.04em] leading-none">{v}</div>
+                  <div className="text-white/40 text-[13px] sm:text-[15px] mt-4 tracking-wide">{l}</div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    function Tech() {
+      const items = [['Cortical Mapping', 'Real-time spatial reconstruction of active neural regions.'], ['Signal Isolation', 'Separates cognitive intent from biological noise.'], ['State Prediction', 'Anticipates cognitive transitions before they occur.'], ['Loop Feedback', 'Closed-loop adjustment based on outcome correlation.']];
+      return (
+        <section className="relative h-screen h-[100dvh] w-full overflow-hidden flex flex-col px-8 sm:px-12 md:px-16 py-12 sm:py-16">
+          <video src={TECH} autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover" />
+          <div className="relative z-10 flex flex-col flex-1">
+            <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-6">
+              <Reveal y={40} duration={1}><h2 className="text-white font-light text-[clamp(36px,8vw,72px)] leading-[0.95] tracking-[-0.03em]">Adaptive<br />Intelligence</h2></Reveal>
+              <Reveal y={20} duration={1} delay={0.2}><p className="text-white/50 text-[13px] sm:text-[15px] leading-relaxed max-w-xs md:text-right md:pt-2">The system learns your neural baseline within 72 hours. From there, every cognitive state is mapped, predicted, and optimized in real time.</p></Reveal>
+            </div>
+            <div className="flex-1" />
+            <Reveal y={0} duration={1} delay={0.3} className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-6">
+              {items.map(([t, d], i) => (
+                <Reveal key={t} y={20} duration={0.7} delay={i * 0.1}>
+                  <h3 className="text-white text-[14px] sm:text-[16px] font-normal mb-2">{t}</h3>
+                  <p className="text-white/40 text-[12px] sm:text-[14px] leading-relaxed">{d}</p>
+                </Reveal>
+              ))}
+            </Reveal>
+          </div>
+        </section>
+      );
+    }
+
+    function Architecture() {
+      const layers = [['Layer 1', 'Capture'], ['Layer 2', 'Process'], ['Layer 3', 'Interface']];
+      return (
+        <section className="min-h-screen bg-black flex items-center justify-center px-6 py-32">
+          <div className="max-w-3xl text-center">
+            <Reveal y={30} duration={1} amount={0.4}>
+              <p className="text-white/40 text-[13px] sm:text-[14px] tracking-[0.2em] uppercase mb-8">Architecture</p>
+              <h2 className="text-white font-light text-[clamp(28px,6vw,56px)] leading-[1.15] tracking-[-0.02em] mb-10">Three layers. Zero friction.</h2>
+              <p className="text-white/45 text-[15px] sm:text-[17px] leading-relaxed max-w-xl mx-auto">Sensor layer captures raw bioelectric signals. Processing layer isolates intent. Interface layer delivers structured output to any connected system.</p>
+            </Reveal>
+            <Reveal y={0} duration={1.2} delay={0.4} amount={0.4} className="mt-20 flex flex-col items-center gap-4">
+              {layers.map(([a, b]) => (
+                <div key={a} className="w-full max-w-md h-[72px] border border-white/10 rounded-lg flex items-center justify-between px-6">
+                  <span className="text-white/30 text-[12px] tracking-[0.15em] uppercase">{a}</span>
+                  <span className="text-white text-[16px] sm:text-[18px] font-light">{b}</span>
+                </div>
+              ))}
+            </Reveal>
+          </div>
+        </section>
+      );
+    }
+
+    function Footer() {
+      return (
+        <footer className="bg-black overflow-hidden flex flex-col md:flex-row min-h-[400px]">
+          <video src={FOOTER} autoPlay muted loop playsInline className="w-full md:w-1/2 h-[300px] md:h-auto object-cover" />
+          <div className="md:w-1/2 flex flex-col justify-between p-10 sm:p-16">
+            <div>
+              <div className="flex items-center gap-2 mb-8"><Logo size={18} className="text-white/70" /><span className="text-[15px] font-medium text-white/70 tracking-tight">SynapseX</span></div>
+              <p className="text-white/40 text-[14px] sm:text-[15px] leading-relaxed max-w-sm">The next evolution of human-machine interaction. Built for those who refuse to be limited by biology alone.</p>
+            </div>
+            <p className="text-white/25 text-[12px] mt-12">© 2026 SynapseX Labs. All rights reserved.</p>
+          </div>
+        </footer>
+      );
+    }
+
+    function App() {
+      const [entrance, setEntrance] = useState(false);
+      useEffect(() => { const t = setTimeout(() => setEntrance(true), 800); return () => clearTimeout(t); }, []);
+      return (
+        <div style={{ fontFamily: '"Space Mono", monospace' }} className="bg-black text-white">
+          <Navbar visible={entrance} />
+          <Hero entrance={entrance} />
+          <Cinematic /><Metrics /><Tech /><Architecture /><Footer />
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+  <style>.embed .back-link { display: none !important; }</style>
+</body>
+</html>

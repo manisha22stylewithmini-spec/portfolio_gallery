@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neuralyn — Landing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = { theme: { extend: {
+      fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Instrument Serif', 'serif'] },
+      colors: { background: 'hsl(0 0% 0%)', foreground: 'hsl(0 0% 100%)', 'muted-foreground': 'hsl(0 0% 65%)' },
+    } } };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+  <style>
+    :root { --hero-subtitle: hsl(210 17% 95%); }
+    html, body { margin: 0; background: #000; color: #fff; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    .liquid-glass {
+      background: rgba(255, 255, 255, 0.01);
+      background-blend-mode: luminosity;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: none;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .liquid-glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.4px;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+        rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+        rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    @keyframes enter { from { opacity: 0; transform: translateY(var(--y, 20px)); } to { opacity: 1; transform: none; } }
+    .enter { animation: enter 0.6s ease-out both; }
+    .back-link {
+      position: fixed; left: 12px; bottom: 12px; z-index: 70;
+      font: 12px system-ui, sans-serif; color: #fff;
+      padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(255,255,255,.15); backdrop-filter: blur(6px);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef } = React;
+    const VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260307_083826_e938b29f-a43a-41ec-a153-3d4730578ab8.mp4';
+    const clamp = (v) => Math.min(1, Math.max(0, v));
+
+    const ChevronDown = () => (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+    );
+    // Placeholders for the logo / dashboard / quote / avatar assets, which were not supplied
+    const LogoMark = () => (
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="12" stroke="#fff" strokeWidth="2.5" /><circle cx="14" cy="14" r="4.5" fill="#fff" /></svg>
+    );
+    const DashboardMock = () => (
+      <svg viewBox="0 0 960 540" className="w-full h-auto block" style={{ background: '#101418' }}>
+        <rect width="960" height="540" fill="#0e1116" />
+        <rect x="0" y="0" width="190" height="540" fill="#151a21" />
+        {[0, 1, 2, 3, 4].map((i) => <rect key={i} x="24" y={60 + i * 44} width={110 - i * 6} height="12" rx="6" fill="#2a323d" />)}
+        {[0, 1, 2].map((i) => (<g key={i}><rect x={220 + i * 235} y="30" width="215" height="100" rx="14" fill="#171d25" /><rect x={236 + i * 235} y="48" width="70" height="10" rx="5" fill="#2e3846" /><rect x={236 + i * 235} y="76" width="110" height="26" rx="6" fill="#c9d4e3" opacity=".85" /></g>))}
+        <rect x="220" y="150" width="450" height="360" rx="14" fill="#171d25" />
+        <polyline points="240,440 300,400 360,420 420,340 480,360 540,270 600,300 650,220" fill="none" stroke="#8fb8ff" strokeWidth="4" />
+        <polyline points="240,470 300,450 360,455 420,410 480,420 540,380 600,390 650,350" fill="none" stroke="#5b6b82" strokeWidth="3" />
+        <rect x="690" y="150" width="235" height="360" rx="14" fill="#171d25" />
+        {[0, 1, 2, 3, 4, 5].map((i) => <rect key={i} x="710" y={180 + i * 52} width={170 - i * 14} height="14" rx="7" fill="#2a323d" />)}
+      </svg>
+    );
+
+    const WORDS = 'Neuralyn revolutionized how we handle financial insights using smart analytics. We are now driving better outcomes quicker than we ever imagined! Neuralyn revolutionized how we handle financial insights using smart analytics.'.split(' ');
+
+    function Hero() {
+      const ref = useRef(null);
+      const [p, setP] = useState(0);
+      useEffect(() => {
+        const f = () => {
+          const r = ref.current.getBoundingClientRect();
+          setP(clamp(-r.top / r.height));
+        };
+        f(); addEventListener('scroll', f, { passive: true }); addEventListener('resize', f);
+        return () => { removeEventListener('scroll', f); removeEventListener('resize', f); };
+      }, []);
+      const delay = (d, y) => ({ animationDelay: `${d}s`, '--y': `${y}px` });
+
+      return (
+        <section ref={ref} className="relative overflow-hidden bg-background">
+          <nav className="flex items-center justify-between px-8 md:px-28 py-4">
+            <div className="flex items-center gap-12 md:gap-20">
+              <div className="flex items-center gap-2"><LogoMark /><span className="text-xl font-bold tracking-tight">Neuralyn</span></div>
+              <div className="hidden md:flex items-center gap-1">
+                {['Home', 'Services', 'Reviews', 'Contact us'].map((l) => (
+                  <a key={l} href="#" className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-foreground/90 hover:text-foreground">{l}{l === 'Services' && <ChevronDown />}</a>
+                ))}
+              </div>
+            </div>
+            <button className="bg-foreground text-background rounded-lg text-sm font-semibold px-4 py-2 hover:opacity-90 transition-opacity">Sign In</button>
+          </nav>
+
+          <div className="flex flex-col items-center text-center mt-16 md:mt-20 px-4" style={{ transform: `translateY(${-200 * p}px)`, opacity: 1 - clamp(p / 0.5) }}>
+            <div className="enter liquid-glass px-3 py-2 rounded-lg mb-6 flex items-center gap-2" style={delay(0, 10)}>
+              <span className="bg-white text-black rounded-md text-sm font-medium px-2 py-0.5">New</span>
+              <span className="text-sm font-medium text-muted-foreground">Say Hello to Corewave v3.2</span>
+            </div>
+            <h1 className="enter text-5xl md:text-7xl tracking-[-2px] font-medium leading-tight md:leading-[1.15] mb-3" style={delay(0.1, 20)}>
+              Your Insights.<br />One Clear <span className="font-serif italic font-normal">Overview.</span>
+            </h1>
+            <p className="enter text-lg font-normal leading-6 opacity-90 mb-8" style={{ color: 'var(--hero-subtitle)', ...delay(0.2, 20) }}>
+              Neuralyn helps teams track metrics, goals,<br />and progress with precision.
+            </p>
+            <button className="enter bg-foreground text-background rounded-full px-8 py-3.5 text-base font-medium hover:scale-[1.03] active:scale-[0.98] transition-transform" style={delay(0.3, 20)}>
+              Get Started for Free
+            </button>
+          </div>
+
+          <div className="enter relative w-screen" style={{ marginLeft: 'calc(-50vw + 50%)', aspectRatio: '16 / 9', ...delay(0.4, 40) }}>
+            <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" src={VIDEO} />
+            <div className="absolute left-1/2 top-1/2 max-w-5xl w-[90%] rounded-2xl overflow-hidden"
+              style={{ mixBlendMode: 'luminosity', transform: `translate(-50%, calc(-50% + ${-250 * p}px))` }}>
+              <DashboardMock />
+            </div>
+            <div className="absolute bottom-0 left-0 right-0 h-40 z-30 pointer-events-none bg-gradient-to-t from-background to-transparent" />
+          </div>
+        </section>
+      );
+    }
+
+    function Testimonial() {
+      const ref = useRef(null);
+      const [p, setP] = useState(0);
+      useEffect(() => {
+        const f = () => {
+          const r = ref.current.getBoundingClientRect();
+          // offset ["start end", "end center"]: 0 when top hits viewport bottom, 1 when bottom hits center
+          setP(clamp((innerHeight - r.top) / (innerHeight - r.top - (r.bottom - innerHeight / 2) || 1)));
+        };
+        f(); addEventListener('scroll', f, { passive: true }); addEventListener('resize', f);
+        return () => { removeEventListener('scroll', f); removeEventListener('resize', f); };
+      }, []);
+      const total = WORDS.length;
+      return (
+        <section className="min-h-screen flex items-center justify-center py-24 md:py-32 px-8 md:px-28 bg-background">
+          <div ref={ref} className="max-w-3xl mx-auto flex flex-col items-start gap-10">
+            <div className="w-14 h-10 flex items-start font-serif text-7xl leading-none text-white" aria-hidden="true">“</div>
+            <p className="text-4xl md:text-5xl font-medium leading-[1.2] flex flex-wrap">
+              {WORDS.map((w, i) => {
+                const t = clamp((p - i / total) / (1 / total));
+                const c = Math.round(35 + 65 * t);
+                return <span key={i} className="mr-[0.3em]" style={{ opacity: 0.2 + 0.8 * t, color: `hsl(0 0% ${c}%)` }}>{w}</span>;
+              })}
+              <span className="text-muted-foreground ml-2">”</span>
+            </p>
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full border-[3px] border-foreground bg-gradient-to-br from-zinc-500 to-zinc-800 flex items-center justify-center text-base font-semibold">BS</div>
+              <div>
+                <div className="text-base font-semibold leading-7 text-foreground">Brooklyn Simmons</div>
+                <div className="text-sm font-normal leading-5 text-muted-foreground">Product Manager</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<><Hero /><Testimonial /></>);
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+  <style>.embed .back-link { display: none !important; }</style>
+</body>
+</html>

@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>quietpress — Hero</title>
+  <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/a64ff11d2c24584c767f6257e880dc65?family=Helvetica+Regular">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+  <style>
+    html { font-family: 'Helvetica Regular', Helvetica, Arial, sans-serif; }
+    html, body, #root { margin: 0; height: 100%; background: #000; }
+
+    .liquid-glass {
+      background: rgba(255, 255, 255, 0.01);
+      background-blend-mode: luminosity;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: none;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .liquid-glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.4px;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+        rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+        rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .animate-fade-up { animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.25s; }
+    .delay-3 { animation-delay: 0.4s; }
+    .delay-4 { animation-delay: 0.55s; }
+    .delay-5 { animation-delay: 0.75s; }
+    @media (prefers-reduced-motion: reduce) { .animate-fade-up { animation: none; } }
+
+    .back-link {
+      position: fixed; left: 12px; bottom: 12px; z-index: 60;
+      font: 12px system-ui, sans-serif; color: rgba(255,255,255,.75);
+      padding: 6px 12px; border-radius: 999px; text-decoration: none;
+      background: rgba(0,0,0,.35); backdrop-filter: blur(6px);
+    }
+    .back-link:hover { color: #fff; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useRef, useEffect } = React;
+
+    // Lucide glyphs (inline)
+    const Icon = ({ size = 24, strokeWidth = 2, className, children }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
+        {children}
+      </svg>
+    );
+    const ShoppingCart = (p) => <Icon {...p}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></Icon>;
+    const Menu = (p) => <Icon {...p}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></Icon>;
+    const X = (p) => <Icon {...p}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></Icon>;
+    const BarChart3 = (p) => <Icon {...p}><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></Icon>;
+    const Heart = (p) => <Icon {...p}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></Icon>;
+
+    const VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260611_183632_c311af08-e4b7-458f-81e7-79847a49b3d3.mp4';
+    const NAV = ['Anthology', 'Talents', 'Sound diary', 'Playback salon'];
+
+    function BoomerangVideoBg({ src }) {
+      const videoRef = useRef(null);
+      const canvasRef = useRef(null);
+      const [ready, setReady] = useState(false);
+
+      useEffect(() => {
+        const video = videoRef.current;
+        const canvas = canvasRef.current;
+        if (!video || !canvas) return;
+
+        const frames = [];
+        let cancelled = false, raf = 0, capturing = false, failed = false;
+
+        const capture = () => {
+          if (cancelled || failed || !video.videoWidth) return;
+          const scale = Math.min(1, 960 / video.videoWidth);
+          const w = Math.round(video.videoWidth * scale), h = Math.round(video.videoHeight * scale);
+          const c = document.createElement('canvas');
+          c.width = w; c.height = h;
+          try {
+            c.getContext('2d').drawImage(video, 0, 0, w, h);
+            frames.push(c);
+          } catch (e) { // tainted canvas (CORS) — fall back to plain looping
+            failed = true;
+            video.loop = true;
+            video.play();
+          }
+        };
+
+        const startCapture = () => {
+          if (capturing) return;
+          capturing = true;
+          if ('requestVideoFrameCallback' in video) {
+            const tick = () => { capture(); if (!video.ended && !cancelled) video.requestVideoFrameCallback(tick); };
+            video.requestVideoFrameCallback(tick);
+          } else {
+            const tick = () => { capture(); if (!video.ended && !cancelled) raf = requestAnimationFrame(tick); };
+            raf = requestAnimationFrame(tick);
+          }
+        };
+
+        const startBoomerang = () => {
+          if (failed || !frames.length) return;
+          canvas.width = frames[0].width; canvas.height = frames[0].height;
+          const ctx = canvas.getContext('2d');
+          let i = 0, dir = 1, last = 0;
+          const step = (t) => {
+            if (cancelled) return;
+            if (t - last >= 1000 / 30) {
+              last = t;
+              ctx.drawImage(frames[i], 0, 0);
+              if (frames.length > 1) {
+                if (i + dir >= frames.length || i + dir < 0) dir = -dir;
+                i += dir;
+              }
+            }
+            raf = requestAnimationFrame(step);
+          };
+          setReady(true);
+          raf = requestAnimationFrame(step);
+        };
+
+        video.addEventListener('play', startCapture);
+        video.addEventListener('ended', startBoomerang);
+        video.play().catch(() => {});
+        return () => { cancelled = true; cancelAnimationFrame(raf); video.removeEventListener('play', startCapture); video.removeEventListener('ended', startBoomerang); };
+      }, [src]);
+
+      return (
+        <div className="absolute inset-0 z-0 scale-[1.08] origin-center overflow-hidden bg-black">
+          <video ref={videoRef} src={src} muted playsInline crossOrigin="anonymous" preload="auto"
+            className={`h-full w-full object-cover ${ready ? 'hidden' : ''}`} />
+          <canvas ref={canvasRef} className={`h-full w-full object-cover ${ready ? '' : 'hidden'}`} />
+        </div>
+      );
+    }
+
+    function App() {
+      const [menuOpen, setMenuOpen] = useState(false);
+      const [liked, setLiked] = useState(false);
+      const tt = 'transition-transform duration-200';
+
+      return (
+        <div className="relative h-screen w-full overflow-hidden">
+          <BoomerangVideoBg src={VIDEO} />
+
+          <header className="absolute top-0 left-0 right-0 z-20">
+            <div className="flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5 md:px-10">
+              <a href="#" className="flex items-center gap-2">
+                <svg width="20" height="20" viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M 256 256 L 128 256 C 198.692 256 256 198.692 256 128 C 256 57.308 198.692 0 128 0 C 57.308 0 0 57.308 0 128 C 0 198.692 57.308 256 128 256 L 0 256 L 0 0 L 256 0 Z M 128 104 C 141.255 104 152 114.745 152 128 C 152 141.255 141.255 152 128 152 C 114.745 152 104 141.255 104 128 C 104 114.745 114.745 104 128 104 Z" />
+                </svg>
+                <span className="text-base tracking-tight text-white">quietpress</span>
+              </a>
+
+              <nav className="hidden md:flex items-center gap-8">
+                {NAV.map((l) => <a key={l} href="#" className="text-sm text-white/90 hover:text-white">{l}</a>)}
+              </nav>
+
+              <div className="flex items-center gap-2">
+                <button className={`flex items-center rounded-xl bg-white p-1 pr-3 sm:pr-4 hover:scale-105 active:scale-95 ${tt}`}>
+                  <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-700 text-white mr-2">
+                    <ShoppingCart size={14} strokeWidth={2} />
+                  </span>
+                  <span className="text-sm text-gray-900"><span className="hidden sm:inline">Cart </span>(0)</span>
+                </button>
+                <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu"
+                  className={`liquid-glass md:hidden flex h-9 w-9 items-center justify-center rounded-xl text-white ${tt}`}>
+                  {menuOpen ? <X size={18} /> : <Menu size={18} />}
+                </button>
+              </div>
+            </div>
+
+            {menuOpen && (
+              <div className="liquid-glass md:hidden mx-4 rounded-2xl p-2">
+                {NAV.map((l) => <a key={l} href="#" className="block rounded-xl px-4 py-3 text-sm text-white/90 hover:bg-white/10">{l}</a>)}
+              </div>
+            )}
+          </header>
+
+          <main className="relative z-10 flex h-full flex-col items-center px-4 pt-28 text-center sm:px-6 sm:pt-36 md:pt-44">
+            <div className="animate-fade-up delay-1 liquid-glass mb-5 sm:mb-6 rounded-lg px-4 py-1.5 text-xs sm:text-sm text-white" style={{ background: 'rgba(255, 255, 255, 0.16)' }}>
+              Press 04 . Vernal woods
+            </div>
+            <h1 className="animate-fade-up delay-2 max-w-3xl text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-[1.1] text-white">
+              records cut for the<br />calm listener.
+            </h1>
+            <p className="animate-fade-up delay-3 mt-5 sm:mt-6 max-w-md text-sm sm:text-base md:text-lg leading-relaxed text-white/90">
+              Drone, roots, and nature-captured sound on wax LPs. Every disc cut just once, snag it or miss.
+            </p>
+            <div className="animate-fade-up delay-4 mt-8 flex flex-col sm:flex-row gap-3">
+              <button className={`rounded-xl bg-white px-7 py-2.5 text-sm text-gray-900 hover:scale-105 active:scale-95 ${tt}`}>Browse the shelves</button>
+              <button className={`liquid-glass rounded-xl px-7 py-2.5 text-sm text-white hover:scale-105 active:scale-95 ${tt}`}>Newest arrivals</button>
+            </div>
+          </main>
+
+          <div className="animate-fade-up delay-5 absolute z-20 bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-10 w-[270px] sm:w-72 flex flex-col gap-2">
+            <div className="flex items-center gap-3 rounded-2xl bg-white p-2.5 pr-4 shadow-lg">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-700 text-white">
+                <BarChart3 size={20} strokeWidth={2.5} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm text-gray-900">Helia Marsh — Fern Light</p>
+                <div className="mt-1.5 h-1 rounded-full bg-gray-200">
+                  <div className="h-full w-[30%] rounded-full bg-blue-700" />
+                </div>
+                <div className="mt-1 flex justify-between text-[10px] text-gray-500"><span>0:33</span><span>-1:21</span></div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <button className={`flex-1 rounded-2xl bg-white py-2 text-sm text-gray-900 shadow-lg hover:scale-105 active:scale-95 ${tt}`}>Prev</button>
+              <button onClick={() => setLiked(!liked)} aria-label="Like"
+                className={`flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg hover:scale-110 active:scale-95 ${tt}`}>
+                <Heart size={16} className={`text-blue-700 ${liked ? 'fill-blue-700' : ''}`} />
+              </button>
+              <button className={`flex-1 rounded-2xl bg-white py-2 text-sm text-gray-900 shadow-lg hover:scale-105 active:scale-95 ${tt}`}>Next</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+  <style>.embed .back-link { display: none !important; }</style>
+</body>
+</html>

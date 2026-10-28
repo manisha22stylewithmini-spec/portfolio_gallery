@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Halcyon° — Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: {
+      ink: '#0C0A09', cream: '#E8E0D0', copper: '#B87333', fog: 'rgba(232, 224, 208, 0.55)',
+    } } } };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+  <style>
+    body { margin: 0; font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif; background: #0C0A09; }
+    .font-fraunces { font-family: 'Fraunces', 'Times New Roman', serif; font-optical-sizing: auto; }
+    @keyframes hero-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+    @keyframes hero-letter-rise { 0% { opacity: 0; transform: translateY(38px); filter: blur(10px); } 100% { opacity: 1; transform: translateY(0); filter: blur(0); } }
+    @keyframes hero-fade-up { 0% { opacity: 0; transform: translateY(18px); } 100% { opacity: 1; transform: translateY(0); } }
+    .anim-breathe { animation: hero-breathe 18s ease-in-out infinite; }
+    .anim-letter { opacity: 0; animation: hero-letter-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .anim-fade-up { opacity: 0; animation: hero-fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @media (prefers-reduced-motion: reduce) { .anim-breathe, .anim-letter, .anim-fade-up { animation: none !important; opacity: 1 !important; } }
+    .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 200; font: 12px system-ui, sans-serif; color: #0C0A09; padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(232,224,208,.85); backdrop-filter: blur(6px); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef } = React;
+    const BG_IMAGE = 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1600&q=80';
+    const RADIUS = 140, PULL = 18, LERP = 0.12, IDLE_MS = 1200;
+    const focusRing = ' focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-copper';
+
+    function usePrefersReducedMotion() {
+      const [reduced, setReduced] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+      useEffect(() => {
+        const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const on = () => setReduced(mq.matches);
+        mq.addEventListener('change', on);
+        return () => mq.removeEventListener('change', on);
+      }, []);
+      return reduced;
+    }
+
+    // Each letter: outer span animates in (CSS), inner span is pulled by the RAF loop (inline transform only).
+    function MagneticWord({ text, children }) {
+      const box = useRef(null);
+      const inner = useRef([]);
+      const reduced = usePrefersReducedMotion();
+      useEffect(() => {
+        if (reduced) { inner.current.forEach((el) => el && (el.style.transform = 'translate3d(0,0,0)')); return; }
+        const el = box.current;
+        let centres = [], w = 0, h = 0, raf = 0;
+        const cur = inner.current.map(() => ({ x: 0, y: 0 }));
+        const pointer = { x: 0, y: 0, active: false, last: -Infinity };
+        const start = performance.now();
+        const measure = () => {
+          w = el.offsetWidth; h = el.offsetHeight;
+          centres = inner.current.map((s) => { const o = s.parentElement; return { x: o.offsetLeft + o.offsetWidth / 2, y: o.offsetTop + o.offsetHeight / 2 }; });
+        };
+        const setFrom = (cx, cy) => { const r = el.getBoundingClientRect(); pointer.x = cx - r.left; pointer.y = cy - r.top; pointer.active = true; pointer.last = performance.now(); };
+        const onMouse = (e) => setFrom(e.clientX, e.clientY);
+        const onTouch = (e) => { const t = e.touches[0]; if (t) setFrom(t.clientX, t.clientY); };
+        const onLeave = () => { pointer.active = false; };
+        const frame = (now) => {
+          const idle = !pointer.active || now - pointer.last > IDLE_MS;
+          const t = (now - start) / 1000;
+          const ax = idle ? w * (0.5 + 0.42 * Math.sin(t * 0.7)) : pointer.x;
+          const ay = idle ? h * (0.5 + 0.22 * Math.sin(t * 1.3)) : pointer.y;
+          for (let i = 0; i < centres.length; i++) {
+            const dx = ax - centres[i].x, dy = ay - centres[i].y, d = Math.hypot(dx, dy);
+            let tx = 0, ty = 0;
+            if (d < RADIUS && d > 0.001) { const m = Math.min(PULL, ((RADIUS - d) / RADIUS) * PULL); tx = (dx / d) * m; ty = (dy / d) * m; }
+            cur[i].x += (tx - cur[i].x) * LERP; cur[i].y += (ty - cur[i].y) * LERP;
+            const s = inner.current[i];
+            if (s) s.style.transform = `translate3d(${cur[i].x.toFixed(2)}px, ${cur[i].y.toFixed(2)}px, 0)`;
+          }
+          raf = requestAnimationFrame(frame);
+        };
+        measure();
+        document.fonts && document.fonts.ready.then(measure);
+        window.addEventListener('resize', measure);
+        window.addEventListener('mousemove', onMouse);
+        window.addEventListener('touchmove', onTouch, { passive: true });
+        document.documentElement.addEventListener('mouseleave', onLeave);
+        raf = requestAnimationFrame(frame);
+        return () => {
+          cancelAnimationFrame(raf);
+          window.removeEventListener('resize', measure);
+          window.removeEventListener('mousemove', onMouse);
+          window.removeEventListener('touchmove', onTouch);
+          document.documentElement.removeEventListener('mouseleave', onLeave);
+        };
+      }, [reduced, text]);
+      const chars = [...text];
+      return (
+        <span ref={box} className="relative inline-block">
+          {chars.map((c, i) => (
+            <span key={i} aria-hidden="true" className="anim-letter inline-block relative" style={{ animationDelay: `${i * 80}ms` }}>
+              <span ref={(n) => (inner.current[i] = n)} className="inline-block will-change-transform">{c}</span>
+              {i === chars.length - 1 && children}
+            </span>
+          ))}
+        </span>
+      );
+    }
+
+    const NAV = ['Work', 'Studio', 'Process', 'Journal', 'Contact'];
+    const Logo = () => (
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10.5" fill="none" stroke="currentColor" strokeWidth="1" className="text-cream" /><circle cx="12" cy="12" r="5" fill="currentColor" className="text-copper" /></svg>
+    );
+    const ArrowUpRight = () => (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 7h10v10M7 17 17 7" /></svg>
+    );
+
+    function Navbar() {
+      const [mounted, setMounted] = useState(false);
+      const [open, setOpen] = useState(false);
+      useEffect(() => { const r = requestAnimationFrame(() => setMounted(true)); return () => cancelAnimationFrame(r); }, []);
+      return (
+        <>
+          <nav className={'fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-5 sm:px-7 py-5 transition-opacity duration-[600ms] delay-200 ' + (mounted ? 'opacity-100' : 'opacity-0')}>
+            <a href="#" className={'flex items-center rounded-full' + focusRing}><Logo /><span className="ml-2 font-fraunces text-cream text-lg">Halcyon°</span></a>
+            <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bg-cream/10 backdrop-blur-md border border-cream/15 rounded-full px-2 py-1.5 items-center gap-1">
+              {NAV.map((l) => <button key={l} className={'px-4 py-1.5 rounded-full text-sm font-medium text-cream/75 hover:bg-cream/15 hover:text-cream transition-colors' + focusRing}>{l}</button>)}
+            </div>
+            <a href="#" className={'hidden md:inline-flex bg-cream text-ink text-sm font-semibold px-5 py-2.5 rounded-full hover:bg-copper hover:text-cream transition-colors' + focusRing}>Book a call</a>
+            <button onClick={() => setOpen(true)} aria-label="Open menu" className={'md:hidden ml-auto w-9 h-9 rounded-full bg-cream/10 border border-cream/15 grid place-items-center text-cream' + focusRing}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 8h16M4 16h16" /></svg>
+            </button>
+          </nav>
+          <div className={'md:hidden fixed inset-0 z-[150] bg-ink/95 backdrop-blur-xl flex flex-col px-7 py-6 transition-opacity duration-300 ' + (open ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none')}>
+            <button onClick={() => setOpen(false)} aria-label="Close menu" className={'self-end w-9 h-9 rounded-full border border-cream/20 grid place-items-center text-cream' + focusRing}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg>
+            </button>
+            <div className="mt-16 flex flex-col gap-6">
+              {NAV.map((l) => <a key={l} href="#" onClick={() => setOpen(false)} className={'font-fraunces text-4xl text-cream' + focusRing}>{l}</a>)}
+              <a href="#" className={'mt-6 self-start bg-cream text-ink text-sm font-semibold px-5 py-2.5 rounded-full' + focusRing}>Book a call</a>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    function Hero() {
+      return (
+        <section className="relative w-full overflow-hidden bg-ink" style={{ height: '100dvh' }}>
+          <div role="img" aria-label="Misty valley with pine trees at dusk, the sky glowing amber" className="absolute inset-0 z-10 bg-center bg-cover bg-no-repeat anim-breathe" style={{ backgroundImage: `url(${BG_IMAGE})` }} />
+          <div className="absolute inset-0 z-20 pointer-events-none bg-ink/35"><div className="absolute inset-0 bg-gradient-to-b from-ink/30 via-transparent to-ink/85" /></div>
+          <svg className="absolute inset-0 w-full h-full pointer-events-none mix-blend-overlay opacity-[0.35]" style={{ zIndex: 25 }} aria-hidden="true">
+            <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" /></filter>
+            <rect width="100%" height="100%" filter="url(#noise)" />
+          </svg>
+
+          <div className="absolute top-[20%] left-0 right-0 z-40 flex justify-center pointer-events-none">
+            <h1 aria-label="Halcyon" className="font-fraunces font-medium text-cream text-[18vw] sm:text-[16vw] md:text-[14vw] lg:text-[13vw] xl:text-[12vw]" style={{ letterSpacing: '-0.045em', lineHeight: 0.9 }}>
+              <MagneticWord text="Halcyon">
+                <span aria-hidden="true" className="absolute top-[0.15em] -right-[0.1em] text-[0.2em] text-copper">°</span>
+              </MagneticWord>
+            </h1>
+          </div>
+
+          <div className="absolute top-[calc(20%+14vw)] sm:top-[calc(20%+12vw)] left-0 right-0 z-40 flex justify-center px-5 pointer-events-none">
+            <p className="font-fraunces italic font-normal text-cream/70 text-base sm:text-xl md:text-2xl anim-fade-up" style={{ animationDelay: '1.1s' }}>An independent studio crafting work that lasts.</p>
+          </div>
+
+          <div className="hidden sm:block absolute bottom-12 left-10 md:left-14 max-w-[280px] z-40 anim-fade-up" style={{ animationDelay: '1.35s' }}>
+            <p className="text-sm text-cream/60 leading-relaxed">We build identities, websites and brand systems for ambitious companies. Considered work, made slowly, shipped boldly.</p>
+          </div>
+
+          <div className="absolute bottom-10 sm:bottom-12 left-5 right-5 sm:left-auto sm:right-10 md:right-14 max-w-full sm:max-w-[280px] z-40 flex flex-col items-start gap-4 anim-fade-up" style={{ animationDelay: '1.5s' }}>
+            <p className="text-xs uppercase tracking-[0.25em] text-cream/40">BOOKING SUMMER '26</p>
+            <button className={'group inline-flex items-center bg-cream text-ink rounded-full pl-5 pr-1 py-1 text-sm font-medium hover:bg-copper hover:text-cream transition-colors duration-300' + focusRing}>
+              Start a project
+              <span className="w-9 h-9 rounded-full bg-copper flex items-center justify-center ml-3 text-cream transition-transform duration-300 group-hover:rotate-45"><ArrowUpRight /></span>
+            </button>
+          </div>
+        </section>
+      );
+    }
+
+    function App() {
+      return (
+        <div className="min-h-screen bg-ink text-cream tracking-[-0.015em]" style={{ fontFamily: "'Inter Tight', sans-serif" }}>
+          <Navbar />
+          <Hero />
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+  <style>.embed .back-link { display: none !important; }</style>
+</body>
+</html>

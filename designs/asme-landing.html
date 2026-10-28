@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asme — Landing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+  <style>
+    body { margin: 0; background: #000; font-family: system-ui, sans-serif; }
+    .serif { font-family: 'Instrument Serif', serif; }
+
+    .liquid-glass {
+      background: rgba(255, 255, 255, 0.01);
+      background-blend-mode: luminosity;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: none;
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .liquid-glass::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1.4px;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+        rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+        rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+    .back-link {
+      position: fixed; left: 12px; bottom: 12px; z-index: 60;
+      font: 12px system-ui, sans-serif; color: rgba(255,255,255,.85);
+      padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(0,0,0,.5);
+    }
+  </style>
+</head>
+<body class="bg-black">
+  <div id="root"></div>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef } = React;
+
+    const Icon = ({ size = 24, className, children }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
+    );
+    const Globe = (p) => <Icon {...p}><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></Icon>;
+    const ArrowRight = (p) => <Icon {...p}><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></Icon>;
+    const ArrowUpRight = (p) => <Icon {...p}><path d="M7 7h10v10"/><path d="M7 17 17 7"/></Icon>;
+    const Instagram = (p) => <Icon {...p}><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></Icon>;
+    const Twitter = (p) => <Icon {...p}><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></Icon>;
+
+    // Scroll-in reveal (stands in for framer-motion's useInView + animate)
+    function Reveal({ children, className = '', delay = 0, duration = 0.7, y = 0, x = 0 }) {
+      const ref = useRef(null);
+      const [seen, setSeen] = useState(false);
+      useEffect(() => {
+        const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setSeen(true); io.disconnect(); } }, { rootMargin: '0px 0px -100px 0px' });
+        io.observe(ref.current);
+        return () => io.disconnect();
+      }, []);
+      return (
+        <div ref={ref} className={className} style={{
+          opacity: seen ? 1 : 0,
+          transform: seen ? 'none' : `translate(${x}px, ${y}px)`,
+          transition: `opacity ${duration}s ease-out ${delay}s, transform ${duration}s ease-out ${delay}s`,
+        }}>{children}</div>
+      );
+    }
+
+    function Video({ src, className = '' }) {
+      return <video src={src} muted autoPlay loop playsInline preload="auto" className={className} />;
+    }
+
+    // Hero video: manual opacity fade in / out / loop
+    function HeroVideo() {
+      const ref = useRef(null);
+      useEffect(() => {
+        const v = ref.current;
+        let raf = 0, fadingOut = false;
+        const fade = (to, ms = 500) => {
+          cancelAnimationFrame(raf);
+          const from = parseFloat(v.style.opacity || '0'), t0 = performance.now();
+          const step = (t) => {
+            const k = Math.min(1, (t - t0) / ms);
+            v.style.opacity = String(from + (to - from) * k);
+            if (k < 1) raf = requestAnimationFrame(step);
+          };
+          raf = requestAnimationFrame(step);
+        };
+        const onCanPlay = () => { v.play().catch(() => {}); fade(1); };
+        const onTime = () => {
+          if (v.duration && v.duration - v.currentTime <= 0.55 && !fadingOut) { fadingOut = true; fade(0); }
+        };
+        const onEnded = () => {
+          v.style.opacity = '0';
+          setTimeout(() => { v.currentTime = 0; fadingOut = false; v.play().catch(() => {}); fade(1); }, 100);
+        };
+        v.addEventListener('canplay', onCanPlay);
+        v.addEventListener('timeupdate', onTime);
+        v.addEventListener('ended', onEnded);
+        return () => { cancelAnimationFrame(raf); v.removeEventListener('canplay', onCanPlay); v.removeEventListener('timeupdate', onTime); v.removeEventListener('ended', onEnded); };
+      }, []);
+      return <video ref={ref} muted autoPlay playsInline preload="auto" style={{ opacity: 0 }}
+        className="absolute inset-0 w-full h-full object-cover object-bottom"
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_074625_a81f018a-956b-43fb-9aee-4d1508e30e6a.mp4" />;
+    }
+
+    function Hero() {
+      return (
+        <div className="min-h-screen overflow-hidden relative flex flex-col">
+          <HeroVideo />
+          <nav className="relative z-20 px-6 py-6">
+            <div className="liquid-glass rounded-full max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
+              <div className="flex items-center">
+                <Globe size={24} className="text-white" />
+                <span className="text-white font-semibold text-lg ml-2">Asme</span>
+                <div className="hidden md:flex items-center gap-8 ml-8">
+                  {['Features', 'Pricing', 'About'].map((l) => <a key={l} href="#" className="text-white/80 hover:text-white text-sm font-medium">{l}</a>)}
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <button className="text-white text-sm font-medium">Sign Up</button>
+                <button className="liquid-glass rounded-full px-6 py-2 text-white text-sm font-medium">Login</button>
+              </div>
+            </div>
+          </nav>
+
+          <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-12 text-center -translate-y-[20%]">
+            <h1 className="serif text-7xl md:text-8xl lg:text-9xl text-white tracking-tight whitespace-nowrap mb-8">
+              Know it then <em className="italic">all</em>.
+            </h1>
+            <div className="max-w-xl w-full space-y-4">
+              <div className="liquid-glass rounded-full pl-6 pr-2 py-2 flex items-center gap-3">
+                <input type="email" placeholder="Enter your email" className="flex-1 bg-transparent outline-none text-white placeholder:text-white/40 text-sm" />
+                <button className="bg-white rounded-full p-3 text-black" aria-label="Subscribe"><ArrowRight size={20} /></button>
+              </div>
+              <p className="text-white text-sm leading-relaxed px-4">
+                Stay updated with the latest news and insights. Subscribe to our newsletter today and never miss out on exciting updates.
+              </p>
+              <button className="liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium hover:bg-white/5 transition-colors">Manifesto</button>
+            </div>
+          </div>
+
+          <div className="relative z-10 flex justify-center gap-4 pb-12">
+            {[Instagram, Twitter, Globe].map((I, i) => (
+              <button key={i} className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"><I size={20} /></button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function About() {
+      return (
+        <section className="bg-black pt-32 md:pt-44 pb-10 md:pb-14 px-6 overflow-hidden relative">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.03)_0%,_transparent_70%)]" />
+          <div className="relative max-w-6xl mx-auto text-center">
+            <Reveal y={20} duration={0.6}><p className="text-white/40 text-sm tracking-widest uppercase mb-6">About Us</p></Reveal>
+            <Reveal y={40} duration={0.8} delay={0.1}>
+              <h2 className="text-4xl md:text-6xl lg:text-7xl text-white leading-[1.1] tracking-tight">
+                Pioneering <span className="serif italic text-white/60">ideas</span> for<br className="hidden md:block" />
+                minds that <span className="serif italic text-white/60">create, build, and inspire.</span>
+              </h2>
+            </Reveal>
+          </div>
+        </section>
+      );
+    }
+
+    function Featured() {
+      return (
+        <section className="bg-black pt-6 md:pt-10 pb-20 md:pb-32 px-6 overflow-hidden">
+          <div className="max-w-6xl mx-auto">
+            <Reveal y={60} duration={0.9}>
+              <div className="relative rounded-3xl overflow-hidden aspect-video">
+                <Video className="w-full h-full object-cover" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260402_054547_9875cfc5-155a-4229-8ec8-b7ba7125cbf8.mp4" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+                  <div className="liquid-glass rounded-2xl p-6 md:p-8 max-w-md">
+                    <p className="text-white/50 text-xs tracking-widest uppercase mb-3">Our Approach</p>
+                    <p className="text-white text-sm md:text-base leading-relaxed">
+                      We believe in the power of curiosity-driven exploration. Every project starts with a question, and every answer opens a new door to innovation.
+                    </p>
+                  </div>
+                  <button className="liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium hover:scale-105 active:scale-95 transition-transform">Explore more</button>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+      );
+    }
+
+    function Philosophy() {
+      return (
+        <section className="bg-black py-28 md:py-40 px-6 overflow-hidden">
+          <div className="max-w-6xl mx-auto">
+            <Reveal y={40} duration={0.8}>
+              <h2 className="text-5xl md:text-7xl lg:text-8xl text-white tracking-tight mb-16 md:mb-24">
+                Innovation <span className="serif italic text-white/40">x</span> Vision
+              </h2>
+            </Reveal>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+              <Reveal x={-40} duration={0.8}>
+                <div className="rounded-3xl overflow-hidden aspect-[4/3]">
+                  <Video className="w-full h-full object-cover" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260307_083826_e938b29f-a43a-41ec-a153-3d4730578ab8.mp4" />
+                </div>
+              </Reveal>
+              <Reveal x={40} duration={0.8} delay={0.1} className="flex flex-col justify-center gap-8">
+                <div>
+                  <p className="text-white/40 text-xs tracking-widest uppercase mb-4">Choose your space</p>
+                  <p className="text-white/70 text-base md:text-lg leading-relaxed">Every meaningful breakthrough begins at the intersection of disciplined strategy and remarkable creative vision. We operate at that crossroads, turning bold thinking into tangible outcomes that move people and reshape industries.</p>
+                </div>
+                <div className="w-full h-px bg-white/10" />
+                <div>
+                  <p className="text-white/40 text-xs tracking-widest uppercase mb-4">Shape the future</p>
+                  <p className="text-white/70 text-base md:text-lg leading-relaxed">We believe that the best work emerges when curiosity meets conviction. Our process is designed to uncover hidden opportunities and translate them into experiences that resonate long after the first impression.</p>
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    const SERVICES = [
+      { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4', tag: 'Strategy', title: 'Research & Insight', body: 'We dig deep into data, culture, and human behavior to surface the insights that drive meaningful, lasting change.' },
+      { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260324_151826_c7218672-6e92-402c-9e45-f1e0f454bdc4.mp4', tag: 'Craft', title: 'Design & Execution', body: 'From concept to launch, we obsess over every detail to deliver experiences that feel effortless and look extraordinary.' },
+    ];
+
+    function Services() {
+      return (
+        <section className="bg-black py-28 md:py-40 px-6 overflow-hidden relative">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.02)_0%,_transparent_60%)]" />
+          <div className="relative max-w-6xl mx-auto">
+            <Reveal y={30} duration={0.7} className="flex items-end justify-between mb-12 md:mb-16">
+              <h2 className="text-3xl md:text-5xl text-white tracking-tight">What we do</h2>
+              <p className="hidden md:block text-white/40 text-sm">Our services</p>
+            </Reveal>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              {SERVICES.map((s, i) => (
+                <Reveal key={s.title} y={50} duration={0.8} delay={i * 0.15}>
+                  <div className="liquid-glass rounded-3xl overflow-hidden group">
+                    <div className="relative aspect-video overflow-hidden">
+                      <Video src={s.src} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                    </div>
+                    <div className="p-6 md:p-8">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="uppercase tracking-widest text-white/40 text-xs">{s.tag}</span>
+                        <span className="liquid-glass rounded-full p-2 text-white"><ArrowUpRight size={16} /></span>
+                      </div>
+                      <h3 className="text-white text-xl md:text-2xl mb-3 tracking-tight">{s.title}</h3>
+                      <p className="text-white/50 text-sm leading-relaxed">{s.body}</p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(
+      <div className="bg-black"><Hero /><About /><Featured /><Philosophy /><Services /></div>
+    );
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+  <style>.embed .back-link { display: none !important; }</style>
+</body>
+</html>

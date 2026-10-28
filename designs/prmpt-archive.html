@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>prmpt — Archive Collection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #fff; font-family: 'Inter Tight', sans-serif; font-weight: 500; }
+    .bp-card { will-change: transform; }
+    @media (prefers-reduced-motion: reduce) { .bp-card { will-change: auto; } }
+    @media (min-width: 1024px) and (pointer: fine) { html, body, #scroll-spacer { cursor: none; } }
+    @keyframes rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    .back-link {
+      position: fixed; left: 50%; transform: translateX(-50%); bottom: 12px; z-index: 60;
+      font: 12px system-ui, sans-serif; color: #fff; mix-blend-mode: normal;
+      padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(0,0,0,.7);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef, useMemo } = React;
+
+    const LEFT = 'https://d8j0ntlcm91z4.cloudfront.net/user_39ca84eAE1ODL9hbR5VhoEj8tBf/hf_20260625_154433_532a85d3-dabf-4265-b8bd-19ac6af31842.mp4';
+    const RIGHT = 'https://d8j0ntlcm91z4.cloudfront.net/user_39ca84eAE1ODL9hbR5VhoEj8tBf/hf_20260625_154401_a664f076-b971-4557-8728-40ef9ea4c49b.mp4';
+    const ids = [
+      'hf_20260629_104530_521b2f85-c0f3-4d0e-9704-b578315b4cb9', 'hf_20260629_103711_76ccdb8b-5043-4f47-9c54-4379713393ea',
+      'hf_20260629_103728_394f6a1b-85e2-4386-a4f6-408472a0a5b7', 'hf_20260629_103739_86743e0e-16a7-4bee-bf38-dd67985344dc',
+      'hf_20260629_103748_b2215dc8-a3a7-470d-b19a-5b87fa7d0c37', 'hf_20260629_103758_e919ce72-5c9d-4b87-9be6-d7647b34825c',
+      'hf_20260629_103808_013583d0-3386-4547-9832-37c7d8edb3ac', 'hf_20260629_103937_a0c49d0a-33eb-4ead-aea6-c1baf241acbc',
+      'hf_20260629_103956_d18ed8fd-7b6f-4b86-91f9-20010fe38670', 'hf_20260629_104034_ba5a9963-87ff-4008-a545-6bd686c088b5',
+    ];
+    const IMAGES = ids.map((id) => `https://images.higgs.ai/?default=1&output=webp&url=${encodeURIComponent(`https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/${id}.png`)}&w=1920&q=85`);
+
+    const SYMBOLS = ['8', '$', '^^', '%', '/'];
+    const EASE = [0.25, 0.1, 0.25, 1];
+    const blend = { mixBlendMode: 'exclusion' };
+    const txt = { fontFamily: "'Inter Tight', sans-serif", fontWeight: 500, color: '#fff', textTransform: 'uppercase' };
+
+    function buildLayout(count, cols) {
+      const out = []; let next = 0, r = 0;
+      while (next < count) {
+        const row = Array(cols).fill(-1);
+        const a = (r * 2 + (r % 2)) % cols;
+        row[a] = next++;
+        if (r % 3 === 0 && next < count) { let b = (a + 2) % cols; if (b === a) b = (a + 1) % cols; row[b] = next++; }
+        out.push(...row); r++;
+      }
+      return out;
+    }
+
+    function useBp() {
+      const get = () => (innerWidth < 640 ? 'm' : innerWidth < 1024 ? 't' : 'd');
+      const [bp, setBp] = useState(get);
+      useEffect(() => { const f = () => setBp(get()); addEventListener('resize', f); return () => removeEventListener('resize', f); }, []);
+      return bp;
+    }
+    const pick = (bp, m, t, d) => (bp === 'm' ? m : bp === 't' ? t : d);
+
+    const anim = (delay) => ({ animation: `rise 0.6s cubic-bezier(${EASE.join(',')}) ${delay}s both` });
+
+    function Cursor() {
+      const ref = useRef(null);
+      useEffect(() => {
+        const f = (e) => { if (ref.current) { ref.current.style.left = e.clientX + 'px'; ref.current.style.top = e.clientY + 'px'; } };
+        addEventListener('mousemove', f); return () => removeEventListener('mousemove', f);
+      }, []);
+      return (
+        <div ref={ref} className="fixed pointer-events-none" style={{ zIndex: 50, transform: 'translate(-50%, -50%)', mixBlendMode: 'exclusion', left: -100, top: -100 }}>
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="22.75" stroke="#fff" strokeWidth="2.5" />
+            <path d="M24 12v24M14 20h20M16 30c4-2 12-2 16 0" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" />
+          </svg>
+        </div>
+      );
+    }
+
+    function Logo({ bp }) {
+      const w = pick(bp, 124, 266, 355), off = bp === 'm' ? 16 : 32;
+      return (
+        <div className="fixed pointer-events-none" style={{ ...blend, zIndex: 20, top: off, left: off, width: w, ...anim(0) }}>
+          <svg viewBox="0 0 355 110" width="100%" fill="#fff">
+            <text x="0" y="82" fontFamily="'Inter Tight', sans-serif" fontWeight="500" fontSize="96" letterSpacing="-5">prmpt</text>
+            <circle cx="318" cy="30" r="17" fill="none" stroke="#fff" strokeWidth="4" />
+            <text x="318" y="38" textAnchor="middle" fontFamily="'Inter Tight', sans-serif" fontWeight="500" fontSize="22">R</text>
+          </svg>
+        </div>
+      );
+    }
+
+    function Hero({ bp }) {
+      const m = bp === 'm';
+      return (
+        <>
+          <div className="fixed pointer-events-none" style={{ ...blend, ...txt, textTransform: 'none', zIndex: 20, left: m ? 16 : 32,
+            top: pick(bp, 118, 180, 244), width: pick(bp, 'calc(100vw - 32px)', 'calc(50vw - 48px)', 692),
+            fontSize: 12, lineHeight: '140%', letterSpacing: '-0.04em', ...anim(0.3) }}>
+            When switching between videos near the center, do not reset currentTime to 0 abruptly. Add a small dead zone: if cursor is within +/-50px of center, keep both videos at currentTime = 0 and show whichever was last active.
+          </div>
+
+          <div className="fixed pointer-events-none flex items-center justify-between" style={{ ...blend, zIndex: 20, top: m ? 16 : 32, right: m ? 16 : 32, width: m ? 'auto' : 330, height: 30, ...anim(0.15) }}>
+            {!m && <span style={{ ...txt, fontSize: 15 }}>About</span>}
+            <div className="flex items-center" style={{ gap: m ? 20 : 50 }}>
+              <svg width={m ? 24 : 30} height={m ? 24 : 30} viewBox="0 0 40 40" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M0 14H40" /><path d="M0 26H40" /></svg>
+              <span style={{ ...txt, fontSize: m ? 13 : 15 }}>[ Cart ]</span>
+            </div>
+          </div>
+        </>
+      );
+    }
+
+    function ProductInfo({ bp }) {
+      const m = bp === 'm';
+      const sz = m ? 20 : 30;
+      return (
+        <div id="outro-info" data-outro-offset={m ? 132 : 166} className="fixed pointer-events-none flex flex-col items-center"
+          style={{ ...blend, zIndex: 20, ...(m ? { left: 0, right: 0, bottom: 48 } : { right: 32, bottom: 80, width: 330 }), animation: 'fade 0.6s ease 0.45s both' }}>
+          <div className="flex flex-col items-start" style={{ width: m ? 252 : '100%', marginBottom: m ? 12 : 32 }}>
+            <div className="relative" style={{ width: sz, height: sz }}>
+              <svg viewBox="0 0 40 40" width="100%" height="100%" fill="none"><circle cx="20" cy="20" r="18.75" stroke="#fff" strokeWidth={m ? 2 : 2.5} /></svg>
+              <span id="circle-symbol" className="absolute inset-0 flex items-center justify-center" style={{ ...txt, fontSize: m ? 10 : 15, letterSpacing: '-0.04em' }}>8</span>
+            </div>
+            <div style={{ ...txt, fontSize: m ? 20 : 30, lineHeight: '100%', textAlign: 'center', letterSpacing: '-0.04em', width: '100%', marginTop: 12 }}>
+              Archive Collection<br />"Prompt"
+            </div>
+          </div>
+          <div style={{ ...txt, textTransform: 'none', fontSize: m ? 60 : 80, lineHeight: '100%', textAlign: 'center', letterSpacing: '-0.04em' }}>$97,33</div>
+        </div>
+      );
+    }
+
+    function App() {
+      const bp = useBp();
+      const m = bp === 'm';
+      const cols = pick(bp, 2, 3, 4);
+      const layout = useMemo(() => buildLayout(IMAGES.length, cols), [cols]);
+      const [loaded, setLoaded] = useState(0);
+
+      const spacerRef = useRef(null), panelRef = useRef(null), wrapRef = useRef(null), canvasRef = useRef(null);
+      const lVid = useRef(null), rVid = useRef(null), cells = useRef([]);
+      const touchRef = useRef(false);
+
+      // Videos: scrub on desktop, alternate autoplay on touch
+      useEffect(() => {
+        const l = lVid.current, r = rVid.current;
+        touchRef.current = matchMedia('(pointer: coarse)').matches || innerWidth < 1024;
+        if (touchRef.current) {
+          const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (reduce) return;
+          l.style.display = 'block'; r.style.display = 'none'; l.play().catch(() => {});
+          const toR = () => { l.style.display = 'none'; r.style.display = 'block'; r.currentTime = 0; r.play().catch(() => {}); };
+          const toL = () => { r.style.display = 'none'; l.style.display = 'block'; l.currentTime = 0; l.play().catch(() => {}); };
+          l.addEventListener('ended', toR); r.addEventListener('ended', toL);
+          return () => { l.removeEventListener('ended', toR); r.removeEventListener('ended', toL); };
+        }
+        let x = innerWidth / 2, side = 'right', raf = 0;
+        const onMove = (e) => { x = e.clientX; };
+        addEventListener('mousemove', onMove);
+        const tick = () => {
+          const w = innerWidth, c = w / 2, dz = Math.max(30, w * 0.05);
+          if (x < c - dz) side = 'right'; else if (x > c + dz) side = 'left';
+          const show = side === 'right' ? r : l, hide = side === 'right' ? l : r;
+          show.style.display = 'block'; hide.style.display = 'none';
+          let p = 0;
+          if (side === 'right' && x < c - dz) p = (c - dz - x) / (c - dz);
+          else if (side === 'left' && x > c + dz) p = (x - (c + dz)) / (w - (c + dz));
+          if (show.duration && !show.seeking) {
+            const t = Math.min(show.duration, Math.max(0, p * show.duration));
+            if (Math.abs(show.currentTime - t) > 0.02) show.currentTime = t;
+          }
+          raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+        return () => { cancelAnimationFrame(raf); removeEventListener('mousemove', onMove); };
+      }, [bp]);
+
+      // Scroll-driven panel / cards / outro (RAF, not scroll events)
+      useEffect(() => {
+        let raf = 0, lastSym = 0, lastY = -1;
+        const q = (id) => document.getElementById(id);
+        const clamp = (v) => Math.min(1, Math.max(0, v));
+        const setHeight = () => {
+          const vh = innerHeight, wrap = wrapRef.current;
+          const maxScroll = Math.max(0, wrap.scrollHeight - vh);
+          spacerRef.current.style.height = `${vh + maxScroll + 2 * vh}px`;
+          return { vh, maxScroll };
+        };
+        let dims = setHeight();
+        const onResize = () => { dims = setHeight(); };
+        addEventListener('resize', onResize);
+        const imgs = [...document.images]; imgs.forEach((i) => i.addEventListener('load', onResize));
+
+        const frame = () => {
+          const { vh, maxScroll } = dims;
+          const y = scrollY;
+          const panelOffset = Math.max(0, vh - y);
+          const innerShift = Math.max(0, y - vh);
+          panelRef.current.style.transform = `translateY(${panelOffset}px)`;
+          wrapRef.current.style.transform = `translateY(${-innerShift}px)`;
+          q('main-canvas').style.visibility = y > vh ? 'hidden' : 'visible';
+
+          cells.current.forEach((cell) => {
+            if (!cell) return;
+            const card = cell.firstChild, rect = cell.getBoundingClientRect();
+            const top = rect.top, bottom = rect.bottom;
+            let s = 0;
+            if (!(bottom <= 0 || top >= vh)) s = Math.min(Math.min(1, (vh - top) / (vh * 0.6)), Math.min(1, bottom / (vh * 0.4)));
+            card.style.transform = `scale(${Math.max(0, s)})`;
+          });
+
+          const p = clamp((y - vh - maxScroll) / (vh - 100));
+          q('outro-overlay').style.opacity = String(p);
+          const info = q('outro-info'), off = Number(info.dataset.outroOffset) || 0;
+          info.style.transform = `translateY(${-off * p}px)`;
+          q('outro-buy').style.transform = `scale(${p})`;
+          q('outro-footer').style.opacity = String(p);
+
+          if (y !== lastY && performance.now() - lastSym > 80) {
+            lastSym = performance.now();
+            const s = q('circle-symbol'); if (s) s.textContent = SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+          }
+          lastY = y;
+          raf = requestAnimationFrame(frame);
+        };
+        raf = requestAnimationFrame(frame);
+        return () => { cancelAnimationFrame(raf); removeEventListener('resize', onResize); imgs.forEach((i) => i.removeEventListener('load', onResize)); };
+      }, [cols]);
+
+      const videoReady = loaded >= 2;
+      const vStyle = { position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' };
+
+      return (
+        <div id="scroll-spacer" ref={spacerRef} style={{ position: 'relative', userSelect: 'none', background: '#fff', height: '500vh' }}>
+          {bp === 'd' && <Cursor />}
+          <div id="main-canvas" className="pointer-events-none"
+            style={{ position: 'fixed', zIndex: 0, overflow: 'hidden', opacity: videoReady ? 1 : 0, transition: 'opacity 0.3s ease',
+              ...(m ? { left: 0, top: 220, width: '100vw', height: 'calc(100vh - 220px)' } : { inset: 0, width: '100%', height: '100%' }) }}>
+            <video ref={lVid} src={LEFT} muted playsInline preload="auto" crossOrigin="anonymous" onLoadedData={() => setLoaded((n) => n + 1)} style={{ ...vStyle, display: 'none' }} />
+            <video ref={rVid} src={RIGHT} muted playsInline preload="auto" crossOrigin="anonymous" onLoadedData={() => setLoaded((n) => n + 1)} style={{ ...vStyle, display: 'block' }} />
+          </div>
+
+          <Logo bp={bp} />
+          <Hero bp={bp} />
+          <ProductInfo bp={bp} />
+
+          <div ref={panelRef} className="fixed inset-0 bg-black" style={{ zIndex: 10, transform: 'translateY(100vh)' }}>
+            <div ref={wrapRef} className="w-full" style={{ paddingTop: 'min(400px, 40vh)' }}>
+              <div className="grid" style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
+                {layout.map((idx, i) => {
+                  const col = i % cols;
+                  const origin = col < cols / 2 ? 'right bottom' : 'left bottom';
+                  return idx < 0 ? <div key={i} style={{ aspectRatio: '2 / 3' }} /> : (
+                    <div key={i} ref={(el) => { cells.current[idx] = el; }} style={{ aspectRatio: '2 / 3' }}>
+                      <img className="bp-card w-full h-full object-cover block" src={IMAGES[idx]} alt="" style={{ transform: 'scale(0)', transformOrigin: origin }} />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div id="outro-overlay" className="fixed inset-0 pointer-events-none" style={{ background: '#fff', opacity: 0, zIndex: 12 }} />
+          <div id="outro-buy" className="fixed pointer-events-none flex items-center justify-center"
+            style={{ ...blend, zIndex: 20, background: '#fff', borderRadius: 1335, transformOrigin: 'right bottom', transform: 'scale(0)',
+              ...(m ? { left: 16, right: 16, bottom: 60, height: 100 } : { right: 32, bottom: 32, width: 330, height: 174 }) }}>
+            <span style={{ ...blend, ...txt, textTransform: 'none', fontSize: m ? 72 : 110, letterSpacing: '-0.04em' }}>view</span>
+          </div>
+          <div id="outro-footer" className={`fixed pointer-events-none flex ${m ? 'justify-between' : ''}`}
+            style={{ ...blend, left: 16, bottom: m ? 24 : 32, opacity: 0, gap: m ? undefined : 80, right: m ? 16 : undefined, zIndex: 20 }}>
+            <span style={{ ...txt, fontSize: m ? 11 : 13, letterSpacing: '-0.02em' }}>PRMPT (R) 2026</span>
+            <span style={{ ...txt, fontSize: m ? 11 : 13, letterSpacing: '-0.02em' }}>PRIVACY POLICY</span>
+          </div>
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+  <style>.embed .back-link { display: none !important; }</style>
+</body>
+</html>

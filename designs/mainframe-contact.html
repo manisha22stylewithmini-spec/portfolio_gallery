@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mainframe — Contact</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script>tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] } } } };</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+  <style>
+    body { margin: 0; font-family: 'Inter', sans-serif; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    .animate-blink { animation: blink 1s step-end infinite; }
+    /* motion/react stand-ins: drop-in, spring check and the height-springing banner */
+    @keyframes drop-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+    .drop-in { opacity: 0; animation: drop-in .6s cubic-bezier(.22,.8,.3,1) forwards; }
+    @keyframes check-spring { 0% { opacity: 0; transform: scale(0) rotate(-45deg); } 60% { opacity: 1; transform: scale(1.18) rotate(6deg); } 80% { transform: scale(.94); } 100% { opacity: 1; transform: none; } }
+    .check-in { animation: check-spring .45s cubic-bezier(.3,1.4,.5,1) both; }
+    @keyframes banner-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+    .banner-in { animation: banner-in .4s cubic-bezier(.3,1.3,.5,1) both; }
+    .grow { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.3,1.2,.5,1); }
+    .grow.open { grid-template-rows: 1fr; }
+    .grow > div { overflow: hidden; }
+    .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 70; font: 12px system-ui, sans-serif; color: #111; padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(255,255,255,.85); backdrop-filter: blur(6px); box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useRef } = React;
+    const VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260601_110537_3a579fa0-7bbc-4d94-9d25-0e816c7840f5.mp4';
+    const SENSITIVITY = 0.8;
+
+    function useTypewriter(text, speed = 38, startDelay = 600) {
+      const [displayed, setDisplayed] = useState('');
+      const [done, setDone] = useState(false);
+      useEffect(() => {
+        let i = 0, interval;
+        const start = setTimeout(() => {
+          interval = setInterval(() => {
+            i++;
+            setDisplayed(text.slice(0, i));
+            if (i >= text.length) { clearInterval(interval); setDone(true); }
+          }, speed);
+        }, startDelay);
+        return () => { clearTimeout(start); clearInterval(interval); };
+      }, [text, speed, startDelay]);
+      return { displayed, done };
+    }
+
+    function BackgroundVideo() {
+      const ref = useRef(null);
+      // Desktop: horizontal mouse movement scrubs the video. One seek at a time; `seeked` queues the next.
+      useEffect(() => {
+        const v = ref.current;
+        let prevX = null, target = 0, seeking = false;
+        const seek = () => {
+          if (!v.duration) return;
+          if (Math.abs(v.currentTime - target) < 0.01) { seeking = false; return; }
+          seeking = true; v.currentTime = target;
+        };
+        const onSeeked = () => { seeking = false; if (Math.abs(v.currentTime - target) > 0.01) seek(); };
+        const onMove = (e) => {
+          if (window.innerWidth < 1024) return;
+          if (prevX === null) { prevX = e.clientX; return; }
+          const delta = e.clientX - prevX; prevX = e.clientX;
+          if (!v.duration) return;
+          target = Math.min(v.duration, Math.max(0, target + (delta / window.innerWidth) * SENSITIVITY * v.duration));
+          if (!seeking) seek();
+        };
+        v.addEventListener('seeked', onSeeked);
+        window.addEventListener('mousemove', onMove);
+        return () => { v.removeEventListener('seeked', onSeeked); window.removeEventListener('mousemove', onMove); };
+      }, []);
+      // Mobile: no scrubbing, just play.
+      useEffect(() => {
+        const v = ref.current;
+        if (window.innerWidth < 1024) { v.autoplay = true; v.loop = true; v.play().catch(() => {}); }
+      }, []);
+      return (
+        <div className="order-last lg:order-none relative lg:absolute lg:inset-0 lg:z-0 overflow-hidden pointer-events-none w-full aspect-square md:aspect-video lg:aspect-auto lg:h-full bg-neutral-50 lg:bg-transparent">
+          <video ref={ref} muted playsInline preload="auto" src={VIDEO} className="w-full h-full object-cover object-right lg:object-right-bottom" />
+        </div>
+      );
+    }
+
+    const LINKS = ['Labs', 'Studio', 'Openings', 'Shop'];
+    function Navbar() {
+      const [isMobileMenuOpen, setOpen] = useState(false);
+      const bar = 'w-6 h-[2px] bg-black transition-all duration-300';
+      return (
+        <>
+          <header className="fixed top-0 inset-x-0 z-10 px-5 sm:px-8 py-4 sm:py-5 flex flex-row justify-between items-center bg-transparent">
+            <a href="#" className="flex flex-row items-center gap-3">
+              <span className="text-[21px] sm:text-[26px] tracking-tight text-black font-medium select-none">Mainframe&reg;</span>
+              <span className="text-[25px] sm:text-[30px] text-black select-none tracking-[-0.02em] font-medium leading-none mb-1">&#10033;</span>
+            </a>
+            <nav className="hidden md:flex flex-row text-[23px] text-black">
+              {LINKS.map((l, i) => (
+                <React.Fragment key={l}>
+                  <a href="#" className="hover:opacity-60 transition-opacity">{l}</a>
+                  {i < LINKS.length - 1 && <span className="opacity-40">,&nbsp;</span>}
+                </React.Fragment>
+              ))}
+            </nav>
+            <a href="#" className="hidden md:inline text-[23px] text-black underline underline-offset-2 hover:opacity-60 transition-opacity">Get in touch</a>
+            <button aria-label="Menu" aria-expanded={isMobileMenuOpen} onClick={() => setOpen((o) => !o)} className="md:hidden flex flex-col gap-[5px] p-1 relative z-20">
+              <span className={bar + (isMobileMenuOpen ? ' rotate-45 translate-y-[7px]' : '')} />
+              <span className={bar + (isMobileMenuOpen ? ' opacity-0' : '')} />
+              <span className={bar + (isMobileMenuOpen ? ' -rotate-45 -translate-y-[7px]' : '')} />
+            </button>
+          </header>
+          <div className={'md:hidden fixed inset-0 z-[9] bg-white/95 backdrop-blur-sm flex flex-col justify-center items-start px-8 gap-8 transition-opacity duration-300 ' + (isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none')}>
+            {LINKS.map((l) => <a key={l} href="#" className="text-[32px] font-medium text-black" onClick={() => setOpen(false)}>{l}</a>)}
+            <a href="#" className="text-[32px] font-medium text-black underline underline-offset-2">Get in touch</a>
+          </div>
+        </>
+      );
+    }
+
+    const Check = () => (
+      <svg className="check-in" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+    );
+    const ArrowRight = () => (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    );
+
+    const OPTIONS = ['Brand', 'Digital', 'Campaign', 'Other'];
+    function Services() {
+      const [services, setServices] = useState([]);
+      const toggle = (s) => setServices((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]));
+      return (
+        <div className="drop-in" style={{ animationDelay: '0.2s' }}>
+          <h2 className="text-2xl font-medium tracking-tight mb-2 text-[#1C2E1E]">What sort of service?</h2>
+          <p className="opacity-85 text-[#738273] mb-8">Select all that apply</p>
+          <div className="flex flex-wrap gap-3">
+            {OPTIONS.map((s) => {
+              const on = services.includes(s);
+              return (
+                <button key={s} type="button" onClick={() => toggle(s)} aria-pressed={on}
+                  className={'inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-medium transition-all duration-300 active:scale-95 hover:scale-[1.03] ' +
+                    (on ? 'bg-[#1C2E1E] text-white shadow-md shadow-emerald-950/5 transform' : 'bg-white text-[#1C2E1E] border border-[#F1F3F1] hover:bg-[#F1F3F1]/55')}>
+                  {on && <Check />}
+                  {s}
+                </button>
+              );
+            })}
+          </div>
+          <div className="mt-8 min-h-[64px]">
+            {services.length === 0 ? (
+              <p key="empty" className="banner-in text-xs italic" style={{ opacity: 0.5 }}>Please click to select services above.</p>
+            ) : (
+              <div className="grow open">
+                <div>
+                  <div key="ready" className="banner-in flex flex-wrap items-center justify-between gap-4 bg-[#FAFBF9] border border-[#EEF1EE] rounded-2xl px-5 py-4">
+                    <p className="text-sm text-[#1C2E1E]">Ready to inquire about: <span className="font-medium">{services.join(', ')}</span></p>
+                    <button type="button" className="inline-flex items-center gap-2 text-[#4D6D47] uppercase text-xs font-semibold tracking-wider hover:gap-3 transition-all">Let's Go <ArrowRight /></button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const { displayed, done } = useTypewriter("we'd love to\nhear from you!");
+      return (
+        <div className="relative bg-white text-neutral-900 font-sans selection:bg-[#EAECE9] selection:text-[#1C2E1E] antialiased overflow-x-hidden flex flex-col lg:block lg:min-h-screen">
+          <Navbar />
+          <BackgroundVideo />
+          <div className="relative z-10 flex flex-col order-first lg:order-none w-full bg-white lg:bg-transparent pb-8 lg:pb-0 lg:min-h-screen">
+            <main id="spade-hero" className="w-full max-w-7xl mx-auto px-6 py-12 pt-28 flex-1 flex flex-col justify-center">
+              <div className="drop-in">
+                <h1 className="text-5xl md:text-6xl lg:text-[76px] font-normal tracking-tight text-black leading-[1.08] mb-8 select-none w-full whitespace-pre-wrap min-h-[2.16em]">
+                  {displayed}
+                  {!done && <span className="inline-block w-[2px] h-[1.1em] bg-black align-middle ml-[2px] animate-blink" />}
+                </h1>
+              </div>
+              <div className="drop-in" style={{ animationDelay: '0.1s' }}>
+                <p className="text-lg md:text-xl text-[#5A635A] leading-relaxed font-normal mb-14 max-w-2xl">
+                  Whether you have questions, feedback, <br /> drop us a message and we'll get back to you as soon as possible.
+                </p>
+              </div>
+              <Services />
+            </main>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+  <style>.embed .back-link { display: none !important; }</style>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stellar.ai — Landing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+  <style>
+    body { margin: 0; font-family: 'Inter', sans-serif; background: #fff; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up { animation: fadeInUp 0.6s ease-out forwards; }
+
+    @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+    .animate-fade-in-overlay { animation: fadeInOverlay 0.4s ease-out forwards; }
+
+    @keyframes fadeInDialog { from { opacity: 0; } to { opacity: 1; } }
+    .animate-slide-up-overlay { animation: fadeInDialog 0.5s ease-out forwards; transform: translate(-50%, -50%); }
+
+    .back-link {
+      position: fixed; left: 12px; bottom: 12px; z-index: 60;
+      font: 12px system-ui, sans-serif; color: #fff;
+      padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(0,0,0,.7);
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect } = React;
+
+    const Icon = ({ className, fill = 'none', children }) => (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill={fill}
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
+    );
+    const Star = (p) => <Icon {...p}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></Icon>;
+    const ChevronDown = (p) => <Icon {...p}><path d="m6 9 6 6 6-6"/></Icon>;
+    const Check = (p) => <Icon {...p}><path d="M20 6 9 17l-5-5"/></Icon>;
+    const BarChart3 = (p) => <Icon {...p}><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></Icon>;
+    const BookOpen = (p) => <Icon {...p}><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></Icon>;
+    const Users = (p) => <Icon {...p}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></Icon>;
+    const Rocket = (p) => <Icon {...p}><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></Icon>;
+
+    const TABS = [
+      { id: 'analyse', label: 'Analyse', Icon: BarChart3 },
+      { id: 'train',   label: 'Train',   Icon: BookOpen },
+      { id: 'testing', label: 'Testing', Icon: Users },
+      { id: 'deploy',  label: 'Deploy',  Icon: Rocket },
+    ];
+    const fade = (d) => ({ animationDelay: `${d}s`, opacity: 0 });
+
+    const Bar = ({ pct, color }) => (
+      <div className="h-2 rounded-full bg-gray-200 overflow-hidden"><div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} /></div>
+    );
+    const Card = ({ children }) => (
+      <div className="animate-slide-up-overlay absolute top-1/2 left-1/2 w-[88%] max-w-md rounded-2xl bg-white p-5 md:p-6 shadow-2xl text-left" style={{ opacity: 0 }}>{children}</div>
+    );
+
+    function Overlay({ tab }) {
+      let body;
+      if (tab === 'analyse') {
+        const steps = ['Connect your tools', 'Import workspace data', 'Invite your team', 'Choose AI preferences'];
+        body = (<>
+          <div className="flex justify-between text-xs text-gray-500 mb-1"><span>Step 1 of 4</span><span>25%</span></div>
+          <Bar pct={25} color="bg-purple-600" />
+          <h3 className="text-lg font-semibold mt-4 mb-3">Set Up Your AI Workspace</h3>
+          <ul className="space-y-2">
+            {steps.map((s, i) => (
+              <li key={s} className="flex items-center gap-3 text-sm">
+                <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] ${i === 0 ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-500'}`}>{i + 1}</span>
+                <span className={i === 0 ? 'font-medium' : 'text-gray-500'}>{s}</span>
+              </li>
+            ))}
+          </ul>
+        </>);
+      } else if (tab === 'train') {
+        const m = [['Accuracy', '94.2%'], ['Loss', '0.082'], ['Epochs', '67 / 100'], ['Samples', '1.2M']];
+        body = (<>
+          <h3 className="text-lg font-semibold mb-3">AI Model Training</h3>
+          <div className="flex justify-between text-xs text-gray-500 mb-1"><span>Training progress</span><span>67%</span></div>
+          <Bar pct={67} color="bg-orange-500" />
+          <div className="grid grid-cols-2 gap-3 mt-4">
+            {m.map(([k, v]) => (<div key={k} className="rounded-lg bg-gray-50 p-3"><div className="text-xs text-gray-500">{k}</div><div className="text-base font-semibold">{v}</div></div>))}
+          </div>
+        </>);
+      } else if (tab === 'testing') {
+        body = (<>
+          <div className="flex items-center gap-3 mb-4">
+            <span className="w-9 h-9 rounded-full bg-green-100 text-green-600 flex items-center justify-center"><Check className="w-5 h-5" /></span>
+            <div><h3 className="text-lg font-semibold leading-tight">Test Suite Results</h3><p className="text-xs text-gray-500">All checks passed</p></div>
+          </div>
+          <div className="flex justify-between text-sm mb-1"><span className="text-gray-600">Tests passed</span><span className="font-semibold text-green-600">127 / 127</span></div>
+          <Bar pct={100} color="bg-green-500" />
+        </>);
+      } else {
+        const items = ['Build verified', 'Tests passing', 'Security scan clear', 'Rollback plan ready'];
+        body = (<>
+          <h3 className="text-lg font-semibold mb-3">Deploy to Production</h3>
+          <ul className="space-y-2 mb-4">
+            {items.map((s) => (<li key={s} className="flex items-center gap-3 text-sm"><span className="w-5 h-5 rounded-full bg-black text-white flex items-center justify-center"><Check className="w-3 h-3" /></span>{s}</li>))}
+          </ul>
+          <button className="w-full bg-black text-white rounded-full py-2.5 text-sm font-medium hover:bg-gray-800 transition-colors">Deploy Now</button>
+        </>);
+      }
+      return (
+        <div key={tab} className="animate-fade-in-overlay absolute inset-0 bg-black/30" style={{ opacity: 0 }}>
+          <Card>{body}</Card>
+        </div>
+      );
+    }
+
+    const LOGOS = [
+      <span className="font-bold tracking-wide">INTERSCOPE</span>,
+      <span className="font-bold tracking-tight flex items-center gap-1.5"><span className="w-5 h-5 rounded-full bg-gray-800 inline-block" />SPOTIFY</span>,
+      <span className="font-semibold flex items-center gap-2">
+        <span className="grid grid-cols-3 gap-[2px]">{Array.from({ length: 9 }).map((_, i) => <i key={i} className="w-1 h-1 rounded-full bg-gray-700" />)}</span>Nexera
+      </span>,
+      <span className="font-serif italic text-2xl font-bold">M3</span>,
+      <span className="font-semibold tracking-wide flex items-center gap-2"><span className="w-6 h-6 rounded-full border border-gray-700 text-[9px] flex items-center justify-center">LC</span>LAURA COLE</span>,
+      <span className="font-medium flex items-center gap-2"><span className="flex gap-[3px]"><i className="w-1.5 h-1.5 rounded-full bg-gray-700" /><i className="w-1.5 h-1.5 rounded-full bg-gray-400" /></span>vertex</span>,
+    ];
+
+    function App() {
+      const [active, setActive] = useState('analyse');
+      useEffect(() => {
+        const t = setInterval(() => {
+          setActive((cur) => TABS[(TABS.findIndex((x) => x.id === cur) + 1) % TABS.length].id);
+        }, 4000);
+        return () => clearInterval(t);
+      }, []);
+
+      const btn = (t, extra = '') => (
+        <button key={t.id} onClick={() => setActive(t.id)}
+          className={`flex items-center justify-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${extra} ${active === t.id ? 'bg-white text-black shadow-sm' : 'text-gray-600'}`}>
+          <t.Icon className="w-4 h-4" />{t.label}
+        </button>
+      );
+
+      return (
+        <div className="bg-white max-w-7xl mx-auto">
+          <nav className="animate-fade-in-up px-6 py-4 flex items-center justify-between max-w-7xl mx-auto" style={fade(0.1)}>
+            <div className="flex items-center gap-2"><Star className="w-5 h-5" fill="black" /><span className="text-lg font-semibold">Stellar.ai</span></div>
+            <div className="hidden md:flex items-center gap-8 text-sm text-gray-700">
+              <a href="#" className="flex items-center gap-1 hover:text-black">Solutions <ChevronDown className="w-4 h-4" /></a>
+              <a href="#" className="flex items-center gap-1 hover:text-black">For Teams <ChevronDown className="w-4 h-4" /></a>
+              <a href="#" className="hover:text-black">About Us</a>
+              <a href="#" className="hover:text-black">Learn Hub</a>
+            </div>
+            <div className="flex items-center gap-4">
+              <a href="#" className="text-sm text-gray-700">Login</a>
+              <button className="bg-black text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">Get started free</button>
+            </div>
+          </nav>
+
+          <section className="px-6 pt-24 pb-32 max-w-7xl mx-auto text-center">
+            <div className="animate-fade-in-up inline-flex items-center gap-2 mb-8" style={fade(0.2)}>
+              <span className="w-6 h-6 border border-gray-300 rounded flex items-center justify-center"><Star className="w-3.5 h-3.5" fill="black" /></span>
+              <span className="text-sm font-medium text-black">4.9 rating from 18.3K+ users</span>
+            </div>
+
+            <h1 className="animate-fade-in-up text-6xl md:text-7xl lg:text-[80px] font-normal leading-[1.1] tracking-tight mb-5" style={fade(0.3)}>
+              Work Smarter. Move Faster.<br />
+              <span className="bg-gradient-to-r from-black via-gray-500 to-gray-400 bg-clip-text text-transparent">AI Powers You Up.</span>
+            </h1>
+
+            <p className="animate-fade-in-up text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto" style={fade(0.4)}>
+              Intelligent automation syncs with the tools you love to streamline tasks, boost output, and save time.
+            </p>
+
+            <button className="animate-fade-in-up bg-black text-white px-8 py-3 rounded-full text-base font-medium hover:bg-gray-800 transition-colors mb-12" style={fade(0.5)}>
+              Begin Free Trial
+            </button>
+
+            <div className="animate-fade-in-up flex justify-center mb-10" style={fade(0.6)}>
+              <div className="bg-gray-100 rounded-lg p-1">
+                <div className="grid grid-cols-2 gap-1 md:hidden">{TABS.map((t) => btn(t))}</div>
+                <div className="hidden md:flex items-center">
+                  {TABS.map((t, i) => (
+                    <React.Fragment key={t.id}>
+                      {i > 0 && <span className="w-px h-5 bg-gray-300 mx-1" />}
+                      {btn(t)}
+                    </React.Fragment>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="animate-fade-in-up relative rounded-3xl overflow-hidden h-[400px] md:h-[500px]" style={fade(0.7)}>
+              <video autoPlay loop muted playsInline className="w-full h-full object-cover"
+                src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260319_165750_358b1e72-c921-48b7-aaac-f200994f32fb.mp4" />
+              <Overlay tab={active} />
+            </div>
+
+            <div className="animate-fade-in-up mt-24 flex flex-wrap items-center justify-center gap-x-12 gap-y-6 text-gray-700 text-lg" style={fade(0.8)}>
+              {LOGOS.map((l, i) => <div key={i}>{l}</div>)}
+            </div>
+          </section>
+        </div>
+      );
+    }
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+  <style>.embed .back-link { display: none !important; }</style>
+</body>
+</html>
