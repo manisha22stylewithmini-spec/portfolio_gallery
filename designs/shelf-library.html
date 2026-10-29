@@ -399,53 +399,8 @@
     .lockwrap { transition: transform .6s cubic-bezier(.3,1.5,.5,1), opacity .35s .3s; }
     .locker.me:not(.locked) .lockwrap { transform: rotate(28deg) translate(-2px, 18px); opacity: 0; }
     .locker.me:not(.locked) .hasp { opacity: 0; transition-delay: 0s; }
-    /* The centre locker is drawn as a real box: back wall, two side walls and a ceiling in perspective,
-       and a shelf floor with a front lip that the books and gadgets rest on. */
-    .deep { --dw: 22px; --dt: 30px; --df: 70px;
-      background: radial-gradient(90% 55% at 50% 4%, #5f5678, transparent 70%), linear-gradient(180deg, #4a4262, #322c43 60%, #262132);
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.6); }
-    .deep::before { background: radial-gradient(ellipse 70% 48% at 50% 0, rgba(255,238,200,.42), rgba(255,238,200,.08) 60%, transparent 75%); }
-    .deep > .wl, .deep > .wr, .deep > .ceil { position: absolute; z-index: 1; pointer-events: none; }
-    .deep > .wl, .deep > .wr { top: 0; bottom: 0; width: var(--dw); }
-    .deep > .wl { left: 0; background: linear-gradient(90deg, #15121c, #2b2638 85%, #3a3349); clip-path: polygon(0 0, 100% var(--dt), 100% calc(100% - var(--df) + 8px), 0 100%); }
-    .deep > .wr { right: 0; background: linear-gradient(270deg, #1b1824, #353046 85%, #433b55); clip-path: polygon(0 var(--dt), 100% 0, 100% 100%, 0 calc(100% - var(--df) + 8px)); }
-    .deep > .ceil { left: 0; right: 0; top: 0; height: var(--dt); background: linear-gradient(180deg, #14111a, #2a2536); clip-path: polygon(0 0, 100% 0, calc(100% - var(--dw)) 100%, var(--dw) 100%); }
-    .lit .deep > .ceil { background: linear-gradient(180deg, #2a2436, #5a5070); }
-    .lit .deep > .wl { background: linear-gradient(90deg, #1a1622, #3a3350 55%, #62577f); }
-    .lit .deep > .wr { background: linear-gradient(270deg, #1e1a27, #423a57 55%, #6c6189); }
-    /* seam shadow where the back wall meets the sides */
-    .deep > .seam { position: absolute; z-index: 1; pointer-events: none; left: var(--dw); right: var(--dw); top: var(--dt); bottom: calc(var(--df) - 8px); box-shadow: inset 8px 0 12px -6px rgba(0,0,0,.55), inset -8px 0 12px -6px rgba(0,0,0,.55), inset 0 10px 14px -8px rgba(0,0,0,.6); }
-    .deep .tube { left: 22%; right: 22%; top: 9px; height: 6px; z-index: 6; }
-    .deep .tube::before { content: ''; position: absolute; left: -6px; right: -6px; top: -3px; bottom: -2px; z-index: -1; border-radius: 3px; background: linear-gradient(#4b4560, #2a2636); box-shadow: 0 2px 3px rgba(0,0,0,.5); }
-    .floor { position: absolute; left: 0; right: 0; bottom: 0; height: var(--df); z-index: 4; pointer-events: none; opacity: 0; transition: opacity .5s .25s; }
-    .open .floor { opacity: 1; }
-    .floor::before { content: ''; position: absolute; inset: 0 0 9px; background: radial-gradient(60% 90% at 50% 0, rgba(0,0,0,.35), transparent 70%), linear-gradient(180deg, #3d3554, #6b6189 60%, #8a7fa8); clip-path: polygon(var(--dw) 0, calc(100% - var(--dw)) 0, 100% 100%, 0 100%); }
-    .floor::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 9px; background: linear-gradient(180deg, #b3a8cf, #8b7fa9); box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 -1px 0 rgba(0,0,0,.35); }
-    .floor > * { position: absolute; }
-    .bk { left: 9%; height: 13px; border-radius: 2px 4px 4px 2px; background: var(--c); transform: rotate(var(--r, 0deg));
-      box-shadow: inset -6px 0 0 #efe6cf, inset -7px 0 0 rgba(0,0,0,.25), inset 0 -2px 0 rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.25), 0 3px 4px rgba(0,0,0,.55); }
-    .bk::before { content: ''; position: absolute; left: 10%; top: 4px; width: 26%; height: 2px; border-radius: 1px; background: rgba(240,210,140,.85); }
-    .tab { right: 9%; bottom: 13px; width: 40%; height: 12px; border-radius: 4px; background: linear-gradient(180deg, #4a4856, #18171d 45%, #0d0c10); transform: rotate(-2deg); box-shadow: 0 4px 6px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.35); }
-    .tab::after { content: ''; position: absolute; left: 12%; right: 30%; top: 2px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent); }
-    .pods { right: 17%; bottom: 24px; width: 26px; height: 15px; border-radius: 7px 7px 6px 6px; background: linear-gradient(180deg, #ffffff, #d9d7de 70%, #b9b6c2); box-shadow: 0 3px 4px rgba(0,0,0,.5), inset 0 -1px 0 rgba(0,0,0,.15); }
-    .pods::after { content: ''; position: absolute; left: 2px; right: 2px; top: 5px; height: 1px; background: rgba(0,0,0,.18); }
-    .pen { height: 4px; border-radius: 2px; transform: rotate(var(--r)); box-shadow: 0 2px 2px rgba(0,0,0,.55); }
-    .pen::after { content: ''; position: absolute; right: -6px; top: 0; border: 2px solid transparent; border-left: 6px solid #e9c99b; }
-    /* marker writing straight on the back wall */
-    .wall-ink { font-family: 'Caveat', cursive; color: var(--marker); text-shadow: 0 0 1px rgba(246,220,124,.4), 0 1px 0 rgba(0,0,0,.35); }
-    .scrawl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; width: 100%; }
-    .scrawl h4 { margin: 0 0 4px; font: 700 21px/1 'Caveat', cursive; letter-spacing: 0; text-transform: none; }
-    .scrawl p { margin: 0; font: 600 15px/1.12 'Caveat', cursive; color: #f4f0fa; text-shadow: 0 1px 0 rgba(0,0,0,.4); }
-    .tall .scrawl { grid-template-columns: 1fr; gap: 12px; }
-    .tall .me-top { flex: 1; }
-    .tall .me-top .scrawl { margin: auto 0; }
-    .tall .scrawl h4 { font-size: 24px; }
-    .tall .scrawl p { font-size: 17px; }
-    .scrawl svg { display: block; width: 30px; height: 26px; margin-top: 2px; overflow: visible; }
-    .door-in { position: absolute; inset: 0; }
-    .door-in img, .door-in .tile { position: absolute; width: var(--w, 30%); height: auto; transform: rotate(var(--r, 0deg)); filter: drop-shadow(0 3px 3px rgba(30,15,60,.45)); }
-    .door-in .tile { aspect-ratio: 1; border-width: 2px; font-size: 13px; }
-    .hook { position: absolute; right: 10%; top: 38%; width: 7px; height: 16px; border: 2px solid #e6e3ee; border-top: 0; border-radius: 0 0 6px 6px; box-shadow: 1px 2px 2px rgba(0,0,0,.35); }
+    .mirror { position: absolute; left: 22%; right: 22%; top: 24%; height: 34%; border-radius: 6px; border: 4px solid #d9d4e6; background: linear-gradient(135deg, #e9f0f6, #b8c4d4 40%, #eef3f8 55%, #a9b6c8); box-shadow: inset 0 0 12px rgba(0,0,0,.25), 0 2px 4px rgba(0,0,0,.3); }
+    .mirror::after { content: 'you look great today'; position: absolute; left: 0; right: 0; bottom: 8px; text-align: center; font: 700 18px 'Caveat'; color: #5d5180; transform: rotate(-3deg); }
 
     .hand { font-family: 'Caveat', cursive; font-weight: 700; color: var(--marker); margin: 0; line-height: 1.05; }
     .me-top { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 8px; }
@@ -456,17 +411,11 @@
     .poster .halo { position: absolute; left: 30%; top: 2%; width: 40%; height: 9%; border: 2px solid var(--marker); border-radius: 50%; transform: rotate(-8deg); }
     .poster .tag { position: absolute; font: 700 22px/1 'Caveat'; color: var(--marker); text-shadow: 0 1px 3px rgba(0,0,0,.5); }
     .tape { position: absolute; width: 44px; height: 15px; background: rgba(235,228,210,.75); box-shadow: 0 1px 2px rgba(0,0,0,.25); z-index: 3; }
-    .locker.me .poster { width: 150px; overflow: visible; box-shadow: 0 2px 3px rgba(0,0,0,.5), 0 14px 22px -6px rgba(0,0,0,.65); }
-    .locker.me .poster img { position: relative; z-index: 1; }
-    .locker.me .poster .tape { z-index: 3; }
-    .locker.me .poster .halo, .locker.me .poster .tag { z-index: 3; }
-    .locker.me .poster .halo { top: -5%; }
-    .me-top .me-name { position: relative; z-index: 2; margin: -30px 0 2px; font: 700 36px/1 'Caveat', cursive; color: #fff; white-space: nowrap; transform: rotate(-5deg); text-shadow: 0 2px 6px rgba(0,0,0,.6); }
+    .about { display: grid; gap: 12px; width: 100%; }
+    .about .me-name { margin-bottom: 4px; font: 700 34px/1 'Caveat', cursive; color: #fff; white-space: nowrap; transform: rotate(-2deg); }
     .me-name span { color: var(--marker); }
-    .poster .tape { width: 40px; height: 14px; background: linear-gradient(180deg, rgba(196,193,206,.92), rgba(160,156,172,.92)); }
-    .poster::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(115deg, rgba(255,255,255,.18), transparent 35%, transparent 70%, rgba(0,0,0,.2)); }
-    .locker.me .in { left: 20px; right: 20px; }
-    .locker.me .facts { margin-top: auto; padding-top: 18px; }
+    .about h4 { margin: 0 0 3px; font: 700 12px/1 'Space Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--marker); }
+    .about p { margin: 0; font: 500 16px/1.15 'Caveat'; color: #f1eef6; }
     .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; }
     .fact { position: relative; padding: 10px 6px 8px; text-align: center; color: var(--ink); background: var(--paper); transform: rotate(var(--r)); box-shadow: 0 5px 9px rgba(0,0,0,.5); }
     .fact b { display: block; font: 400 22px/1 'Bungee'; }
@@ -477,6 +426,75 @@
     .pencil { position: absolute; height: 5px; border-radius: 2px; transform-origin: left; }
     .pencil::after { content: ''; position: absolute; right: -7px; top: 0; border: 2.5px solid transparent; border-left: 7px solid #e9c99b; }
     .tablet { position: absolute; right: 4px; bottom: 0; width: 34%; height: 9px; border-radius: 3px; background: linear-gradient(#3b3a45, #121117); box-shadow: 0 3px 4px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.25); }
+
+    /* Centre locker only: a real box you look into. One-point perspective — a shallow ceiling (we look from a
+       little below the light), side walls, and a deeper floor (we look down onto the shelf). The back wall is
+       the .inside background; walls/ceiling/floor are clipped trapezoids that meet it at a dark crease. */
+    .locker.me .inside { --dw: 13px; --dc: 12px; --df: 28px;
+      background: radial-gradient(ellipse 90% 60% at 50% 100%, rgba(0,0,0,.35), transparent 70%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.018) 0 1px, transparent 1px 4px),
+        linear-gradient(180deg, #4a4260, #332d43 55%, #262131);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.7); }
+    .locker.me .inside::before { background: radial-gradient(ellipse 70% 62% at 50% 2%, rgba(255,240,205,.42), rgba(255,236,190,.12) 55%, transparent 78%); }
+    .depth { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+    .depth i { position: absolute; display: block; }
+    /* back-wall seams: where the walls fold away, a crisp crease + soft ambient occlusion */
+    .depth::after { content: ''; position: absolute; inset: var(--dc) var(--dw) var(--df); border: 1px solid rgba(10,6,18,.75);
+      box-shadow: inset 0 0 18px 4px rgba(8,5,16,.55), inset 0 10px 14px -6px rgba(8,5,16,.6); }
+    .d-ceil { left: 0; right: 0; top: 0; height: var(--dc); clip-path: polygon(0 0, 100% 0, calc(100% - var(--dw)) 100%, var(--dw) 100%);
+      background: linear-gradient(180deg, #2a2536, #3b3450); }
+    .d-wl, .d-wr { top: 0; bottom: 0; width: var(--dw); }
+    .d-wl { left: 0; clip-path: polygon(0 0, 100% var(--dc), 100% calc(100% - var(--df)), 0 100%);
+      background: linear-gradient(180deg, rgba(255,238,200,.16), transparent 35%, rgba(0,0,0,.4)), linear-gradient(90deg, #2c2639, #5b5172 88%, #2a2436); }
+    .d-wr { right: 0; clip-path: polygon(0 var(--dc), 100% 0, 100% 100%, 0 calc(100% - var(--df)));
+      background: linear-gradient(180deg, rgba(255,238,200,.12), transparent 35%, rgba(0,0,0,.45)), linear-gradient(270deg, #241f30, #4c4362 88%, #221d2c); }
+    /* the shelf floor: lit from the tube above, darker at the back edge, a bright worn front lip */
+    .d-floor { left: 0; right: 0; bottom: 0; height: var(--df); clip-path: polygon(var(--dw) 0, calc(100% - var(--dw)) 0, 100% 100%, 0 100%);
+      background: linear-gradient(180deg, #3a3350 0, #6b6287 50%, #847aa2 84%, #cfc7e4 87%, #9a90b8 90%, #4a4260 100%); }
+    .d-floor::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 55% 80% at 50% 30%, rgba(255,240,205,.22), transparent 70%); opacity: 0; transition: opacity .4s; }
+    .lit .d-floor::after { opacity: 1; }
+    /* a coat hook on the right wall, catching the light */
+    .d-hook { right: 3px; top: 15%; width: 9px; height: 16px; border: 2px solid #b8b0cc; border-top: 0; border-left-color: transparent; border-radius: 0 0 8px 8px; filter: drop-shadow(-2px 3px 2px rgba(0,0,0,.6)); }
+    .d-hook::before { content: ''; position: absolute; right: -2px; top: -5px; width: 5px; height: 7px; border-radius: 2px; background: linear-gradient(90deg, #8d84a6, #d9d3e8); }
+    .locker.me .tube { left: 20%; right: 20%; top: 4px; }
+    .locker.me .in { left: 19px; right: 19px; }
+
+    /* shelf props, drawn as objects with volume: a top face, a lit front, and a contact shadow on the floor */
+    .locker.me .stuff { height: 62px; margin-left: -4px; margin-right: -4px; }
+    .floorshade { position: absolute; left: -4%; right: -4%; bottom: -5px; height: 14px; background: radial-gradient(closest-side, rgba(5,3,10,.55), transparent); }
+    .bk { position: absolute; left: var(--x); bottom: var(--b); width: var(--w); height: var(--h); border-radius: 1px 3px 3px 1px;
+      background: linear-gradient(180deg, var(--c) 0 2px, transparent 2px calc(100% - 2px), var(--c) 0),
+        repeating-linear-gradient(180deg, #f4eedf 0 1px, #d8cfb8 1px 2px);
+      box-shadow: inset 7px 0 0 var(--c), inset 8px 0 0 rgba(0,0,0,.3), inset -1px 0 0 rgba(0,0,0,.15), 0 2px 3px rgba(0,0,0,.55); }
+    .bk.spine { background: linear-gradient(90deg, transparent 18%, var(--foil, #e6c46a) 18% 20%, transparent 20% 78%, var(--foil, #e6c46a) 78% 80%, transparent 80%),
+        linear-gradient(180deg, rgba(255,255,255,.22), transparent 40%, rgba(0,0,0,.3)), var(--c); box-shadow: 0 2px 3px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.2); }
+    .bk.top::before { content: ''; position: absolute; left: 3px; right: -4px; bottom: 100%; height: 6px; clip-path: polygon(7% 0, 100% 0, 95% 100%, 0 100%);
+      background: linear-gradient(180deg, color-mix(in oklab, var(--c) 70%, #000), color-mix(in oklab, var(--c) 85%, #fff)); }
+    .bk .ttl { position: absolute; left: 26%; right: 26%; top: 50%; height: 2px; margin-top: -1px; border-radius: 1px; background: var(--foil, #e6c46a); opacity: .8; }
+    .pcl { position: absolute; left: var(--x); bottom: var(--b); width: var(--w); height: 5px; border-radius: 1px; transform: rotate(var(--r)); transform-origin: left center;
+      background: linear-gradient(180deg, color-mix(in oklab, var(--c) 60%, #fff), var(--c) 45%, color-mix(in oklab, var(--c) 60%, #000));
+      box-shadow: 0 3px 2px -1px rgba(0,0,0,.55); }
+    .pcl::before { content: ''; position: absolute; left: -7px; top: 0; width: 7px; height: 5px; border-radius: 2px 0 0 2px;
+      background: linear-gradient(90deg, #f29aa6 0 3px, #c9c8d2 3px), linear-gradient(180deg, rgba(255,255,255,.5), transparent 50%, rgba(0,0,0,.3)); background-blend-mode: multiply; }
+    .pcl::after { content: ''; position: absolute; right: -8px; top: 0; width: 8px; height: 5px; clip-path: polygon(0 0, 100% 50%, 0 100%);
+      background: linear-gradient(90deg, #e9c99b 0 62%, #3a3540 62%); }
+    .tab { position: absolute; right: 0; bottom: 0; width: 42%; height: 15px; }
+    .tab .face-t { position: absolute; left: 0; right: 0; top: 0; height: 11px; clip-path: polygon(7% 0, 93% 0, 100% 100%, 0 100%);
+      background: linear-gradient(100deg, transparent 38%, rgba(255,255,255,.22) 46%, transparent 54%), linear-gradient(180deg, #2c2b36, #18171e); }
+    .tab .face-t::after { content: ''; position: absolute; inset: 2px 10% 1px; clip-path: polygon(4% 0, 96% 0, 100% 100%, 0 100%); background: linear-gradient(180deg, #0b0b10, #15151c); }
+    .tab .edge { position: absolute; left: 0; right: 0; bottom: 0; height: 4px; border-radius: 0 0 2px 2px; background: linear-gradient(180deg, #8f8d9b, #3a3944 40%, #121117); box-shadow: 0 3px 4px rgba(0,0,0,.6); }
+    .pods { position: absolute; right: 13%; bottom: 13px; width: 22px; height: 15px; border-radius: 8px 8px 6px 6px;
+      background: linear-gradient(180deg, transparent 38%, rgba(120,115,135,.55) 38% 44%, transparent 44%), radial-gradient(circle at 34% 26%, #fff, #ecebf1 45%, #b4b0c2 100%);
+      box-shadow: 0 3px 3px rgba(0,0,0,.45), inset 0 -2px 2px rgba(0,0,0,.12); }
+    /* tall lockers (tablet) get a second shelf in the spare space; it has zero height when there is none */
+    .me-extra { flex: 1 1 0; min-height: 0; overflow: hidden; container-type: size; display: flex; flex-direction: column; justify-content: center; }
+    .shelf2 { display: none; position: relative; height: 92px; margin: 0 -14px; }
+    @container (min-height: 120px) { .shelf2 { display: block; } }
+    .shelf2 .plank { position: absolute; left: 0; right: 0; bottom: 0; height: 14px; }
+    .shelf2 .plank::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 9px; clip-path: polygon(4% 0, 96% 0, 100% 100%, 0 100%); background: linear-gradient(180deg, #4e4664, #8a80a8); }
+    .shelf2 .plank::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; border-radius: 1px; background: linear-gradient(180deg, #d4cce8, #8f86ad 40%, #5d5478); box-shadow: 0 8px 12px rgba(0,0,0,.55); }
+    .shelf2 svg { position: absolute; bottom: 9px; overflow: visible; filter: drop-shadow(0 4px 3px rgba(0,0,0,.5)); }
+    .cable { position: absolute; right: -2px; bottom: 4px; width: 46px; height: 22px; overflow: visible; }
 
     .kick { margin: 0 0 7px; font: 700 9px 'Space Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--marker); }
     .tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
@@ -680,22 +698,20 @@
             </div></div>
           </div>
 
-          <div class="locker me locked" data-area="me" data-no="00" data-label="About me" data-center data-fit data-floor="70">
-            <div class="inside deep"><i class="ceil"></i><i class="wl"></i><i class="wr"></i><i class="seam"></i><div class="in">
+          <div class="locker me locked" data-area="me" data-no="00" data-label="About me" data-center data-fit>
+            <div class="inside"><div class="depth" aria-hidden="true"><i class="d-ceil"></i><i class="d-wl"></i><i class="d-wr"></i><i class="d-floor"></i><i class="d-hook"></i></div><div class="in">
               <div class="me-top">
-                <div class="poster" id="poster" data-grow>
+                <div class="poster" id="poster">
                   <span class="tape" style="left:-8px;top:6px;transform:rotate(-35deg)"></span>
                   <span class="tape" style="right:-8px;top:6px;transform:rotate(35deg)"></span>
-                  <span class="tape" style="left:-8px;bottom:6px;transform:rotate(35deg)"></span>
-                  <span class="tape" style="right:-8px;bottom:6px;transform:rotate(-35deg)"></span>
                   <span class="halo"></span>
                   <span class="tag" style="left:8px;top:16%;transform:rotate(-8deg)">hey!</span>
+                  <span class="tag" style="right:8px;bottom:8px;font-size:26px;transform:rotate(-6deg)">it's me ✦</span>
                 </div>
-                <p class="wall-ink me-name">Manisha, <span>designer</span></p>
-                <div class="scrawl wall-ink">
-                  <div><h4>About me..</h4><p>Turns messy ideas into clean, playful interfaces. Lavender lover, sticker hoarder.</p>
-                    <svg viewBox="0 0 30 26"><path d="M22 24 C 26 14 22 6 12 3 M12 3 l5 -2 M12 3 l3 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-                  <div><h4>I'm here to:-</h4><p>Make products that feel human, and help brands look like themselves.</p></div>
+                <div class="about">
+                  <p class="hand me-name">Manisha, <span>designer</span></p>
+                  <div><h4>About me…</h4><p>Designer who turns messy ideas into clean, playful interfaces. Lavender lover, sticker hoarder.</p></div>
+                  <div><h4>I'm here to:</h4><p>Make products that feel human — and help brands look like themselves.</p></div>
                 </div>
               </div>
               <div class="facts">
@@ -703,16 +719,26 @@
                 <div class="fact" style="--r:2deg;background:#47f41f"><span class="tape"></span><b>20+</b><small>live designs</small></div>
                 <div class="fact" style="--r:-1deg;background:#c9bfe0"><span class="tape"></span><b>∞</b><small>stickers</small></div>
               </div>
-            </div>
-            <div class="floor" aria-hidden="true">
-              <span class="bk" style="--c:#2c3b7a;bottom:38px;width:40%;--r:-1.5deg"></span>
-              <span class="bk" style="--c:#e8b93a;bottom:25px;width:44%;left:7%"></span>
-              <span class="bk" style="--c:#3b6b4f;bottom:12px;width:42%;--r:.8deg"></span>
-              <span class="tab"></span>
-              <span class="pods"></span>
-              <span class="pen" style="left:30%;bottom:16px;width:22%;background:linear-gradient(#e0473f,#a8241d);--r:-24deg"></span>
-              <span class="pen" style="left:14%;bottom:10px;width:26%;background:linear-gradient(#4b8be8,#2155a8);--r:-5deg"></span>
-              <span class="pen" style="left:48%;bottom:9px;width:20%;background:linear-gradient(#59b36b,#2f7a42);--r:4deg"></span>
+              <div class="me-extra" aria-hidden="true"><div class="shelf2">
+                <svg style="left:8%" width="34" height="54" viewBox="0 0 34 54"><rect x="1" y="6" width="9" height="48" rx="1" fill="#c0303a"/><rect x="1" y="6" width="9" height="48" rx="1" fill="url(#me-sp)"/><rect x="11" y="10" width="8" height="44" rx="1" fill="#e8e2d4"/><rect x="11" y="10" width="8" height="44" rx="1" fill="url(#me-sp)"/><g transform="rotate(14 22 54)"><rect x="20" y="4" width="9" height="50" rx="1" fill="#47f41f"/><rect x="20" y="4" width="9" height="50" rx="1" fill="url(#me-sp)"/></g><rect x="3" y="14" width="5" height="2" fill="#f3d27a"/><rect x="3" y="44" width="5" height="2" fill="#f3d27a"/>
+                  <defs><linearGradient id="me-sp" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".25"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></linearGradient>
+                  <linearGradient id="me-cyl" x1="0" x2="1"><stop offset="0" stop-color="#000" stop-opacity=".28"/><stop offset=".3" stop-color="#fff" stop-opacity=".35"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".4"/></linearGradient></defs></svg>
+                <svg style="left:43%" width="40" height="40" viewBox="0 0 40 40"><path d="M30 14h3a6 6 0 0 1 0 12h-3" fill="none" stroke="#f4f1ea" stroke-width="3.5"/><rect x="4" y="8" width="27" height="31" rx="3" fill="#f4f1ea"/><rect x="4" y="8" width="27" height="31" rx="3" fill="url(#me-cyl)"/><ellipse cx="17.5" cy="8.5" rx="13.5" ry="3" fill="#3b2418"/><ellipse cx="17.5" cy="8.5" rx="13.5" ry="3" fill="none" stroke="#fff" stroke-width="1"/><text x="17.5" y="28" text-anchor="middle" font-family="Caveat" font-weight="700" font-size="11" fill="#6d4fb0">hi :)</text><path d="M13 4c-2-2 2-3 0-5M20 5c-2-2 2-3 0-5" stroke="#fff" stroke-opacity=".35" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>
+                <svg style="right:8%" width="38" height="60" viewBox="0 0 38 60"><path d="M19 38C17 26 8 22 3 14c9 1 14 9 16 20M19 38c0-14 2-24 9-34-1 12-6 22-8 34M19 38c3-9 9-14 17-15-5 6-11 10-16 17" fill="#5fae6a"/><path d="M19 38C17 26 8 22 3 14M19 38c0-14 2-24 9-34M19 38c3-9 9-14 17-15" fill="none" stroke="#2f6b3a" stroke-width=".8"/><path d="M8 38h22l-3 21H11z" fill="#d9825b"/><path d="M8 38h22l-3 21H11z" fill="url(#me-cyl)"/><rect x="6.5" y="36" width="25" height="5" rx="1" fill="#e79670"/></svg>
+                <span class="plank"></span>
+              </div></div>
+              <div class="stuff" aria-hidden="true">
+                <span class="floorshade"></span>
+                <span class="bk" style="--x:2px;--b:0;--w:44%;--h:13px;--c:#e3dccb"></span>
+                <span class="bk spine" style="--x:6px;--b:13px;--w:40%;--h:12px;--c:#e8b33a;--foil:#7a4a10"></span>
+                <span class="bk spine top" style="--x:0;--b:25px;--w:43%;--h:14px;--c:#253a8a"><i class="ttl"></i></span>
+                <span class="pcl" style="--x:40%;--b:3px;--w:22%;--c:#3a7bd9;--r:-7deg"></span>
+                <span class="pcl" style="--x:46%;--b:12px;--w:17%;--c:#d93a3a;--r:-24deg"></span>
+                <span class="pcl" style="--x:30%;--b:-3px;--w:24%;--c:#2f9a5a;--r:3deg"></span>
+                <span class="tab"><i class="face-t"></i><i class="edge"></i></span>
+                <span class="pods"></span>
+                <svg class="cable" viewBox="0 0 46 22" fill="none"><path d="M38 12c5 2 3 8-3 8-7 0-9-6-15-5S12 20 7 18" stroke="#e9e7ef" stroke-width="1.3" stroke-linecap="round" opacity=".9"/><circle cx="5.5" cy="17" r="2.6" fill="#f4f3f8"/><circle cx="10" cy="20.5" r="2.4" fill="#e4e2ea"/></svg>
+              </div>
             </div></div>
           </div>
 
@@ -1030,13 +1056,7 @@
           <span class="stk" style="right:9%;top:${idx % 2 ? 54 : 51}cqh;--r:${idx % 2 ? 9 : -10}deg">${STICKERS[sticker]}</span>
           ${vents(3, 'bottom')}
           <div class="handle"><span class="lever"></span></div>`;
-      const back = center ? `<div class="door-in">
-          <img src="assets/tools/figma.webp" alt="" style="left:16%;top:9%;--w:24%;--r:-8deg" loading="lazy" decoding="async">
-          <img src="assets/tools/illustrator.webp" alt="" style="left:50%;top:12%;--w:26%;--r:6deg" loading="lazy" decoding="async">
-          <span class="tile" style="left:20%;top:25%;width:24%;--r:4deg;background:#001e36;color:#31a8ff">Ps</span>
-          <img src="assets/tools/framer.webp" alt="" style="left:54%;top:28%;--w:22%;--r:-5deg" loading="lazy" decoding="async">
-          <img src="assets/tools/claude.webp" alt="" style="left:30%;top:41%;--w:22%;--r:9deg" loading="lazy" decoding="async">
-          <span class="hook"></span></div>${vents(3, 'bottom', 'back')}` : `${vents(3, 'top')}${vents(3, 'bottom')}`;
+      const back = center ? `<div class="mirror"></div>${vents(3, 'bottom', 'back')}` : `${vents(3, 'top')}${vents(3, 'bottom')}`;
       cavity.insertAdjacentHTML('beforeend', `<div class="door"><div class="face front">${front}</div><div class="face back">${back}</div></div>`);
       l.insertAdjacentHTML('beforeend', '<span class="hinge" style="top:16%"></span><span class="hinge" style="bottom:16%"></span>');
       if (center) l.insertAdjacentHTML('beforeend', `<span class="hasp"></span>
@@ -1052,27 +1072,17 @@
       const auto = 'fit' in l.dataset;   // data-fit: a fuller interior, sized to its real content
       let z = Math.min(1, c.clientWidth / bw, auto ? 1 : c.clientHeight / bh);
       // zoom shrinks the insets too; keep a real ~26px gap so content never meets the light tube
-      const floor = +(l.dataset.floor || 0);   // a shelf floor the content must stay above
       const apply = () => {
         inner.style.zoom = z.toFixed(3);
-        inner.style.top = ((floor ? 34 : 26) / z).toFixed(1) + 'px';
-        inner.style.bottom = ((10 + floor) / z).toFixed(1) + 'px';
+        inner.style.top = (26 / z).toFixed(1) + 'px';
+        inner.style.bottom = (10 / z).toFixed(1) + 'px';
       };
       inner.style.transition = 'none';     // measure the real size, not a mid-transition one
-      const grow = inner.querySelector('[data-grow]');   // e.g. the poster: takes up spare height on tall lockers
-      if (grow) grow.style.width = '';
-      if (floor) l.classList.toggle('tall', c.clientHeight > c.clientWidth * 2.6);   // narrow + tall: stack the wall notes
-      const room = c.clientHeight - 36 - (floor ? 8 : 0) - floor;
-      const fits = () => { apply(); inner.style.bottom = 'auto'; return inner.getBoundingClientRect().height <= room && inner.scrollWidth <= inner.clientWidth + 1; };
+      const fits = () => { apply(); inner.style.bottom = 'auto'; return inner.getBoundingClientRect().height <= c.clientHeight - 36; };
       if (auto && !fits()) {   // narrower zoom re-wraps the tags, so search for the biggest zoom that fits
         let lo = .1, hi = z;
         for (let i = 0; i < 8; i++) { z = (lo + hi) / 2; fits() ? lo = z : hi = z; }
         z = lo;
-      }
-      if (grow && fits()) {
-        const spare = room - inner.getBoundingClientRect().height, g = grow.getBoundingClientRect();
-        // a 4:5 poster gains 1.25px of height per px of width; keep it inside the back wall
-        if (spare > 16) grow.style.width = Math.min((g.width + spare * .8 / 1.25) / z, inner.clientWidth * .92) + 'px';
       }
       apply();
       inner.offsetHeight;
@@ -1080,8 +1090,6 @@
     });
     fitInteriors();
     new ResizeObserver(fitInteriors).observe(document.querySelector('.wall'));
-    document.fonts.ready.then(fitInteriors);   // handwriting fonts change line heights once they arrive
-    addEventListener('load', fitInteriors);
 
     // photo slot: your image, or a pixel-art placeholder
     const poster = document.getElementById('poster');
