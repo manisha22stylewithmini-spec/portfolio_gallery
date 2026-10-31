@@ -26,7 +26,8 @@
     @media (prefers-reduced-motion: reduce) { .rise { animation: none; } }
     /* the film is portrait, so on a wide screen it is scaled to the full width and the window rests on its middle:
        the horizon, where the train runs and the water mirrors the sky */
-    .bgvid { object-fit: cover; object-position: 50% 52%; }
+    .bgvid { position: fixed; inset: 0; width: 100vw; height: 100vh; height: 100dvh; z-index: 0; object-fit: cover; object-position: 50% 52%; pointer-events: none; background: #1d5fae; }
+    .heroin { position: relative; z-index: 1; }
     .shade { text-shadow: 0 2px 24px rgba(8, 32, 74, .45), 0 0 2px rgba(8, 32, 74, .2); }
     /* die-cut sticker outline, so the black script keeps its shape on the sky */
     .logo-sticker {
@@ -88,10 +89,7 @@
       const [msg, setMsg] = useState('');
       const go = () => { window.top.location.href = SOCIAL; };
       return (
-        <section className="relative w-full overflow-hidden" style={{ height: '100svh', minHeight: 560 }}>
-          {/* the film fills the whole hero edge to edge */}
-          <video className="bgvid absolute inset-0 w-full h-full" autoPlay loop muted playsInline preload="auto"
-            src="assets/train/train.mp4" poster="assets/train/train.webp" aria-hidden="true" />
+        <section className="heroin w-full overflow-hidden" style={{ height: '100dvh', minHeight: 560 }}>
           {/* a gentle scrim so the words stay readable on the bright sky */}
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 78% 46% at 36% 52%, rgba(8,36,84,.46), transparent 72%), linear-gradient(180deg, rgba(8,36,84,.42) 0%, rgba(8,36,84,.10) 40%, rgba(8,36,84,.30) 100%)' }} />
 
@@ -124,7 +122,11 @@
     }
 
     ReactDOM.createRoot(document.getElementById('root')).render(
-      <div className="min-h-screen selection:bg-brand-green selection:text-black"><Navbar /><main><Hero /></main></div>
+      <div className="min-h-screen selection:bg-brand-green selection:text-black">
+        {/* the film covers the whole screen, edge to edge, whatever its size or shape; it plays forward and loops */}
+        <video className="bgvid" autoPlay loop muted playsInline preload="auto" src="assets/train/train.mp4" poster="assets/train/train.webp" aria-hidden="true" />
+        <Navbar /><main><Hero /></main>
+      </div>
     );
   </script>
   <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
