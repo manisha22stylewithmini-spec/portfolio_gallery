@@ -35,13 +35,15 @@
 
     /* ---------- sidebar ---------- */
     aside { padding: 24px 16px 16px; display: flex; flex-direction: column; border-right: 1px solid var(--hair); }
-    .logo { display: flex; align-items: center; gap: 10px; padding: 2px 8px 0; margin-bottom: 30px; }
-    /* the full wordmark (transparent webp), sized by height so it never crowds the mascot */
-    .brand-logo { width: auto; height: 46px; display: block; filter: drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
+    .logo { display: flex; align-items: center; padding: 0 6px; margin-bottom: 26px; }
+    /* the full wordmark (transparent webp) fills the logo row */
+    .brand-logo { width: 100%; max-width: 196px; height: auto; display: block; filter: drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
     /* the cursor-following mascot (vanilla port of page-mascot): two 3x3 sprite sheets, directions + reactions */
     .mascot { --size: 40px; position: relative; display: block; flex: none; width: var(--size); height: var(--size); padding: 0; border: 0; background: transparent; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; filter: drop-shadow(0 4px 5px rgba(0,0,0,.22)); }
     .mascot .sq { position: relative; display: block; width: 100%; height: 100%; transform-origin: 50% 78%; }
     .mascot .ly { position: absolute; inset: 0; background-size: 300% 300%; background-repeat: no-repeat; }
+    /* it sits right after "Manisha" in the greeting, riding the text baseline */
+    .intro h1 .mascot { font-size: inherit; --size: 1.3em; display: inline-block; vertical-align: -.22em; margin-left: .14em; }
     .mascot:focus-visible { outline: 2px dashed var(--ink); outline-offset: 3px; border-radius: 10px; }
     .label { font: 500 10px/1 'Space Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); padding: 0 12px; margin: 0 0 10px; }
     nav a {
@@ -601,8 +603,7 @@
   <div class="app">
     <aside>
       <div class="logo">
-        <button class="mascot" id="mascot" type="button" aria-label="Boop the mascot"><span class="sq"><span class="ly d"></span><span class="ly r"></span></span></button>
-        <img class="brand-logo" src="assets/logo-wide.webp" alt="Manisha Baroliya" width="89" height="46">
+        <img class="brand-logo" src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186">
       </div>
       <p class="label">Menu</p>
       <nav>
@@ -624,7 +625,7 @@
     <main id="main">
       <div class="intro">
         <div>
-          <h1 id="greet">Good day, <em>Manisha</em></h1>
+          <h1 id="greet">Good <span id="greetPart">day</span>, <em>Manisha</em><button class="mascot" id="mascot" type="button" aria-label="Boop the mascot"><span class="sq"><span class="ly d"></span><span class="ly r"></span></span></button></h1>
           <p id="sub">Your template shelves — hover a cover to peek, click to open.</p>
         </div>
         <!-- desktop: the button moves up here so it sits level with the title, on every page (see placeCta) -->
@@ -890,7 +891,7 @@
     const greet = () => {
       const h = istHour();
       const part = h >= 5 && h < 12 ? 'morning' : h < 17 && h >= 12 ? 'afternoon' : h >= 17 && h < 21 ? 'evening' : 'night';
-      document.getElementById('greet').innerHTML = `Good ${part}, <em>Manisha</em>`;
+      document.getElementById('greetPart').textContent = part;   // only the word changes, so the mascot stays put
     };
     greet(); setInterval(greet, 60000);
     document.getElementById('navCount').textContent = document.getElementById('sTotal').textContent = T.length;
