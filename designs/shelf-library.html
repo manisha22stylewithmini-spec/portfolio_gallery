@@ -262,6 +262,13 @@
     [data-view="home"] main { display: flex; flex-direction: column; overflow: hidden; }
     [data-view="home"] .intro { flex: none; margin-bottom: 4px; }
     .home-hint { position: relative; z-index: 8; flex: none; display: flex; justify-content: space-between; align-items: center; margin: 0 2px 20px; }
+    /* desktop: title + description on the left, the button (home) or logo (social) centred against them on the right */
+    .intro-cta, .intro-logo { display: none; }
+    @media (min-width: 861px) {
+      [data-view="home"] .intro, [data-view="social"] .intro { align-items: center; }
+      .intro-cta { display: flex; flex: none; }
+      .intro-logo { display: block; flex: none; width: auto; height: 74px; margin: -14px 0; mix-blend-mode: multiply; transform: rotate(-2deg); }
+    }
     .home-hint p { margin: 0; font: 700 22px/1 'Caveat', cursive; color: #5d5180; transform: rotate(-2deg); }
     /* Web Shot Button: a red glass pill that shoots silk threads at the pointer */
     .wsb-wrap { position: relative; isolation: isolate; display: inline-flex; color: #17141d; }
@@ -623,6 +630,9 @@
           <div class="stat"><b id="sShelves">4</b><span>Shelves</span></div>
           <div class="stat"><b id="sHero">12</b><span>Hero sections</span></div>
         </div>
+        <!-- desktop: the button moves up here so it sits level with the title (see placeCta) -->
+        <div class="intro-cta home-only" id="ctaSlot"></div>
+        <img class="intro-logo social-only" src="assets/logo-full.webp" alt="Manisha Baroliya" width="640" height="331" decoding="async">
         <!-- tablet/phone only: the sidebar is hidden there, so this switch moves between the two views -->
         <nav class="view-switch" aria-label="Views">
           <span class="vs-pill"></span>
@@ -1309,6 +1319,14 @@
         });
       });
     })(document.querySelector('#wsb .wsb'));
+
+    // Desktop: the button sits in the title row; tablet/phone: back on the hint row under it
+    (() => {
+      const wsb = document.getElementById('wsb'), slot = document.getElementById('ctaSlot'), hint = document.querySelector('.home-hint');
+      const mq = matchMedia('(min-width: 861px)');
+      const placeCta = () => (mq.matches ? slot : hint).appendChild(wsb);
+      placeCta(); mq.addEventListener('change', placeCta);
+    })();
 
     // ================= views: Home (lockers) / My library (shelves) =================
     const sub = document.getElementById('sub');
