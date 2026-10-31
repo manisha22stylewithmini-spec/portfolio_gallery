@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lumora — Hero</title>
+  <title>Manisha Baroliya — Hero</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -41,11 +41,12 @@
       pointer-events: none;
     }
 
-    @keyframes train-bob {
-      0%, 100% { transform: translateY(0) scale(1.03); }
-      50%      { transform: translateY(-6px) scale(1.03); }
+    /* die-cut sticker outline, so the black script stays readable over every background */
+    .logo-sticker {
+      height: 56px; width: auto; display: block;
+      filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff) drop-shadow(0 6px 10px rgba(0,0,0,.28));
     }
-    .train-bob { animation: train-bob 3s ease-in-out infinite; }
+    @media (min-width: 640px) { .logo-sticker { height: 64px; } }
 
     .back-link {
       position: fixed; left: 12px; bottom: 12px; z-index: 60;
@@ -73,70 +74,48 @@
     const Menu = (p) => <Icon {...p}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></Icon>;
     const X = (p) => <Icon {...p}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></Icon>;
 
-    const VIDEOS = [
-      { label: 'Golden Hour', src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081127_0992a171-d3c6-4978-8213-0ec5df8b6d63.mp4' },
-      { label: 'Still Water', src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_092026_dd05b805-ea0f-40b2-8c52-332b88502592.mp4' },
-      { label: 'Deep Woods',  src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081042_df7202bf-bd80-4b2b-bbc6-1f09ba2870e9.mp4' },
-      { label: 'Quiet Dawn',  src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_080959_4cac5234-3573-464e-a5b7-76b94b8a7d61.mp4' },
-    ];
-    const OVERLAY = 'https://soft-zoom-63098134.figma.site/_assets/v11/0b4a435b2df2747593c43d7a1c9b4578f7d8d90c.png';
-    const NAV = ['How It Works', 'Features', 'Pricing', 'Community'];
-    const STATS = ['60+ Deep Sessions', '12,000+ Creators', '4.8 User Satisfaction', 'Intentional-First Design'];
+    // one looping background (H.264, 720p, no audio) with a poster for the first paint
+    const VIDEO = { src: 'assets/hero/craft.mp4', poster: 'assets/hero/craft.webp' };
+    const CONNECT = 'shelf-library.html#social';   // every sticker on the social calendar opens a chat with me
+    const STATS = ['3+ Years Experience', '20+ Live Designs', 'UI/UX · Research · Design Systems', 'AI-assisted Workflow'];
     const SANS = { fontFamily: 'system-ui, sans-serif' };
+    const SHADE = { textShadow: '0 1px 14px rgba(0,0,0,.5), 0 0 2px rgba(0,0,0,.25)' };
 
     function App() {
-      const [activeVideo, setActiveVideo] = useState(0);
-      const [isTransitioning, setIsTransitioning] = useState(false);
       const [menuOpen, setMenuOpen] = useState(false);
-
-      const dark = activeVideo === 2;
-      const tone = dark ? 'text-[#182C41]' : 'text-white';
-      const toneTrans = 'transition-colors duration-700';
-
-      const switchVideo = (i) => {
-        if (i === activeVideo || isTransitioning) return;
-        setActiveVideo(i);
-        setIsTransitioning(true);
-        setTimeout(() => setIsTransitioning(false), 1000);
-      };
-
       const ease = { transitionTimingFunction: 'cubic-bezier(0.4,0,0.2,1)' };
 
       return (
         <section className="relative w-full h-screen overflow-hidden bg-black">
-          {/* Videos */}
-          {VIDEOS.map((v, i) => (
-            <video key={v.src} src={v.src} autoPlay muted loop playsInline
-              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${i === activeVideo ? 'opacity-100' : 'opacity-0'}`} />
-          ))}
+          {/* Background video: fixed behind everything, plays on a loop */}
+          <video src={VIDEO.src} poster={VIDEO.poster} autoPlay muted loop playsInline preload="auto"
+            className="absolute inset-0 w-full h-full object-cover" />
 
-          {/* PNG overlay */}
-          <img src={OVERLAY} alt="" className="train-bob absolute inset-0 w-full h-full object-cover pointer-events-none" style={{ zIndex: 1 }} />
+          {/* soft scrims keep the type readable on the bright footage */}
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ zIndex: 1, background: 'radial-gradient(ellipse 70% 42% at 50% 36%, rgba(0,0,0,.5), rgba(0,0,0,0) 75%), linear-gradient(180deg, rgba(0,0,0,.45) 0%, rgba(0,0,0,.22) 50%, rgba(0,0,0,.05) 70%)' }} />
+          <div className="absolute inset-x-0 bottom-0 h-40 pointer-events-none"
+            style={{ zIndex: 1, background: 'linear-gradient(0deg, rgba(0,0,0,.5), rgba(0,0,0,0))' }} />
 
           {/* Mobile menu */}
           <div className={`fixed inset-0 z-50 md:hidden transition-opacity duration-500 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`} style={ease}>
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setMenuOpen(false)} />
             <div className="relative h-full flex flex-col items-center justify-center gap-6">
-              {NAV.map((l, i) => (
-                <a key={l} href="#" onClick={() => setMenuOpen(false)}
-                  className={`text-white text-3xl transition-all duration-500 ${menuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-                  style={{ ...ease, transitionDelay: menuOpen ? `${100 + i * 50}ms` : '0ms' }}>{l}</a>
-              ))}
-              <button
-                className={`mt-4 bg-white text-black rounded-full px-8 py-3 text-base transition-all duration-500 ${menuOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
-                style={{ ...SANS, ...ease, transitionDelay: menuOpen ? '350ms' : '0ms' }}>Get Started</button>
+              <a href={CONNECT} target="_top"
+                className={`bg-white text-black rounded-full px-10 py-4 text-lg transition-all duration-500 ${menuOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
+                style={{ ...SANS, ...ease, transitionDelay: menuOpen ? '150ms' : '0ms' }}>Get connected</a>
             </div>
           </div>
 
           {/* Content */}
           <div className="relative h-full flex flex-col" style={{ zIndex: 2 }}>
             <nav className="flex items-center justify-between px-5 sm:px-8 md:px-12 pt-5 sm:pt-6">
-              <span className="text-white italic text-xl sm:text-2xl z-[60]">Lumora</span>
+              <img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186" className="logo-sticker z-[60] relative" />
 
-              <div className="hidden md:flex liquid-glass rounded-full items-center gap-7 pl-7 pr-2 py-2" style={SANS}>
-                {NAV.map((l) => <a key={l} href="#" className="text-white/90 hover:text-white text-sm transition-colors">{l}</a>)}
-                <button className="bg-white text-black rounded-full px-5 py-2 text-sm font-medium">Get Started</button>
-              </div>
+              <a href={CONNECT} target="_top" style={SANS}
+                className="hidden md:inline-flex rounded-full px-6 py-2.5 text-sm font-medium bg-white text-black">
+                Get connected
+              </a>
 
               <button onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu"
                 className="md:hidden liquid-glass rounded-full w-11 h-11 flex items-center justify-center text-white relative z-[60]">
@@ -145,41 +124,31 @@
               </button>
             </nav>
 
-            <div className="flex flex-col items-center text-center px-5 pt-10 sm:pt-14 md:pt-16">
-              <div className={`liquid-glass rounded-full px-4 py-1.5 text-xs sm:text-sm mb-6 ${tone} ${toneTrans}`} style={SANS}>
-                Over 10,000 minds already finding their clarity
+            <div className="flex flex-col items-center text-center px-5 pt-10 sm:pt-14 md:pt-16 text-white">
+              <div className="liquid-glass rounded-full px-4 py-1.5 text-xs sm:text-sm mb-6" style={SANS}>
+                Product designer &amp; UX researcher · open for new projects
               </div>
 
-              <h1 className={`text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] leading-[1.1] max-w-4xl ${tone} ${toneTrans}`}>
-                Clarity in an Endlessly<br />Noisy Universe
+              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] leading-[1.1] max-w-4xl">
+                Messy Ideas, Turned into<br />Clean, Playful Interfaces
               </h1>
 
-              <p className={`mt-5 max-w-xl leading-relaxed text-sm sm:text-base ${dark ? 'text-[#182C41]' : 'text-white/80'} ${toneTrans}`} style={SANS}>
-                Rise above the chaos of pings, infinite scrolling, and relentless demands. Discover how to protect your presence and create with intention.
+              <p className="mt-5 max-w-xl leading-relaxed text-sm sm:text-base text-white/90" style={{ ...SANS, ...SHADE }}>
+                I'm Manisha — I design products that feel human and brands that look like themselves, from first research to the last pixel of the prototype.
               </p>
 
-              <form onSubmit={(e) => e.preventDefault()}
-                className="liquid-glass rounded-full mt-8 flex items-center w-full max-w-[320px] sm:max-w-sm pl-5 pr-1.5 py-1.5">
-                <input type="email" placeholder="Your Best Email"
-                  className={`bg-transparent outline-none flex-1 min-w-0 text-sm ${tone} ${toneTrans} ${dark ? 'placeholder:text-[#182C41]/60' : 'placeholder:text-white/60'}`} style={SANS} />
-                <button type="submit" className="bg-white text-black rounded-full px-4 py-2 text-xs sm:text-sm font-medium whitespace-nowrap" style={SANS}>
-                  Get Early Access
-                </button>
-              </form>
-
-              <div className="mt-8 flex flex-wrap justify-center gap-x-5 gap-y-2" style={SANS}>
-                {VIDEOS.map((v, i) => (
-                  <button key={v.label} onClick={() => switchVideo(i)}
-                    className={`text-xs sm:text-sm pb-1 border-b transition-all duration-700 ${tone} ${i === activeVideo ? (dark ? 'border-[#182C41]' : 'border-white') : 'opacity-50 border-transparent hover:opacity-80'}`}>
-                    {v.label}
-                  </button>
-                ))}
+              <div className="liquid-glass rounded-full mt-8 flex items-center w-full max-w-[340px] sm:max-w-md pl-5 pr-1.5 py-1.5">
+                <span className="flex-1 min-w-0 text-left text-sm truncate" style={SANS}>Have an idea? Let's build it.</span>
+                <a href={CONNECT} target="_top"
+                  className="rounded-full px-4 py-2 text-xs sm:text-sm font-medium whitespace-nowrap bg-white text-black" style={SANS}>
+                  Get connected
+                </a>
               </div>
             </div>
 
             <div className="flex-1" />
 
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-5 pb-10 sm:pb-8 text-white/70 text-xs sm:text-sm" style={SANS}>
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 px-5 pb-10 sm:pb-8 text-white/85 text-xs sm:text-sm" style={{ ...SANS, textShadow: '0 1px 10px rgba(0,0,0,.55)' }}>
               {STATS.map((s, i) => (
                 <React.Fragment key={s}>
                   {i > 0 && <span className="hidden sm:inline text-white/30">|</span>}
