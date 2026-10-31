@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Orbis — Intro</title>
+  <title>Manisha Baroliya — Intro</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Condiment&display=swap" rel="stylesheet" />
@@ -23,6 +23,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
   <style>
     html, body { margin: 0; background: #010828; }
+    /* die-cut sticker outline, so the black script stays readable on the dark scene */
+    .logo-sticker {
+      height: 64px; width: auto; display: block; transform: rotate(-2deg); transform-origin: left center;
+      filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff) drop-shadow(0 8px 14px rgba(0,0,0,.45));
+    }
     .back-link {
       position: fixed; left: 12px; bottom: 12px; z-index: 60;
       font: 12px system-ui, sans-serif; color: rgba(255,255,255,.85);
@@ -37,7 +42,14 @@
   <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
 
   <script type="text/babel" data-presets="react">
-    const COPY = 'A digital object fixed beyond time and place. An exploration of distance, form, and silence in space';
+    const COPY = 'A product designer and UX researcher, turning messy ideas into clean, playful interfaces that feel human.';
+    // the faint lines behind the scene: what I do, in my words (skills and strengths only)
+    const GHOST = [
+      'Three years of product design across SaaS and B2B platforms, from the first sketch to the final handoff.',
+      'A psychology background shapes my research, so every decision starts with how people actually behave.',
+      'Figma design systems and tidy handoffs that help whole teams move faster, with fewer back-and-forths.',
+      'AI to explore faster, humans to decide: MVPs delivered 25 to 30 percent quicker, with the human touch intact.',
+    ];
     const ghost = 'font-mono text-[14px] sm:text-[15px] md:text-[16px] uppercase lg:text-cream text-[#010828] opacity-10 leading-relaxed';
 
     function App() {
@@ -51,22 +63,25 @@
             <div className="flex flex-col lg:flex-row justify-between items-start gap-8 lg:gap-12 mb-12 sm:mb-16 md:mb-20">
               <h2 className="font-grotesk text-[32px] sm:text-[48px] md:text-[60px] font-normal uppercase leading-[1.05] sm:leading-[1] md:leading-[1] text-cream relative">
                 Hello!<br />
-                I'm orbis
+                I'm Manisha
                 <span className="font-condiment text-[36px] sm:text-[52px] md:text-[68px] font-normal normal-case text-neon mix-blend-exclusion leading-[0.79] tracking-[0.03em] absolute right-[-8px] bottom-[-20px] sm:bottom-[-30px] md:bottom-[-40px] -rotate-1 opacity-90">
-                  Orbis
+                  Baroliya
                 </span>
               </h2>
-              <p className="font-mono text-[14px] sm:text-[15px] md:text-[16px] uppercase text-cream max-w-[266px] leading-relaxed">{COPY}</p>
+              <div className="flex flex-col items-start gap-5 max-w-[266px]">
+                <img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186" className="logo-sticker" />
+                <p className="font-mono text-[14px] sm:text-[15px] md:text-[16px] uppercase text-cream leading-relaxed">{COPY}</p>
+              </div>
             </div>
 
             <div className="flex justify-between items-start">
               <div className="flex flex-col gap-5 max-w-[335px]">
-                <p className={ghost}>{COPY}</p>
-                <p className={ghost}>{COPY}</p>
+                <p className={ghost}>{GHOST[0]}</p>
+                <p className={ghost}>{GHOST[1]}</p>
               </div>
               <div className="hidden lg:flex flex-col gap-5 max-w-[335px]">
-                <p className={ghost}>{COPY}</p>
-                <p className={ghost}>{COPY}</p>
+                <p className={ghost}>{GHOST[2]}</p>
+                <p className={ghost}>{GHOST[3]}</p>
               </div>
             </div>
           </div>
