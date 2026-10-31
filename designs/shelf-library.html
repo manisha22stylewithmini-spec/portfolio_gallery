@@ -36,9 +36,8 @@
     /* ---------- sidebar ---------- */
     aside { padding: 24px 16px 16px; display: flex; flex-direction: column; border-right: 1px solid var(--hair); }
     .logo { display: flex; align-items: center; gap: 10px; padding: 2px 8px 0; margin-bottom: 30px; }
-    /* Light-theme logo (dark lettering on a light badge). Multiply drops the light badge into the white sidebar
-       so only the lettering shows. Swap for a transparent file when available. */
-    .brand-logo { width: 34px; height: 34px; display: block; mix-blend-mode: multiply; filter: contrast(1.35) brightness(1.08); }
+    /* the full wordmark (transparent webp), sized by height so it never crowds the mascot */
+    .brand-logo { width: auto; height: 46px; display: block; filter: drop-shadow(0 2px 2px rgba(0,0,0,.08)); }
     /* the cursor-following mascot (vanilla port of page-mascot): two 3x3 sprite sheets, directions + reactions */
     .mascot { --size: 40px; position: relative; display: block; flex: none; width: var(--size); height: var(--size); padding: 0; border: 0; background: transparent; cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; filter: drop-shadow(0 4px 5px rgba(0,0,0,.22)); }
     .mascot .sq { position: relative; display: block; width: 100%; height: 100%; transform-origin: 50% 78%; }
@@ -63,8 +62,10 @@
     }
     .continue .top { display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--muted); }
     .continue .top b { font-weight: 500; color: var(--ink); }
-    .reel-bar { width: 0; transition: width 7s linear; }
-    .continue:hover .reel-bar { width: 100%; }
+    /* the intro reel plays on its own, on loop; the bar fills and restarts with it */
+    .reel-bar { width: 100%; transform-origin: left; animation: reel 7s linear infinite; }
+    @keyframes reel { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @media (prefers-reduced-motion: reduce) { .reel-bar { animation: none; } }
     .np-dot { display: inline-block; width: 6px; height: 6px; margin-right: 6px; border-radius: 50%; background: #E0242F; vertical-align: 1px; animation: ping 1.8s infinite; }
     .continue .stage { display: grid; place-items: center; padding: 14px 0 12px; }
     .continue .cover { width: 88px; }
@@ -72,8 +73,11 @@
     .bar-p { height: 4px; border-radius: 4px; background: var(--soft-2); overflow: hidden; }
     .bar-p i { display: block; height: 100%; background: var(--ink); border-radius: 4px; }
     .user { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 14px; font-size: 13px; box-shadow: inset 0 0 0 1px var(--hair); }
-    .user i { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg,#4a4a48,#121212); display: grid; place-items: center; color: #fff; font: 600 11px 'Inter'; font-style: normal; box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--hair-2); }
-    .user small { display: block; font-size: 11px; color: var(--muted); }
+    .user { text-decoration: none; color: inherit; }
+    .user i { flex: none; width: 34px; height: 34px; border-radius: 50%; overflow: hidden; background: #1b1628; box-shadow: 0 0 0 2px #fff, 0 0 0 3px var(--hair-2); }
+    .user i img { display: block; width: 100%; height: 100%; transform: scale(1.32); }
+    .user .li { display: inline-grid; place-items: center; width: 12px; height: 12px; border-radius: 3px; background: #0a66c2; color: #fff; font: 700 8px/1 'Inter'; }
+    .user small { display: flex; align-items: center; gap: 4px; margin-top: 1px; font-size: 11px; color: var(--muted); white-space: nowrap; }
     .user svg { margin-left: auto; width: 14px; height: 14px; color: var(--muted); }
 
     /* ---------- main panel ---------- */
@@ -90,16 +94,16 @@
     .intro h1 { margin: 0; font: 400 36px/1.05 'Instrument Serif', serif; letter-spacing: -.4px; }
     .intro h1 em { color: var(--muted); }
     .intro p { margin: 6px 0 0; font-size: 12.5px; color: var(--muted); }
-    .stats { display: flex; gap: 8px; }
     .view-switch { display: none; position: relative; flex: none; padding: 3px; border-radius: 12px; background: var(--soft); box-shadow: inset 0 0 0 1px var(--hair); }
     .view-switch a { position: relative; z-index: 1; padding: 8px 14px; border-radius: 9px; font: 500 12.5px 'Inter', sans-serif; color: var(--muted); text-decoration: none; transition: color .2s; white-space: nowrap; }
     .view-switch a.on { color: var(--ink); background: none; box-shadow: none; font-weight: 500; }
     .view-switch a::before { content: none !important; }
     .view-switch a:hover { background: none; color: var(--ink); }
     .vs-pill { position: absolute; top: 3px; bottom: 3px; left: 0; border-radius: 9px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.1), inset 0 0 0 1px var(--hair); transition: transform .35s cubic-bezier(.3,.8,.2,1), width .35s; }
-    .stat { background: #fff; border-radius: 12px; padding: 8px 12px; box-shadow: inset 0 0 0 1px var(--hair), 0 1px 2px rgba(0,0,0,.03); min-width: 78px; }
-    .stat b { display: block; font: 500 17px/1.1 'Inter'; letter-spacing: -.3px; }
-    .stat span { font: 500 9.5px 'Space Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    /* a quiet tally at the right end of the search bar: 27 designs · 4 shelves · 12 heroes */
+    .tally { flex: none; display: flex; align-items: center; margin: 0; padding: 0 12px 0 4px; font: 500 10.5px 'Space Mono', monospace; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+    .tally span + span::before { content: '·'; margin: 0 8px; color: var(--faint); }
+    .tally b { font: 600 12.5px 'Inter', sans-serif; letter-spacing: -.2px; color: var(--ink); margin-right: 3px; }
 
     .bar {
       display: flex; gap: 8px; align-items: center; background: rgba(255,255,255,.85); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -114,7 +118,6 @@
     .search svg { width: 15px; height: 15px; color: var(--muted); }
     .search input { flex: 1; border: 0; background: none; outline: 0; font: 13px 'Inter'; color: var(--ink); }
     .search input::placeholder { color: var(--faint); }
-    kbd { font: 500 10.5px 'Space Mono', monospace; color: var(--muted); background: #fff; border-radius: 6px; padding: 3px 6px; box-shadow: inset 0 0 0 1px var(--hair-2), 0 1px 0 var(--hair-2); }
 
     /* ---------- shelves ---------- */
     section.shelf { margin-top: 30px; }
@@ -221,7 +224,7 @@
     .cal-head { display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; text-align: center; margin-bottom: 1.6cqh; }
     .cal-head button { border: 0; background: none; color: #5b2f22; font: 300 30px/1 'Inter', sans-serif; cursor: pointer; padding: 4px; border-radius: 10px; }
     .cal-head button:hover { background: rgba(91,47,34,.06); }
-    .cal-kicker { margin: 0; font: 400 clamp(12px, 2.2cqw, 17px)/1.2 'DM Serif Display', serif; color: #5b2f22; }
+    .cal-kicker { margin: 0; font: 400 clamp(17px, 3.2cqw, 30px)/1.15 'DM Serif Display', serif; color: #5b2f22; }
     /* the headline space stays, intentionally empty */
     .cal-tag { margin: .1em 0 0; height: 1em; font: 400 clamp(22px, 6.4cqw, 58px)/1 'Abril Fatface', serif; }
     .cal-days, .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
@@ -262,12 +265,11 @@
     [data-view="home"] main { display: flex; flex-direction: column; overflow: hidden; }
     [data-view="home"] .intro { flex: none; margin-bottom: 4px; }
     .home-hint { position: relative; z-index: 8; flex: none; display: flex; justify-content: space-between; align-items: center; margin: 0 2px 20px; }
-    /* desktop: title + description on the left, the button (home) or logo (social) centred against them on the right */
-    .intro-cta, .intro-logo { display: none; }
+    /* desktop: title + description on the left, the button centred against them on the right (Home and Social) */
+    .intro-cta { display: none; }
     @media (min-width: 861px) {
-      [data-view="home"] .intro, [data-view="social"] .intro { align-items: center; }
+      .intro { align-items: center; }
       .intro-cta { display: flex; flex: none; }
-      .intro-logo { display: block; flex: none; width: auto; height: 74px; margin: -14px 0; mix-blend-mode: multiply; transform: rotate(-2deg); }
     }
     .home-hint p { margin: 0; font: 700 22px/1 'Caveat', cursive; color: #5d5180; transform: rotate(-2deg); }
     /* Web Shot Button: a red glass pill that shoots silk threads at the pointer */
@@ -577,6 +579,7 @@
 
     /* Phones only: the wall stacks and the panel scrolls. Desktop and tablet keep the no-scroll 5-column wall. */
     @media (max-width: 600px) {
+      .tally { display: none; }
       [data-view="home"] main { display: block; overflow-y: auto; }
       #home { display: block; }
       .wall { grid-template-columns: 1fr 1fr; grid-template-rows: 600px repeat(4, 320px); grid-template-areas: "me me" "a b" "c d" "e f" "g h"; padding: 12px 8px 0; }
@@ -589,7 +592,6 @@
       body { padding: 20px 14px; }
       aside { display: none; }
       main { margin: 10px; padding: 18px 16px; }
-      .stats { display: none; }
       .view-switch { display: flex; align-self: center; }
       .track { gap: 16px; padding-left: 12px; padding-right: 12px; }
     }
@@ -600,7 +602,7 @@
     <aside>
       <div class="logo">
         <button class="mascot" id="mascot" type="button" aria-label="Boop the mascot"><span class="sq"><span class="ly d"></span><span class="ly r"></span></span></button>
-        <img class="brand-logo" src="assets/logo-light.png" alt="Manisha Barol" width="34" height="34">
+        <img class="brand-logo" src="assets/logo-wide.webp" alt="Manisha Baroliya" width="89" height="46">
       </div>
       <p class="label">Menu</p>
       <nav>
@@ -612,10 +614,10 @@
         <a class="continue" id="cont" href="#">
           <div class="top"><span><i class="np-dot"></i>Now playing</span><b id="contName"></b></div>
           <div class="stage"><span class="cover" id="contCover"></span></div>
-          <div class="meta"><span>Hover to play ▸</span><span>7 takes</span></div>
+          <div class="meta"><span>Playing on loop ↻</span><span>7 takes</span></div>
           <div class="bar-p"><i class="reel-bar"></i></div>
         </a>
-        <div class="user" data-go="social" role="link" tabindex="0" title="Chat with me"><i>MB</i><div>Manisha<small>Designer</small></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></div>
+        <a class="user" id="liChat" href="#social" data-go="social" title="Chat with me on LinkedIn"><i><img src="assets/logo-badge.webp" alt="" width="34" height="34"></i><div>Manisha<small><b class="li">in</b>Chat on LinkedIn</small></div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg></a>
       </div>
     </aside>
 
@@ -625,14 +627,8 @@
           <h1 id="greet">Good day, <em>Manisha</em></h1>
           <p id="sub">Your template shelves — hover a cover to peek, click to open.</p>
         </div>
-        <div class="stats lib-only">
-          <div class="stat"><b id="sTotal">19</b><span>Templates</span></div>
-          <div class="stat"><b id="sShelves">4</b><span>Shelves</span></div>
-          <div class="stat"><b id="sHero">12</b><span>Hero sections</span></div>
-        </div>
-        <!-- desktop: the button moves up here so it sits level with the title (see placeCta) -->
-        <div class="intro-cta home-only" id="ctaSlot"></div>
-        <img class="intro-logo social-only" src="assets/logo-full.webp" alt="Manisha Baroliya" width="640" height="331" decoding="async">
+        <!-- desktop: the button moves up here so it sits level with the title, on every page (see placeCta) -->
+        <div class="intro-cta" id="ctaSlot"></div>
         <!-- tablet/phone only: the sidebar is hidden there, so this switch moves between the two views -->
         <nav class="view-switch" aria-label="Views">
           <span class="vs-pill"></span>
@@ -643,17 +639,17 @@
       </div>
 
       <div class="bar lib-only">
-        <div class="tabs"><span class="pill"></span><button class="on" data-v="shelves">Shelves</button><button data-v="all">All Templates</button></div>
+        <div class="tabs"><span class="pill"></span><button class="on" data-v="shelves">Shelves</button><button data-v="all">All designs</button></div>
         <label class="search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
           <input id="q" placeholder="Search in My library" />
-          <kbd>/</kbd>
         </label>
+        <p class="tally"><span><b id="sTotal">19</b> designs</span><span><b id="sShelves">4</b> shelves</span><span><b id="sHero">12</b> heroes</span></p>
       </div>
       <div class="lib-only">
         <div id="shelves"></div>
         <div id="all" class="grid" hidden></div>
-        <div id="empty" class="empty" hidden>No templates match that search.</div>
+        <div id="empty" class="empty" hidden>No designs match that search.</div>
       </div>
 
       <!-- HOME: locker wall -->
@@ -889,8 +885,14 @@
       { name: 'Footers', c: 'footer' },
     ].map((s) => ({ ...s, items: T.filter((d) => d.c === s.c) }));
 
-    const h = new Date().getHours();
-    document.getElementById('greet').innerHTML = `Good ${h < 12 ? 'morning' : h < 18 ? 'afternoon' : 'evening'}, <em>Manisha</em>`;
+    // greeting follows India time (IST) wherever the visitor is, and refreshes each minute
+    const istHour = () => +new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone: 'Asia/Kolkata' }).format(new Date());
+    const greet = () => {
+      const h = istHour();
+      const part = h >= 5 && h < 12 ? 'morning' : h < 17 && h >= 12 ? 'afternoon' : h >= 17 && h < 21 ? 'evening' : 'night';
+      document.getElementById('greet').innerHTML = `Good ${part}, <em>Manisha</em>`;
+    };
+    greet(); setInterval(greet, 60000);
     document.getElementById('navCount').textContent = document.getElementById('sTotal').textContent = T.length;
 
     const cover = (d, extra = '') => `
@@ -921,12 +923,13 @@
     // scale previews (600x800 viewport -> cover width) and lazy-load them
     const frames = () => [...document.querySelectorAll('.cover iframe')];
     const fit = () => frames().forEach((f) => { const w = f.parentElement.clientWidth; if (w) f.style.transform = `scale(${w / 600})`; });
-    // Live pages load only on hover/focus (covers and the "Now playing" card); otherwise the poster shows.
+    // Shelf covers load their live page only on hover/focus; otherwise the poster shows.
     // ?embed hides the page's back link.
     const liveOn = (f) => { if (f.dataset.live || !f.parentElement.clientWidth) return; f.dataset.live = '1'; f.src = f.dataset.src + '?embed'; };
     const liveOff = (f) => { if (!f.dataset.live) return; delete f.dataset.live; f.classList.remove('on'); f.src = 'about:blank'; };
     // nothing loads live by default any more: covers without a poster show their colour card until hovered
-    const wantsAlwaysLive = () => false;
+    // …except the "Now playing" intro reel, which plays on loop whenever it's on screen
+    const wantsAlwaysLive = (f) => !!f.closest('.continue');
     const io = new IntersectionObserver((es) => es.forEach(({ target: f, isIntersecting }) => {
       if (!wantsAlwaysLive(f)) return;
       if (isIntersecting) liveOn(f); else liveOff(f);
@@ -935,7 +938,7 @@
       // fade the live page in a beat after load, so its first (often black) frame never replaces the poster
       f.addEventListener('load', () => { if (f.dataset.live) setTimeout(() => f.dataset.live && f.classList.add('on'), 700); });
       io.observe(f);
-      const book = f.closest('.book, .continue');
+      const book = f.closest('.book');
       if (!book) return;
       let t = 0;
       const on = () => { clearTimeout(t); liveOn(f); };
@@ -1332,7 +1335,7 @@
     const sub = document.getElementById('sub');
     const SUBS = {
       home: 'Welcome to my hallway — every locker holds a piece of me. The big one is locked, but you have the key.',
-      library: 'Your template shelves — hover a cover to peek, click to open.',
+      library: 'My design shelves — hover a cover to peek, click to open.',
       social: 'My social tree — every sticker on the calendar opens a chat with me on that platform.',
     };
 
@@ -1397,7 +1400,10 @@
     document.getElementById('calPrev').addEventListener('click', () => { calOffset--; renderCal(); });
     document.getElementById('calNext').addEventListener('click', () => { calOffset++; renderCal(); });
     renderCal();
-    document.querySelector('.user').addEventListener('keydown', (e) => { if (e.key === 'Enter') e.currentTarget.click(); });
+    // sidebar profile card: opens a LinkedIn chat with me in a new tab (LinkedIn asks visitors to sign in if needed);
+    // until a username is set it falls back to the social calendar
+    const li = document.getElementById('liChat');
+    if (SOCIAL.linkedin) { li.href = CHAT.linkedin(SOCIAL.linkedin); li.target = '_blank'; li.rel = 'noopener'; delete li.dataset.go; }
     // the white pill under the active tab of the tablet view switch
     const moveVsPill = () => {
       const on = document.querySelector('.view-switch a.on'), pill = document.querySelector('.vs-pill');
