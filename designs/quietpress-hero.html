@@ -108,6 +108,11 @@
     const Next = (p) => <Glyph {...p}><rect x="16.9" y="5" width="2.6" height="14" rx="1.1"/><path d="M4.5 5.9v12.2a.9.9 0 0 0 1.4.75l8.6-6.1a.9.9 0 0 0 0-1.5L5.9 5.15a.9.9 0 0 0-1.4.75Z"/></Glyph>;
 
     const VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260611_183632_c311af08-e4b7-458f-81e7-79847a49b3d3.mp4';
+    const PAGES = [
+      { label: 'Home', href: 'shelf-library.html#home' },
+      { label: 'About', href: 'halcyon-hero.html' },          // the design-POV journey tells who I am
+      { label: 'Projects', href: 'shelf-library.html#library' },
+    ];
     const SOCIAL = 'shelf-library.html#social';   // every sticker on the social calendar opens a chat with me
     // two tracks, audio only (AAC, ~56 kbps); the page loads just the one that's selected
     const TRACKS = [
@@ -231,7 +236,8 @@
 
       const btn = 'flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-white hover:bg-white/15 active:scale-90 transition';
       return (
-        <div id="player" className={`player ${playing ? 'playing' : ''} animate-fade-up delay-5 absolute z-20 bottom-14 left-4 right-4 sm:left-auto sm:bottom-6 sm:right-6 md:bottom-8 md:right-10 sm:w-[440px] rounded-full pl-1.5 pr-4 py-1.5 flex items-center gap-1.5 text-white`}>
+        <div className="absolute z-20 bottom-14 sm:bottom-6 md:bottom-8 left-0 right-0 flex justify-center px-4 pointer-events-none">
+        <div id="player" className={`player ${playing ? 'playing' : ''} animate-fade-up delay-5 pointer-events-auto w-full sm:w-[440px] rounded-full pl-1.5 pr-4 py-1.5 flex items-center gap-1.5 text-white`}>
           <audio ref={audio} preload="metadata"
             onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)}
             onTimeUpdate={(e) => setCur(e.currentTarget.currentTime)}
@@ -256,6 +262,7 @@
             </div>
           </div>
         </div>
+        </div>
       );
     }
 
@@ -274,7 +281,8 @@
                 <img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186" className="logo-sticker" />
               </a>
 
-              <nav className="hidden md:flex items-center gap-9 md:absolute md:left-1/2 md:-translate-x-1/2">
+              <nav className="hidden md:flex items-center gap-6 lg:gap-9 md:absolute md:left-1/2 md:-translate-x-1/2">
+                {PAGES.map((l) => <a key={l.label} href={l.href} target="_top" className="text-sm text-white/90 hover:text-white">{l.label}</a>)}
                 <a href="#player" onClick={diary} className="text-sm text-white/90 hover:text-white">Sound diary</a>
                 <a href={SOCIAL} target="_top" className="text-sm text-white/90 hover:text-white">Social</a>
               </nav>
@@ -287,6 +295,7 @@
 
             {menuOpen && (
               <div className="liquid-glass md:hidden mx-4 rounded-2xl p-2">
+                {PAGES.map((l) => <a key={l.label} href={l.href} target="_top" className="block rounded-xl px-4 py-3 text-sm text-white/90 hover:bg-white/10">{l.label}</a>)}
                 <a href="#player" onClick={diary} className="block rounded-xl px-4 py-3 text-sm text-white/90 hover:bg-white/10">Sound diary</a>
                 <a href={SOCIAL} target="_top" className="block rounded-xl px-4 py-3 text-sm text-white/90 hover:bg-white/10">Social</a>
               </div>
