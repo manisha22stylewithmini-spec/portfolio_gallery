@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
+  if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mainframe — Contact</title>
+  <title>Manisha Baroliya — Get in touch</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,6 +15,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
   <style>
+    html, body { background: #000; }
     body { margin: 0; font-family: 'Inter', sans-serif; }
     @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     .animate-blink { animation: blink 1s step-end infinite; }
@@ -23,9 +26,43 @@
     .check-in { animation: check-spring .45s cubic-bezier(.3,1.4,.5,1) both; }
     @keyframes banner-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
     .banner-in { animation: banner-in .4s cubic-bezier(.3,1.3,.5,1) both; }
+    @keyframes scroll-cue { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+    .cue { animation: scroll-cue 2.2s ease-in-out infinite; }
+    @media (prefers-reduced-motion: reduce) { .drop-in, .check-in, .banner-in, .cue { animation: none !important; opacity: 1 !important; transform: none !important; } }
     .grow { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s cubic-bezier(.3,1.2,.5,1); }
     .grow.open { grid-template-rows: 1fr; }
     .grow > div { overflow: hidden; }
+    /* `clip`, not `hidden`: hidden would make this a scroll container and break the sticky stage */
+    .clipx { overflow-x: clip; }
+    /* die-cut sticker outline, so the black script stays readable on the black page */
+    .logo-sticker {
+      height: 46px; width: auto; display: block;
+      filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff) drop-shadow(0 6px 10px rgba(0,0,0,.4));
+    }
+    @media (min-width: 640px) { .logo-sticker { height: 54px; } }
+
+    /* ---------- one pinned stage: the hero, the dive into the head, and the scrubbed clip all happen inside it ---------- */
+    .stage { position: sticky; top: 0; height: 100dvh; overflow: hidden; background: #000; --card: min(88vw, 56vh); }
+    .charvid { object-position: 77% 100%; }                 /* phones: keep the head in view */
+    @media (min-width: 1024px) { .charvid { object-position: 100% 100%; } }
+    .portal { position: absolute; inset: 0; z-index: 5; visibility: hidden; }
+    .ring { position: absolute; z-index: 4; border-radius: 50%; pointer-events: none; opacity: 0; visibility: hidden;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.4), 0 0 70px 16px rgba(120,100,255,.55), inset 0 0 70px 6px rgba(255,70,90,.4); }
+    .cardx { position: absolute; transform: translate(-50%, -50%); overflow: hidden; background: #000; will-change: left, top, width, height; }
+    .cardx video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ambient { position: absolute; z-index: 3; left: 50%; top: calc(5rem + var(--card) / 2); width: calc(var(--card) * 1.9); height: calc(var(--card) * 1.5); margin: calc(var(--card) * -.75) 0 0 calc(var(--card) * -.95);
+      filter: blur(70px) saturate(1.6); opacity: 0; will-change: opacity; }
+    .ambient canvas { width: 100%; height: 100%; display: block; border-radius: 50%; }
+    .cap { position: absolute; z-index: 6; left: 0; right: 0; bottom: 0; padding: 0 1.5rem 3.4rem; text-align: center; opacity: 0; visibility: hidden; pointer-events: none; will-change: transform, opacity, filter; }
+    .cap-in { max-width: 420px; margin: 0 auto; }
+    @media (min-width: 1024px) {
+      .stage { --card: min(72vh, 44vw); }
+      .ambient { top: 50%; }
+      .cap { top: 0; bottom: 0; width: calc((100vw - var(--card)) / 2); display: flex; align-items: center; padding: 0 3vw; text-align: left; }
+      .cap.left { left: 0; right: auto; justify-content: flex-end; }
+      .cap.right { right: 0; left: auto; justify-content: flex-start; }
+      .cap-in { margin: 0; max-width: 320px; }
+    }
     .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 70; font: 12px system-ui, sans-serif; color: #111; padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(255,255,255,.85); backdrop-filter: blur(6px); box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
   </style>
 </head>
@@ -35,8 +72,41 @@
 
   <script type="text/babel" data-presets="react">
     const { useState, useEffect, useRef } = React;
-    const VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260601_110537_3a579fa0-7bbc-4d94-9d25-0e816c7840f5.mp4';
+    const HEAD = 'assets/char/head.mp4', HEAD_POSTER = 'assets/char/head.webp';   // the chrome figure, re-lit on black with a baked glow
+    const CLIP = 'assets/iconic/clip.mp4', CLIP_POSTER = 'assets/iconic/clip.webp';
+    const SOCIAL = 'shelf-library.html#social';          // every sticker on the social calendar opens a chat with me
     const SENSITIVITY = 0.8;
+    const SCREENS = 9.5;                                 // height of the pinned stage, in screens (8.5 of them are scroll travel)
+    // where things happen along that travel (0 to 1): text fades, camera dives, the portal opens, the clip settles, then it scrubs
+    const Q_TEXT = 0.05, Q_Z0 = 0.015, Q_P0 = 0.11, Q_Z1 = 0.20, Q_M1 = 0.30;
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const ease = (t) => t * t * t * (t * (6 * t - 15) + 10);   // smootherstep: no visible start or stop
+    const lerp = (a, b, t) => a + (b - a) * t;
+    let Q = 0;                                           // scroll progress, shared so the mouse scrub rests while we dive
+
+    function useIsLg() {
+      const [lg, setLg] = useState(() => matchMedia('(min-width: 1024px)').matches);
+      useEffect(() => {
+        const mq = matchMedia('(min-width: 1024px)'), on = () => setLg(mq.matches);
+        mq.addEventListener('change', on); return () => mq.removeEventListener('change', on);
+      }, []);
+      return lg;
+    }
+
+    // A server without byte-range support makes a <video> unseekable; load it whole as a blob instead (always seekable).
+    function useSeekable(ref, src) {
+      useEffect(() => {
+        const v = ref.current; let swapped = false;
+        const check = () => {
+          const last = v.seekable.length - 1;
+          if (!swapped && !(last >= 0 && v.seekable.end(last) >= v.duration - 0.5)) {
+            swapped = true;
+            fetch(src).then((r) => r.blob()).then((b) => { v.src = URL.createObjectURL(b); }).catch(() => {});
+          }
+        };
+        if (v.readyState >= 1) check(); else v.addEventListener('loadedmetadata', check, { once: true });
+      }, []);
+    }
 
     function useTypewriter(text, speed = 38, startDelay = 600) {
       const [displayed, setDisplayed] = useState('');
@@ -55,71 +125,38 @@
       return { displayed, done };
     }
 
-    function BackgroundVideo() {
-      const ref = useRef(null);
-      // Desktop: horizontal mouse movement scrubs the video. One seek at a time; `seeked` queues the next.
-      useEffect(() => {
-        const v = ref.current;
-        let prevX = null, target = 0, seeking = false;
-        const seek = () => {
-          if (!v.duration) return;
-          if (Math.abs(v.currentTime - target) < 0.01) { seeking = false; return; }
-          seeking = true; v.currentTime = target;
-        };
-        const onSeeked = () => { seeking = false; if (Math.abs(v.currentTime - target) > 0.01) seek(); };
-        const onMove = (e) => {
-          if (window.innerWidth < 1024) return;
-          if (prevX === null) { prevX = e.clientX; return; }
-          const delta = e.clientX - prevX; prevX = e.clientX;
-          if (!v.duration) return;
-          target = Math.min(v.duration, Math.max(0, target + (delta / window.innerWidth) * SENSITIVITY * v.duration));
-          if (!seeking) seek();
-        };
-        v.addEventListener('seeked', onSeeked);
-        window.addEventListener('mousemove', onMove);
-        return () => { v.removeEventListener('seeked', onSeeked); window.removeEventListener('mousemove', onMove); };
-      }, []);
-      // Mobile: no scrubbing, just play.
-      useEffect(() => {
-        const v = ref.current;
-        if (window.innerWidth < 1024) { v.autoplay = true; v.loop = true; v.play().catch(() => {}); }
-      }, []);
-      return (
-        <div className="order-last lg:order-none relative lg:absolute lg:inset-0 lg:z-0 overflow-hidden pointer-events-none w-full aspect-square md:aspect-video lg:aspect-auto lg:h-full bg-neutral-50 lg:bg-transparent">
-          <video ref={ref} muted playsInline preload="auto" src={VIDEO} className="w-full h-full object-cover object-right lg:object-right-bottom" />
-        </div>
-      );
-    }
-
-    const LINKS = ['Labs', 'Studio', 'Openings', 'Shop'];
+    const LINKS = [
+      { label: 'Work', href: 'shelf-library.html#library' },
+      { label: 'About', href: 'halcyon-hero.html' },     // the design-POV journey tells who I am
+      { label: 'Social', href: SOCIAL },
+    ];
     function Navbar() {
       const [isMobileMenuOpen, setOpen] = useState(false);
-      const bar = 'w-6 h-[2px] bg-black transition-all duration-300';
+      const bar = 'w-6 h-[2px] bg-white transition-all duration-300';
       return (
         <>
-          <header className="fixed top-0 inset-x-0 z-10 px-5 sm:px-8 py-4 sm:py-5 flex flex-row justify-between items-center bg-transparent">
-            <a href="#" className="flex flex-row items-center gap-3">
-              <span className="text-[21px] sm:text-[26px] tracking-tight text-black font-medium select-none">Mainframe&reg;</span>
-              <span className="text-[25px] sm:text-[30px] text-black select-none tracking-[-0.02em] font-medium leading-none mb-1">&#10033;</span>
+          <header className="fixed top-0 inset-x-0 z-[30] px-5 sm:px-8 py-3 sm:py-4 flex flex-row justify-between items-center bg-transparent">
+            <a href="#" aria-label="Manisha Baroliya" className="relative z-20">
+              <img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186" className="logo-sticker" />
             </a>
-            <nav className="hidden md:flex flex-row text-[23px] text-black">
+            <nav className="hidden md:flex flex-row text-[21px] text-white absolute left-1/2 -translate-x-1/2">
               {LINKS.map((l, i) => (
-                <React.Fragment key={l}>
-                  <a href="#" className="hover:opacity-60 transition-opacity">{l}</a>
+                <React.Fragment key={l.label}>
+                  <a href={l.href} target="_top" className="hover:opacity-60 transition-opacity">{l.label}</a>
                   {i < LINKS.length - 1 && <span className="opacity-40">,&nbsp;</span>}
                 </React.Fragment>
               ))}
             </nav>
-            <a href="#" className="hidden md:inline text-[23px] text-black underline underline-offset-2 hover:opacity-60 transition-opacity">Get in touch</a>
-            <button aria-label="Menu" aria-expanded={isMobileMenuOpen} onClick={() => setOpen((o) => !o)} className="md:hidden flex flex-col gap-[5px] p-1 relative z-20">
+            <a href={SOCIAL} target="_top" className="hidden md:inline text-[21px] text-white underline underline-offset-2 hover:opacity-60 transition-opacity">Get in touch</a>
+            <button aria-label="Menu" aria-expanded={isMobileMenuOpen} onClick={() => setOpen((o) => !o)} className="md:hidden flex flex-col gap-[5px] p-1 relative z-[30]">
               <span className={bar + (isMobileMenuOpen ? ' rotate-45 translate-y-[7px]' : '')} />
               <span className={bar + (isMobileMenuOpen ? ' opacity-0' : '')} />
               <span className={bar + (isMobileMenuOpen ? ' -rotate-45 -translate-y-[7px]' : '')} />
             </button>
           </header>
-          <div className={'md:hidden fixed inset-0 z-[9] bg-white/95 backdrop-blur-sm flex flex-col justify-center items-start px-8 gap-8 transition-opacity duration-300 ' + (isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none')}>
-            {LINKS.map((l) => <a key={l} href="#" className="text-[32px] font-medium text-black" onClick={() => setOpen(false)}>{l}</a>)}
-            <a href="#" className="text-[32px] font-medium text-black underline underline-offset-2">Get in touch</a>
+          <div className={'md:hidden fixed inset-0 z-[25] bg-black/95 backdrop-blur-sm flex flex-col justify-center items-start px-8 gap-8 transition-opacity duration-300 ' + (isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none')} style={{ opacity: isMobileMenuOpen ? 1 : 0 }}>
+            {LINKS.map((l) => <a key={l.label} href={l.href} target="_top" className="text-[32px] font-medium text-white" onClick={() => setOpen(false)}>{l.label}</a>)}
+            <a href={SOCIAL} target="_top" className="text-[32px] font-medium text-white underline underline-offset-2">Get in touch</a>
           </div>
         </>
       );
@@ -132,36 +169,36 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
     );
 
-    const OPTIONS = ['Brand', 'Digital', 'Campaign', 'Other'];
+    const OPTIONS = ['UI/UX design', 'Product design', 'Design system', 'UX research', 'Other'];
     function Services() {
       const [services, setServices] = useState([]);
       const toggle = (s) => setServices((cur) => (cur.includes(s) ? cur.filter((x) => x !== s) : [...cur, s]));
       return (
         <div className="drop-in" style={{ animationDelay: '0.2s' }}>
-          <h2 className="text-2xl font-medium tracking-tight mb-2 text-[#1C2E1E]">What sort of service?</h2>
-          <p className="opacity-85 text-[#738273] mb-8">Select all that apply</p>
-          <div className="flex flex-wrap gap-3">
+          <h2 className="text-2xl font-medium tracking-tight mb-2 text-white">What can I help with?</h2>
+          <p className="text-white/50 mb-8">Select all that apply</p>
+          <div className="flex flex-wrap gap-3 lg:max-w-[34rem]">
             {OPTIONS.map((s) => {
               const on = services.includes(s);
               return (
                 <button key={s} type="button" onClick={() => toggle(s)} aria-pressed={on}
-                  className={'inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-medium transition-all duration-300 active:scale-95 hover:scale-[1.03] ' +
-                    (on ? 'bg-[#1C2E1E] text-white shadow-md shadow-emerald-950/5 transform' : 'bg-white text-[#1C2E1E] border border-[#F1F3F1] hover:bg-[#F1F3F1]/55')}>
+                  className={'inline-flex items-center gap-2 rounded-full px-6 py-3 text-base font-medium transition-all duration-300 active:scale-95 hover:scale-[1.03] backdrop-blur-md ' +
+                    (on ? 'bg-white text-black shadow-lg shadow-indigo-500/20' : 'bg-white/[0.07] text-white border border-white/15 hover:bg-white/15')}>
                   {on && <Check />}
                   {s}
                 </button>
               );
             })}
           </div>
-          <div className="mt-8 min-h-[64px]">
+          <div className="mt-8 min-h-[64px] lg:max-w-[34rem]">
             {services.length === 0 ? (
-              <p key="empty" className="banner-in text-xs italic" style={{ opacity: 0.5 }}>Please click to select services above.</p>
+              <p key="empty" className="banner-in text-xs italic text-white" style={{ opacity: 0.5 }}>Pick a few to get started.</p>
             ) : (
               <div className="grow open">
                 <div>
-                  <div key="ready" className="banner-in flex flex-wrap items-center justify-between gap-4 bg-[#FAFBF9] border border-[#EEF1EE] rounded-2xl px-5 py-4">
-                    <p className="text-sm text-[#1C2E1E]">Ready to inquire about: <span className="font-medium">{services.join(', ')}</span></p>
-                    <button type="button" className="inline-flex items-center gap-2 text-[#4D6D47] uppercase text-xs font-semibold tracking-wider hover:gap-3 transition-all">Let's Go <ArrowRight /></button>
+                  <div key="ready" className="banner-in flex flex-wrap items-center justify-between gap-4 bg-white/[0.06] border border-white/15 backdrop-blur-md rounded-2xl px-5 py-4">
+                    <p className="text-sm text-white">Ready to chat about: <span className="font-medium">{services.join(', ')}</span></p>
+                    <a href={SOCIAL} target="_top" className="inline-flex items-center gap-2 text-[#9db0ff] uppercase text-xs font-semibold tracking-wider hover:gap-3 transition-all">Let's Go <ArrowRight /></a>
                   </div>
                 </div>
               </div>
@@ -171,28 +208,238 @@
       );
     }
 
-    function App() {
-      const { displayed, done } = useTypewriter("we'd love to\nhear from you!");
+    function HeroCopy() {
+      const { displayed, done } = useTypewriter("I'd love to\nhear from you!");
       return (
-        <div className="relative bg-white text-neutral-900 font-sans selection:bg-[#EAECE9] selection:text-[#1C2E1E] antialiased overflow-x-hidden flex flex-col lg:block lg:min-h-screen">
-          <Navbar />
-          <BackgroundVideo />
-          <div className="relative z-10 flex flex-col order-first lg:order-none w-full bg-white lg:bg-transparent pb-8 lg:pb-0 lg:min-h-screen">
-            <main id="spade-hero" className="w-full max-w-7xl mx-auto px-6 py-12 pt-28 flex-1 flex flex-col justify-center">
-              <div className="drop-in">
-                <h1 className="text-5xl md:text-6xl lg:text-[76px] font-normal tracking-tight text-black leading-[1.08] mb-8 select-none w-full whitespace-pre-wrap min-h-[2.16em]">
-                  {displayed}
-                  {!done && <span className="inline-block w-[2px] h-[1.1em] bg-black align-middle ml-[2px] animate-blink" />}
-                </h1>
-              </div>
-              <div className="drop-in" style={{ animationDelay: '0.1s' }}>
-                <p className="text-lg md:text-xl text-[#5A635A] leading-relaxed font-normal mb-14 max-w-2xl">
-                  Whether you have questions, feedback, <br /> drop us a message and we'll get back to you as soon as possible.
-                </p>
-              </div>
-              <Services />
-            </main>
+        <main id="spade-hero" className="w-full max-w-7xl mx-auto px-6 py-12 pt-28 flex-1 flex flex-col justify-center">
+          <div className="drop-in">
+            <h1 className="text-5xl md:text-6xl lg:text-[76px] font-normal tracking-tight text-white leading-[1.08] mb-8 select-none w-full whitespace-pre-wrap min-h-[2.16em]">
+              {displayed}
+              {!done && <span className="inline-block w-[2px] h-[1.1em] bg-white align-middle ml-[2px] animate-blink" />}
+            </h1>
           </div>
+          <div className="drop-in" style={{ animationDelay: '0.1s' }}>
+            <p className="text-lg md:text-xl text-white/60 leading-relaxed font-normal mb-14 max-w-2xl">
+              Have a project, a question or just want to say hi? <br /> Drop me a message and I'll get back to you as soon as possible.
+            </p>
+          </div>
+          <Services />
+        </main>
+      );
+    }
+
+    // What I do, told over the clip. Skills and strengths only. `mid` is where in the clip's scroll the caption is fully shown;
+    // it eases in over 0.06 before that and out 0.06 after, so one finishes fading just as the next begins.
+    const win = (mid) => [mid - 0.09, mid - 0.03, mid + 0.03, mid + 0.09];
+    const CAPS = [
+      { id: 'people', side: 'right', at: win(0.13), eyebrow: '01 · Curious first',
+        title: <>Start with the <em className="italic font-normal text-[#9db0ff]">people.</em></>,
+        body: 'A psychology background means I research how people actually think, feel and get stuck, before I draw a single screen.' },
+      { id: 'play', side: 'left', at: win(0.33), eyebrow: '02 · Playful on purpose',
+        title: <>Interfaces with <em className="italic font-normal text-[#9db0ff]">personality.</em></>,
+        body: 'Clean, friendly and a little unexpected: products that feel human and brands that look like themselves.' },
+      { id: 'scale', side: 'right', at: win(0.52), eyebrow: '03 · Built to scale',
+        title: <>Systems, not just <em className="italic font-normal text-[#9db0ff]">screens.</em></>,
+        body: 'Figma design systems and tidy handoffs that help whole teams move faster across SaaS and B2B products.' },
+      { id: 'ai', side: 'left', at: win(0.69), eyebrow: '04 · Smarter, faster',
+        title: <>AI to explore, <em className="italic font-normal text-[#9db0ff]">humans to decide.</em></>,
+        body: 'AI-assisted exploration trimmed MVP turnaround by 25–30%, with the human touch kept in.' },
+      { id: 'end', side: 'right', at: [0.80, 0.86, 2, 3], eyebrow: '05 · Let\'s talk', cta: true,   // the last caption stays to the end
+        title: <>Let's make something <em className="italic font-normal text-[#9db0ff]">iconic.</em></>,
+        body: 'Got an idea, a product or a brand that needs a human touch? I\'d love to hear about it.' },
+    ];
+
+    function Stage({ lg }) {
+      const wrap = useRef(null), cam = useRef(null), head = useRef(null), heroText = useRef(null), cue = useRef(null);
+      const ring = useRef(null), portal = useRef(null), card = useRef(null), clip = useRef(null), canvas = useRef(null), amb = useRef(null), caps = useRef([]);
+      useSeekable(head, HEAD);
+
+      // The figure: horizontal mouse movement turns its head (desktop); on phones it just plays. It rests once we start diving.
+      useEffect(() => {
+        const v = head.current;
+        let prevX = null, target = 0, seeking = false;
+        const seek = () => {
+          if (!v.duration) return;
+          if (Math.abs(v.currentTime - target) < 0.01) { seeking = false; return; }
+          seeking = true; v.currentTime = target;
+        };
+        const onSeeked = () => { seeking = false; if (Math.abs(v.currentTime - target) > 0.01) seek(); };
+        const onMove = (e) => {
+          if (window.innerWidth < 1024 || Q > 0.01) return;
+          if (prevX === null) { prevX = e.clientX; return; }
+          const delta = e.clientX - prevX; prevX = e.clientX;
+          if (!v.duration) return;
+          target = Math.min(v.duration, Math.max(0, target + (delta / window.innerWidth) * SENSITIVITY * v.duration));
+          if (!seeking) seek();
+        };
+        v.addEventListener('seeked', onSeeked);
+        window.addEventListener('mousemove', onMove);
+        if (window.innerWidth < 1024) { v.autoplay = true; v.loop = true; v.play().catch(() => {}); }
+        return () => { v.removeEventListener('seeked', onSeeked); window.removeEventListener('mousemove', onMove); };
+      }, []);
+
+      // The dive, the portal, the settle and the scrub, all driven by one eased progress value.
+      useEffect(() => {
+        const v = clip.current, ctx = canvas.current.getContext('2d');
+        const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let target = 0, shown = 0, raf = 0, ready = false, first = true, g = null;
+        const blur = (px) => (px > 0.15 ? `blur(${px.toFixed(1)}px)` : 'none');
+        const glow = () => { try { ctx.drawImage(v, 0, 0, 24, 24); } catch (e) {} };   // tiny copy of the frame lights the backdrop
+
+        // where the head sits on screen, how far to zoom, and where the clip's frame ends up (mirrors the CSS)
+        const measure = () => {
+          const W = innerWidth, H = innerHeight, big = W >= 1024;
+          const k = Math.max(W / 1920, H / 1080), vw = 1920 * k, vh = 1080 * k, px = big ? 1 : 0.77;
+          const hx = (W - vw) * px + 0.70 * vw, hy = (H - vh) + 0.22 * vh;
+          const s = Math.min(3.6, (0.85 * H) / (0.29 * vh));
+          const size = big ? Math.min(0.72 * H, 0.44 * W) : Math.min(0.88 * W, 0.56 * H);
+          g = { W, H, hx, hy, s, size, cx: W / 2, cy: big ? H / 2 : 80 + size / 2, R: Math.hypot(W, H) / 2 * 1.04 };
+          cam.current.style.transformOrigin = `${hx}px ${hy}px`;
+        };
+
+        const paint = (q) => {
+          // 1. the words step aside
+          const tf = ease(clamp(q / Q_TEXT));
+          if (heroText.current) {
+            const hs = heroText.current.style;
+            hs.opacity = (1 - tf).toFixed(3); hs.transform = `translate3d(0, ${(-4 * tf).toFixed(2)}vh, 0)`;
+            hs.visibility = tf > 0.98 ? 'hidden' : 'visible'; hs.pointerEvents = tf > 0.2 ? 'none' : 'auto';
+          }
+          cue.current.style.opacity = (1 - clamp(q / 0.03)).toFixed(3);
+          // 2. the camera dives into the face and centres on it
+          const ze = ease(clamp((q - Q_Z0) / (Q_Z1 - Q_Z0)));
+          cam.current.style.transform = `translate3d(${((g.W / 2 - g.hx) * ze).toFixed(1)}px, ${((g.H / 2 - g.hy) * ze).toFixed(1)}px, 0) scale(${(1 + (g.s - 1) * ze).toFixed(4)})`;
+          // 3. a round portal opens from the face onto the clip's first frame
+          const pe = ease(clamp((q - Q_P0) / (Q_Z1 - Q_P0))), r = pe * g.R;
+          const ps = portal.current.style;
+          ps.visibility = r > 0.5 ? 'visible' : 'hidden';
+          ps.clipPath = pe >= 1 ? 'none' : `circle(${r.toFixed(1)}px at ${g.W / 2}px ${g.H / 2}px)`;
+          const rs = ring.current.style;
+          rs.visibility = r > 0.5 && pe < 1 ? 'visible' : 'hidden';
+          rs.opacity = (0.95 * (1 - clamp((r / g.R - 0.7) / 0.3))).toFixed(3);
+          rs.width = rs.height = `${(2 * r).toFixed(1)}px`; rs.left = `${g.W / 2 - r}px`; rs.top = `${g.H / 2 - r}px`;
+          cam.current.style.visibility = pe >= 1 ? 'hidden' : 'visible';
+          // 4. the full-screen frame settles into its card
+          const m = ease(clamp((q - Q_Z1) / (Q_M1 - Q_Z1)));
+          const cs = card.current.style;
+          cs.left = `${lerp(g.W / 2, g.cx, m).toFixed(1)}px`; cs.top = `${lerp(g.H / 2, g.cy, m).toFixed(1)}px`;
+          cs.width = `${lerp(g.W, g.size, m).toFixed(1)}px`; cs.height = `${lerp(g.H, g.size, m).toFixed(1)}px`;
+          cs.borderRadius = `${(26 * m).toFixed(1)}px`; cs.boxShadow = `0 0 0 1px rgba(255,255,255,${(0.14 * m).toFixed(3)}), 0 50px 120px -30px rgba(0,0,0,${(0.9 * m).toFixed(2)})`;
+          amb.current.style.opacity = (0.8 * m).toFixed(3);
+          // 5. then it scrubs, and the captions drift in from their own sides
+          const qs = clamp((q - Q_M1) / (1 - Q_M1));
+          CAPS.forEach((c, i) => {
+            const el = caps.current[i]; if (!el) return;
+            const [a, b, cc, d] = c.at;
+            const inn = ease(clamp((qs - a) / (b - a))), out = ease(clamp((qs - cc) / (d - cc)));
+            const o = inn * (1 - out), dir = c.side === 'left' ? -1 : 1;
+            const st = el.style;
+            st.opacity = o.toFixed(3); st.visibility = o < 0.005 ? 'hidden' : 'visible';
+            st.transform = `translate3d(${(dir * (34 * (1 - inn) + 26 * out)).toFixed(1)}px, 0, 0)`; st.filter = blur((1 - o) * 6);
+            st.pointerEvents = o > 0.6 ? 'auto' : 'none';
+          });
+          return qs;
+        };
+        const wantTime = (qs) => clamp((qs - 0.03) / 0.94) * ((v.duration || 0) - 0.05);   // rest a beat on the first and last frame
+
+        // One eased progress value drives everything, so wheel steps glide and the words and footage always move together.
+        const tick = () => {
+          raf = 0;
+          shown = reduced || first ? target : shown + (target - shown) * 0.075;
+          if (Math.abs(target - shown) < 0.0003) shown = target;
+          first = false; Q = shown;
+          const qs = paint(shown);
+          let lag = false;
+          if (ready && v.duration) {
+            const w = wantTime(qs);
+            if (!v.seeking && Math.abs(w - v.currentTime) > 0.015) v.currentTime = w;
+            lag = v.seeking || Math.abs(w - v.currentTime) > 0.015;
+          }
+          if (shown !== target || lag) raf = requestAnimationFrame(tick);
+        };
+        const onScroll = () => {
+          const r = wrap.current.getBoundingClientRect();
+          target = clamp(-r.top / (r.height - innerHeight));
+          if (!raf) raf = requestAnimationFrame(tick);
+        };
+        const onResize = () => { measure(); onScroll(); };
+        const onSeeked = () => { glow(); if (!raf) raf = requestAnimationFrame(tick); };
+        // iOS only lets a video seek smoothly after it has been "played" once; do that silently, then follow the scroll
+        const onReady = () => {
+          ready = true;
+          const pl = v.play();
+          (pl && pl.then ? pl.then(() => v.pause()) : Promise.resolve(v.pause())).catch(() => {}).then(() => { glow(); onScroll(); });
+        };
+        let swapped = false;
+        const begin = () => {
+          const last = v.seekable.length - 1;
+          const seekable = last >= 0 && v.seekable.end(last) >= v.duration - 0.5;
+          if (!seekable && !swapped) {
+            swapped = true;
+            fetch(CLIP).then((r) => r.blob()).then((blob) => { v.addEventListener('loadeddata', onReady, { once: true }); v.src = URL.createObjectURL(blob); }).catch(onReady);
+            return;
+          }
+          onReady();
+        };
+        measure();
+        if (v.readyState >= 2) begin(); else v.addEventListener('loadeddata', begin, { once: true });
+        v.addEventListener('seeked', onSeeked);
+        onScroll();
+        addEventListener('scroll', onScroll, { passive: true });
+        addEventListener('resize', onResize);
+        return () => { removeEventListener('scroll', onScroll); removeEventListener('resize', onResize); v.removeEventListener('seeked', onSeeked); cancelAnimationFrame(raf); };
+      }, []);
+
+      return (
+        <div ref={wrap} style={{ height: `${SCREENS * 100}svh` }}>
+          <div className="stage">
+            {/* the figure, on black with its glow; this whole layer is what the camera dives through */}
+            <div ref={cam} className="absolute inset-0 z-0 will-change-transform pointer-events-none">
+              <video ref={head} muted playsInline preload="auto" src={HEAD} poster={HEAD_POSTER} className="charvid w-full h-full object-cover" />
+            </div>
+            {lg && (
+              <div ref={heroText} className="absolute inset-0 z-[2] flex flex-col will-change-transform">
+                <HeroCopy />
+              </div>
+            )}
+            <div ref={cue} className="hidden lg:flex absolute bottom-7 left-1/2 -translate-x-1/2 z-[2] flex-col items-center gap-2 pointer-events-none drop-in" style={{ animationDelay: '1.4s' }}>
+              <span className="text-[10px] uppercase tracking-[0.3em] text-white/50">Scroll</span>
+              <span className="block h-8 w-px bg-white/50 cue" />
+            </div>
+            <div ref={amb} className="ambient" aria-hidden="true"><canvas ref={canvas} width="24" height="24" /></div>
+            <div ref={ring} className="ring" aria-hidden="true" />
+            <div ref={portal} className="portal">
+              <div ref={card} className="cardx" style={{ left: '50%', top: '50%', width: '100vw', height: '100dvh' }}>
+                <video ref={clip} src={CLIP} poster={CLIP_POSTER} muted playsInline preload="auto" tabIndex={-1} aria-hidden="true" />
+              </div>
+            </div>
+            {CAPS.map((c, i) => (
+              <div key={c.id} ref={(n) => (caps.current[i] = n)} className={'cap ' + c.side}>
+                <div className="cap-in">
+                  <p className="text-xs uppercase tracking-[0.25em] text-white/50">{c.eyebrow}</p>
+                  <h2 className="mt-3 text-[1.9rem] sm:text-4xl lg:text-[2.6rem] font-medium leading-[1.05] tracking-tight text-white">{c.title}</h2>
+                  <p className="mt-4 text-sm sm:text-base leading-relaxed text-white/65">{c.body}</p>
+                  {c.cta && (
+                    <a href={SOCIAL} target="_top" className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-black hover:scale-[1.03] active:scale-95 transition-transform">
+                      Get in touch <ArrowRight />
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const lg = useIsLg();
+      return (
+        <div className="relative bg-black text-white font-sans selection:bg-indigo-500/40 selection:text-white antialiased clipx">
+          <Navbar />
+          {/* phones and tablets: the words come first, in the flow, and the pinned stage with the figure follows */}
+          {!lg && <section className="relative flex flex-col bg-black pb-8"><HeroCopy /></section>}
+          <Stage lg={lg} key={lg ? 'lg' : 'sm'} />
         </div>
       );
     }
