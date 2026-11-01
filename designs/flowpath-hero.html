@@ -5,7 +5,7 @@
   <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
   if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>flowpath — Hero</title>
+  <title>Manisha Baroliya — Product designer</title>
   <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/08e020de1811ec4489f82d1247a42c09?family=Helvetica+Now+Text">
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
@@ -14,6 +14,14 @@
   <style>
     * { font-family: 'Helvetica Now Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
     body { margin: 0; background: #000; }
+    /* the film is shot on pure black, so it can sit off to the right (on wide screens) and the words get the quiet side;
+       on a phone it rests in the lower part of the screen under the words */
+    .bgwrap { position: absolute; inset: 0; transform: translateX(15vw); }
+    .bgwrap video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; }
+    @media (max-width: 767px) { .bgwrap { transform: none; top: auto; height: 66%; } .bgwrap video { object-position: 50% 60%; } }
+    .tx { text-shadow: 0 2px 24px rgba(0,0,0,.55); }
+    .logo-dark { height: 46px; width: auto; display: block; }
+    @media (min-width: 640px) { .logo-dark { height: 56px; } }
 
     .liquid-glass {
       background: rgba(255, 255, 255, 0.01);
@@ -67,56 +75,39 @@
     const Menu = (p) => <Icon {...p}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></Icon>;
     const X = (p) => <Icon {...p}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></Icon>;
 
+    const SOCIAL = 'shelf-library.html#social';          // every sticker on the social calendar opens a chat with me
     const NAV = [
-      { label: 'Product', items: ['Connections', 'Workflows', 'Insights'] },
-      { label: 'Solutions', items: ['Guides', 'Use cases', 'API reference'] },
-      { label: 'About', items: ['Our story', 'Open roles', 'Reach us'] },
-      { label: 'Plans', items: [] },
+      { label: 'Home', href: 'shelf-library.html#home' },
+      { label: 'Work', href: 'shelf-library.html#library' },
+      { label: 'About', href: 'halcyon-hero.html' },     // the design-POV journey tells who I am
+      { label: 'Social', href: SOCIAL },
     ];
 
     const Logo = () => (
-      <div className="flex items-center gap-2">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <path d="M14 2 26 14 14 26 2 14Z" fill="white" opacity="0.9" />
-          <path d="M14 8 20 14 14 20 8 14Z" fill="white" opacity="0.5" />
-        </svg>
-        <span className="text-white text-lg sm:text-xl font-medium tracking-tight">flowpath</span>
-      </div>
+      <a href="#" aria-label="Manisha Baroliya" className="block"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199" className="logo-dark" /></a>
     );
 
     function App() {
-      const [openDrop, setOpenDrop] = useState(null);
       const [mobile, setMobile] = useState(false);
 
       return (
-        <section className="relative h-screen w-full overflow-hidden flex flex-col bg-black">
-          <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover"
-            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260703_053131_1ec3dd1c-d627-44fb-ab20-6e1fce41b0d5.mp4" />
-          <div className="absolute inset-0 bg-black/10" />
+        <section className="relative w-full overflow-hidden flex flex-col bg-black" style={{ height: '100dvh' }}>
+          {/* the glowing mushrooms, looping forward, on pure black */}
+          <div className="bgwrap" aria-hidden="true">
+            <video autoPlay loop muted playsInline preload="auto" src="assets/glow/glow.mp4" poster="assets/glow/glow.webp" />
+          </div>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(90deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.18) 45%, transparent 70%)' }} />
 
           <nav className="relative z-30 flex items-center justify-between px-5 sm:px-6 md:px-12 lg:px-16 py-4 sm:py-5">
             <div className="flex items-center gap-10">
               <Logo />
               <div className="hidden md:flex items-center gap-7">
-                {NAV.map((n) => (
-                  <div key={n.label} className="relative" onMouseEnter={() => setOpenDrop(n.label)} onMouseLeave={() => setOpenDrop(null)}>
-                    <button className="flex items-center gap-1 text-white/90 hover:text-white text-sm font-medium py-2">
-                      {n.label}
-                      {n.items.length > 0 && <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${openDrop === n.label ? 'rotate-180' : ''}`} />}
-                    </button>
-                    {n.items.length > 0 && openDrop === n.label && (
-                      <div className="animate-dropdown liquid-glass !absolute top-full left-0 rounded-xl py-3 px-2 min-w-[160px] shadow-xl">
-                        {n.items.map((it) => <a key={it} href="#" className="block px-3 py-2 text-white/80 hover:text-white text-sm rounded-lg hover:bg-white/5">{it}</a>)}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                {NAV.map((n) => <a key={n.label} href={n.href} target="_top" className="text-white/90 hover:text-white text-sm font-medium py-2 transition-colors">{n.label}</a>)}
               </div>
             </div>
 
             <div className="hidden md:flex items-center gap-5">
-              <a href="#" className="text-white/90 hover:text-white text-sm font-medium">Log in</a>
-              <button className="liquid-glass rounded-full px-5 py-2 text-white text-sm font-medium">Try it free</button>
+              <a href={SOCIAL} target="_top" className="liquid-glass rounded-full px-5 py-2 text-white text-sm font-medium">Get in touch</a>
             </div>
 
             <button onClick={() => setMobile(!mobile)} aria-label="Toggle menu" className="md:hidden relative w-9 h-9 text-white">
@@ -124,32 +115,28 @@
               <X className={`absolute inset-0 m-auto w-6 h-6 transition-all duration-300 ${mobile ? 'opacity-100' : '-rotate-90 scale-50 opacity-0'}`} />
             </button>
 
-            <div className={`md:hidden absolute top-full left-4 right-4 mt-2 bg-[#2C221C]/95 backdrop-blur-xl rounded-2xl p-6 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobile ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
-              {NAV.map((n) => (
-                <div key={n.label} className="mb-4">
-                  <a href="#" className="text-white text-lg font-medium">{n.label}</a>
-                  {n.items.map((it) => <a key={it} href="#" className="block pl-4 pt-2 text-white/70 text-sm">{it}</a>)}
-                </div>
-              ))}
-              <div className="border-t border-white/10 pt-4 flex items-center justify-between">
-                <a href="#" className="text-white/90 text-sm font-medium">Log in</a>
-                <button className="liquid-glass rounded-full px-5 py-2 text-white text-sm font-medium">Try it free</button>
+            <div className={`md:hidden absolute top-full left-4 right-4 mt-2 bg-[#14100d]/95 backdrop-blur-xl rounded-2xl p-6 transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${mobile ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
+              {NAV.map((n) => <a key={n.label} href={n.href} target="_top" onClick={() => setMobile(false)} className="block mb-4 text-white text-lg font-medium">{n.label}</a>)}
+              <div className="border-t border-white/10 pt-4">
+                <a href={SOCIAL} target="_top" className="inline-block liquid-glass rounded-full px-5 py-2 text-white text-sm font-medium">Get in touch</a>
               </div>
             </div>
           </nav>
 
-          <div className="relative z-10 flex-1 flex items-start justify-center px-5 pt-16 sm:pt-20 md:pt-24">
-            <div className="text-center max-w-3xl">
-              <h1 className="text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl leading-[1.05] tracking-[-0.02em]">
-                Bridge the<br />gaps. <span className="text-white/60">Ditch the</span><br /><span className="text-white/60">grindwork.</span>
+          <div className="relative z-10 flex-1 flex items-start md:items-center px-5 sm:px-6 md:px-12 lg:px-16 pt-10 sm:pt-14 md:pt-0 pb-10">
+            <div className="max-w-xl lg:max-w-2xl">
+              <p className="tx text-[11px] sm:text-xs uppercase tracking-[0.22em] text-white/60 mb-4 sm:mb-6">Product designer &amp; UX researcher</p>
+              <h1 className="tx text-white text-4xl sm:text-5xl md:text-6xl xl:text-7xl leading-[1.05] tracking-[-0.02em]">
+                Designing products <span className="text-white/60">people actually understand.</span>
               </h1>
-              <p className="text-white/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-md mx-auto mt-6 sm:mt-8">
-                Flowpath unifies your complete wellness tools, so your crew spends less energy plugging gaps and more on real progress.
+              <p className="tx text-white/80 text-sm sm:text-base md:text-lg leading-relaxed max-w-md mt-6 sm:mt-8">
+                I'm Manisha. I turn complex, multi-role workflows into clean, human interfaces, grounded in research and a psychology-led approach.
               </p>
-              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
-                <button className="px-5 sm:px-6 py-2.5 sm:py-3 bg-white text-gray-900 text-sm font-semibold rounded-full hover:bg-white/90">Begin your journey</button>
-                <button className="px-5 sm:px-6 py-2.5 sm:py-3 liquid-glass rounded-full text-white text-sm font-semibold hover:bg-white/10">See it live</button>
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 mt-6 sm:mt-8">
+                <a href="shelf-library.html#library" target="_top" className="px-5 sm:px-6 py-2.5 sm:py-3 bg-white text-gray-900 text-sm font-semibold rounded-full hover:bg-white/90">View my work</a>
+                <a href={SOCIAL} target="_top" className="px-5 sm:px-6 py-2.5 sm:py-3 liquid-glass rounded-full text-white text-sm font-semibold hover:bg-white/10">Get in touch</a>
               </div>
+              <p className="tx hidden sm:block text-white/50 text-xs sm:text-sm mt-8 sm:mt-10">3+ years · 20+ live designs · 10+ SaaS &amp; B2B platforms</p>
             </div>
           </div>
         </section>

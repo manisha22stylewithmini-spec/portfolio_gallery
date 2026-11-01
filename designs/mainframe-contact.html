@@ -76,9 +76,11 @@
     const CLIP = 'assets/iconic/clip.mp4', CLIP_POSTER = 'assets/iconic/clip.webp';
     const SOCIAL = 'shelf-library.html#social';          // every sticker on the social calendar opens a chat with me
     const SENSITIVITY = 0.8;
-    const SCREENS = 9.5;                                 // height of the pinned stage, in screens (8.5 of them are scroll travel)
-    // where things happen along that travel (0 to 1): text fades, camera dives, the portal opens, the clip settles, then it scrubs
-    const Q_TEXT = 0.05, Q_Z0 = 0.015, Q_P0 = 0.11, Q_Z1 = 0.20, Q_M1 = 0.30;
+    const SCREENS = 12;                                  // height of the pinned stage, in screens (about 11 of them are scroll travel)
+    // where things happen along that travel (0 to 1). In: the text fades, the camera dives, the portal opens, the clip settles, then it scrubs.
+    // Out (the same moves, backwards): the clip opens to full screen, the portal closes into the head, the camera pulls out, the words return.
+    const Q_TEXT = 0.039, Q_Z0 = 0.012, Q_P0 = 0.086, Q_Z1 = 0.156, Q_M1 = 0.234;     // going in
+    const Q_S1 = 0.78, Q_X1 = 0.853, Q_C1 = 0.982, Q_T0 = 0.955;                      // scrub ends, clip full screen, portal closed, words back
     const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
     const ease = (t) => t * t * t * (t * (6 * t - 15) + 10);   // smootherstep: no visible start or stop
     const lerp = (a, b, t) => a + (b - a) * t;
@@ -244,7 +246,7 @@
       { id: 'ai', side: 'left', at: win(0.69), eyebrow: '04 · Smarter, faster',
         title: <>AI to explore, <em className="italic font-normal text-[#9db0ff]">humans to decide.</em></>,
         body: 'AI-assisted exploration trimmed MVP turnaround by 25–30%, with the human touch kept in.' },
-      { id: 'end', side: 'right', at: [0.80, 0.86, 2, 3], eyebrow: '05 · Let\'s talk', cta: true,   // the last caption stays to the end
+      { id: 'end', side: 'right', at: [0.80, 0.86, 0.93, 0.99], eyebrow: '05 · Let\'s talk', cta: true,   // the last caption fades before the clip opens up
         title: <>Let's make something <em className="italic font-normal text-[#9db0ff]">iconic.</em></>,
         body: 'Got an idea, a product or a brand that needs a human touch? I\'d love to hear about it.' },
     ];
@@ -265,7 +267,7 @@
         };
         const onSeeked = () => { seeking = false; if (Math.abs(v.currentTime - target) > 0.01) seek(); };
         const onMove = (e) => {
-          if (window.innerWidth < 1024 || Q > 0.01) return;
+          if (window.innerWidth < 1024 || (Q > 0.01 && Q < 0.97)) return;
           if (prevX === null) { prevX = e.clientX; return; }
           const delta = e.clientX - prevX; prevX = e.clientX;
           if (!v.duration) return;
@@ -298,19 +300,19 @@
         };
 
         const paint = (q) => {
-          // 1. the words step aside
-          const tf = ease(clamp(q / Q_TEXT));
+          // 1. the words step aside going in, and come back at the very end
+          const tf = ease(clamp(q / Q_TEXT)), back = ease(clamp((q - Q_T0) / (1 - Q_T0))), vis = 1 - tf * (1 - back);
           if (heroText.current) {
             const hs = heroText.current.style;
-            hs.opacity = (1 - tf).toFixed(3); hs.transform = `translate3d(0, ${(-4 * tf).toFixed(2)}vh, 0)`;
-            hs.visibility = tf > 0.98 ? 'hidden' : 'visible'; hs.pointerEvents = tf > 0.2 ? 'none' : 'auto';
+            hs.opacity = vis.toFixed(3); hs.transform = `translate3d(0, ${(-4 * tf * (1 - back)).toFixed(2)}vh, 0)`;
+            hs.visibility = vis < 0.02 ? 'hidden' : 'visible'; hs.pointerEvents = vis > 0.7 ? 'auto' : 'none';
           }
           cue.current.style.opacity = (1 - clamp(q / 0.03)).toFixed(3);
-          // 2. the camera dives into the face and centres on it
-          const ze = ease(clamp((q - Q_Z0) / (Q_Z1 - Q_Z0)));
+          // 2. the camera dives into the face and centres on it; at the end it pulls back out
+          const zIn = ease(clamp((q - Q_Z0) / (Q_Z1 - Q_Z0))), zOut = ease(clamp((q - Q_X1) / (Q_C1 - Q_X1))), ze = zIn * (1 - zOut);
           cam.current.style.transform = `translate3d(${((g.W / 2 - g.hx) * ze).toFixed(1)}px, ${((g.H / 2 - g.hy) * ze).toFixed(1)}px, 0) scale(${(1 + (g.s - 1) * ze).toFixed(4)})`;
-          // 3. a round portal opens from the face onto the clip's first frame
-          const pe = ease(clamp((q - Q_P0) / (Q_Z1 - Q_P0))), r = pe * g.R;
+          // 3. a round portal opens from the face onto the clip, and later closes back into it
+          const pIn = ease(clamp((q - Q_P0) / (Q_Z1 - Q_P0))), pOut = ease(clamp((q - Q_X1) / ((Q_C1 - Q_X1) * 0.5))), pe = pIn * (1 - pOut), r = pe * g.R;
           const ps = portal.current.style;
           ps.visibility = r > 0.5 ? 'visible' : 'hidden';
           ps.clipPath = pe >= 1 ? 'none' : `circle(${r.toFixed(1)}px at ${g.W / 2}px ${g.H / 2}px)`;
@@ -319,15 +321,15 @@
           rs.opacity = (0.95 * (1 - clamp((r / g.R - 0.7) / 0.3))).toFixed(3);
           rs.width = rs.height = `${(2 * r).toFixed(1)}px`; rs.left = `${g.W / 2 - r}px`; rs.top = `${g.H / 2 - r}px`;
           cam.current.style.visibility = pe >= 1 ? 'hidden' : 'visible';
-          // 4. the full-screen frame settles into its card
-          const m = ease(clamp((q - Q_Z1) / (Q_M1 - Q_Z1)));
+          // 4. the full-screen frame settles into its card, and opens back to full screen before the portal closes
+          const m = ease(clamp((q - Q_Z1) / (Q_M1 - Q_Z1))) * (1 - ease(clamp((q - Q_S1) / (Q_X1 - Q_S1))));
           const cs = card.current.style;
           cs.left = `${lerp(g.W / 2, g.cx, m).toFixed(1)}px`; cs.top = `${lerp(g.H / 2, g.cy, m).toFixed(1)}px`;
           cs.width = `${lerp(g.W, g.size, m).toFixed(1)}px`; cs.height = `${lerp(g.H, g.size, m).toFixed(1)}px`;
           cs.borderRadius = `${(26 * m).toFixed(1)}px`; cs.boxShadow = `0 0 0 1px rgba(255,255,255,${(0.14 * m).toFixed(3)}), 0 50px 120px -30px rgba(0,0,0,${(0.9 * m).toFixed(2)})`;
           amb.current.style.opacity = (0.8 * m).toFixed(3);
-          // 5. then it scrubs, and the captions drift in from their own sides
-          const qs = clamp((q - Q_M1) / (1 - Q_M1));
+          // 5. between those, the clip scrubs and the captions drift in from their own sides
+          const qs = clamp((q - Q_M1) / (Q_S1 - Q_M1));
           CAPS.forEach((c, i) => {
             const el = caps.current[i]; if (!el) return;
             const [a, b, cc, d] = c.at;
@@ -340,7 +342,7 @@
           });
           return qs;
         };
-        const wantTime = (qs) => clamp((qs - 0.03) / 0.94) * ((v.duration || 0) - 0.05);   // rest a beat on the first and last frame
+        const wantTime = (qs) => clamp((qs - 0.03) / 0.94) * Math.max(0, (v.duration || 0) - 0.015);   // rest a beat on the first and last frame
 
         // One eased progress value drives everything, so wheel steps glide and the words and footage always move together.
         const tick = () => {
