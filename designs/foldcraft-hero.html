@@ -5,7 +5,7 @@
   <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
   if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Foldcraft — Hero</title>
+  <title>Manisha Baroliya — Product designer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,8 +16,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background: #000; }
+    body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background: #02040a; }
     @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+    /* the dark-theme logo (white script), made for dark backgrounds, so it needs no outline */
+    .logo-sticker { height: 48px; width: auto; display: block; }
+    @media (min-width: 640px) { .logo-sticker { height: 58px; } }
     .back-link {
       position: fixed; right: 12px; bottom: 12px; z-index: 60;
       font: 12px system-ui, sans-serif; color: rgba(255,255,255,.85);
@@ -30,7 +34,8 @@
   <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
 
   <script type="text/babel" data-presets="react">
-    const { useState } = React;
+    const { useState, useEffect, useRef } = React;
+    const SOCIAL = 'shelf-library.html#social';          // every sticker on the social calendar opens a chat with me
     const Icon = ({ size = 24, className, children }) => (
       <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
         strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
@@ -39,53 +44,239 @@
     const Menu = (p) => <Icon {...p}><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></Icon>;
     const X = (p) => <Icon {...p}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></Icon>;
 
-    const LINKS = ['Home', 'Projects', 'Studio', 'Reach Us'];
+    const LINKS = [
+      { label: 'Home', href: 'shelf-library.html#home' },
+      { label: 'Work', href: 'shelf-library.html#library' },
+      { label: 'About', href: 'halcyon-hero.html' },      // the design-POV journey tells who I am
+      { label: 'Social', href: SOCIAL },
+    ];
+
+    /* ---------------------------------------------------------------------------------------------------------------
+       The school. The film is a light shaft with the fish taken out of it; the fish are drawn live on a canvas above it,
+       in the film's own coordinates (1920 x 1080), so they stay locked to the beam at any screen size.
+       - on their own they drift as a school inside the beam
+       - while the cursor is on the right half of the screen they chase it, but never past the centre of the screen
+       - when the cursor is over the school they swim fast; when it leaves, they swim back home
+       --------------------------------------------------------------------------------------------------------------- */
+    const VW = 1920, VH = 1080;
+    const HOME = { x: 1535, y: 470, rx: 185, ry: 235 };       // where the school lives, in film pixels
+    const BEAM = { x: 1440, sx: 270 };                        // the light column, for lighting the fish
+    const N = 26;
+    const PALETTES = [
+      ['#ff4d17', '#ff9a2e', '#ffd25f'], ['#ff6a1a', '#ffb23c', '#ffe08a'], ['#ff3b1d', '#ff7a2a', '#ffc24d'],
+      ['#ff7e1f', '#ffc04a', '#fff0a8'], ['#e8431c', '#ff8a33', '#ffd070'],
+    ];
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    // spring({ bounce: 0.65, duration: 400 }): it overshoots to about 1.3, undershoots, and settles. This is its linear() curve.
+    const SPRING = [0, 0.0282, 0.1054, 0.2195, 0.3584, 0.5107, 0.6659, 0.8149, 0.9506, 1.0676, 1.1625, 1.2335, 1.2805, 1.3046, 1.3083, 1.2944, 1.2666, 1.2285, 1.1839, 1.1362, 1.0885, 1.0435, 1.0032, 0.9691, 0.9421, 0.9225, 0.9102, 0.9048, 0.9055, 0.9113, 0.921, 0.9335, 0.9477, 0.9626, 0.9771, 0.9906, 1.0025, 1.0124, 1.0201, 1.0254, 1.0285, 1.0296, 1.0288, 1.0266, 1.0233, 1.0192, 1.0147, 1.0101, 1.0057, 1.0017, 0.9982, 0.9953, 0.9932, 0.9918, 0.991, 0.9909, 0.9913, 0.9921, 0.9932, 0.9945, 0.9959, 0.9973, 0.9986, 0.9998, 1.0009, 1.0017, 1.0023, 1.0026, 1.0028, 1.0028, 1.0026, 1.0024, 1.002, 1.0016, 1.0011, 1.0007, 1.0003, 0.9999, 0.9996, 0.9994, 0.9993, 0.9992, 0.9991, 0.9991, 0.9992, 0.9993, 0.9994, 0.9996, 0.9997, 0.9998, 0.9999, 1, 1.0001, 1.0002, 1.0002, 1.0003, 1.0003, 1.0003, 1.0002, 1.0002, 1];
+    const SPRING_MS = 1560;
+    const springAt = (u) => { if (u >= 1) return 1; if (u <= 0) return 0; const x = u * (SPRING.length - 1), i = Math.floor(x); return SPRING[i] + (SPRING[i + 1] - SPRING[i]) * (x - i); };
+    // a value that springs to a new target each time the target changes (like animate(el, { x: target, ease: spring(...) }))
+    const springTo = (v0) => ({ v: v0, from: v0, to: v0, t0: 0, set(to, now) { if (to !== this.to) { this.from = this.v; this.to = to; this.t0 = now; } return this; }, tick(now) { return (this.v = this.from + (this.to - this.from) * springAt((now - this.t0) / SPRING_MS)); } });
+    const sstep = (a, b, t) => { const u = clamp((t - a) / (b - a)); return u * u * (3 - 2 * u); };
+
+    // where the film sits on the screen (object-fit: cover, positioned so the beam lands on the right of the screen)
+    function layout() {
+      const W = innerWidth, H = innerHeight, k = Math.max(W / VW, H / VH);
+      const target = (W < 900 ? 0.64 : 0.76) * W;
+      const px = clamp((target - 1440 * k) / (W - VW * k || -1), 0, 1);
+      return { W, H, k, px, ox: (W - VW * k) * px, oy: (H - VH * k) * 0.5 };
+    }
+
+    function drawFish(ctx, f, k, light, wag) {
+      const L = f.len * k, Hh = L * 0.34;
+      const pal = f.pal, a = 0.5 + 0.5 * light;
+      ctx.save();
+      ctx.translate(f.sx, f.sy);
+      ctx.rotate(f.ang);
+      if (Math.cos(f.ang) < 0) ctx.scale(1, -1);           // swimming left: flip, so the back stays up
+      // body: a tapered teardrop that bends along its length as the tail swings
+      const top = [], bot = [], M = 14;
+      for (let i = 0; i <= M; i++) {
+        const t = i / M, x = L * (0.5 - 0.86 * t);
+        const prof = Math.pow(Math.sin(Math.PI * Math.pow(t, 0.6)), 0.85);
+        const yc = Math.sin(f.ph - t * 3.2) * L * 0.075 * wag * t * t * 2.2;
+        top.push([x, yc - Hh * 0.5 * prof]); bot.push([x, yc + Hh * 0.5 * prof * 0.92]);
+      }
+      const tail = top[M], tx = tail[0], ty = (top[M][1] + bot[M][1]) / 2;
+      const sw = Math.sin(f.ph - 3.2) * L * 0.2 * wag;
+      ctx.globalAlpha = a;
+      // tail fin
+      ctx.fillStyle = pal[1]; ctx.beginPath();
+      ctx.moveTo(tx + L * 0.02, ty);
+      ctx.quadraticCurveTo(tx - L * 0.2, ty - L * 0.2 + sw, tx - L * 0.32, ty - L * 0.27 + sw * 1.4);
+      ctx.quadraticCurveTo(tx - L * 0.2, ty + sw * 0.6, tx - L * 0.34, ty + L * 0.27 + sw * 1.4);
+      ctx.quadraticCurveTo(tx - L * 0.2, ty + L * 0.2 + sw, tx + L * 0.02, ty);
+      ctx.fill();
+      // dorsal fin
+      const d0 = top[5], d1 = top[8];
+      ctx.beginPath(); ctx.moveTo(d0[0], d0[1]); ctx.quadraticCurveTo((d0[0] + d1[0]) / 2 + L * 0.05, d0[1] - Hh * 0.62, d1[0], d1[1]); ctx.closePath(); ctx.fill();
+      // body
+      const g = ctx.createLinearGradient(0, -Hh * 0.5, 0, Hh * 0.5);
+      g.addColorStop(0, pal[0]); g.addColorStop(0.55, pal[1]); g.addColorStop(1, pal[2]);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(top[0][0], top[0][1]);
+      for (let i = 1; i <= M; i++) ctx.lineTo(top[i][0], top[i][1]);
+      for (let i = M; i >= 0; i--) ctx.lineTo(bot[i][0], bot[i][1]);
+      ctx.closePath(); ctx.fill();
+      // a sliver of light along the back, and the eye
+      ctx.globalAlpha = a * 0.55; ctx.strokeStyle = 'rgba(255,238,190,.9)'; ctx.lineWidth = Math.max(0.8, L * 0.035); ctx.lineCap = 'round';
+      ctx.beginPath(); for (let i = 2; i <= 9; i++) { const p = top[i]; i === 2 ? ctx.moveTo(p[0], p[1] + Hh * 0.08) : ctx.lineTo(p[0], p[1] + Hh * 0.08); } ctx.stroke();
+      ctx.globalAlpha = a; ctx.fillStyle = 'rgba(30,8,0,.85)'; ctx.beginPath(); ctx.arc(top[1][0] - L * 0.01, (top[1][1] + bot[1][1]) / 2 - Hh * 0.04, Math.max(0.9, L * 0.035), 0, 6.283); ctx.fill();
+      ctx.restore();
+    }
+
+    function School({ videoRef }) {
+      const cv = useRef(null);
+      useEffect(() => {
+        const ctx = cv.current.getContext('2d');
+        const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let L = layout(), dpr = 1, raf = 0, last = 0;
+        const fit = () => {
+          L = layout(); dpr = Math.min(2, devicePixelRatio || 1);
+          cv.current.width = Math.round(L.W * dpr); cv.current.height = Math.round(L.H * dpr);
+          cv.current.style.width = L.W + 'px'; cv.current.style.height = L.H + 'px';
+          if (videoRef.current) videoRef.current.style.objectPosition = `${(L.px * 100).toFixed(2)}% 50%`;
+        };
+        // the fish
+        const fish = Array.from({ length: N }, (_, i) => {
+          const a = Math.random() * 6.283, r = Math.sqrt(Math.random());
+          return { x: HOME.x + Math.cos(a) * HOME.rx * r, y: HOME.y + Math.sin(a) * HOME.ry * r, vx: (Math.random() - 0.5) * 30, vy: (Math.random() - 0.5) * 30,
+            ang: Math.random() * 6.283, len: 58 + Math.random() * 30, ph: Math.random() * 6.283, w: Math.random() * 6.283,
+            ring: Math.random() * 6.283, ringR: 46 + Math.random() * 96, pal: PALETTES[i % PALETTES.length], top: 38 + Math.random() * 26, sx: 0, sy: 0 };
+        });
+        // the pointer
+        const P = { x: -1, y: -1, in: false, held: false };
+        let attract = 0, fast = 0, hint = true, chasing = false, hovering = false, burst = null;
+        const A = springTo(0), F = springTo(0);
+        const onMove = (e) => { P.x = e.clientX; P.y = e.clientY; P.in = true; if (hint && e.clientX > innerWidth * 0.5) { hint = false; const h = document.getElementById('hint'); if (h) h.style.opacity = 0; } };
+        const onDown = (e) => { P.held = true; onMove(e); if (!reduced) burst = { x: e.clientX, y: e.clientY }; };   // a click scatters the school
+        const onUp = () => { P.held = false; };
+        const onLeave = () => { P.in = false; };
+        addEventListener('pointermove', onMove); addEventListener('pointerdown', onDown); addEventListener('pointerup', onUp); addEventListener('pointercancel', onUp);
+        document.documentElement.addEventListener('mouseleave', onLeave); addEventListener('resize', fit); fit();
+
+        const step = (t) => {
+          raf = requestAnimationFrame(step);
+          const dt = Math.min(0.05, (t - last) / 1000 || 0.016); last = t;
+          const { W, H, k, ox, oy } = L;
+          const pvx = (P.x - ox) / k, pvy = (P.y - oy) / k;                       // pointer, in film pixels
+          // 1. does the school chase the pointer? only while it is on the right of the screen, and never past the centre
+          chasing = !reduced && P.in && (P.held || P.x / W > (chasing ? 0.46 : 0.52));
+          attract = Math.min(1.4, A.set(chasing ? 1 : 0, t).tick(t));            // springs: rushes past the pointer, then settles
+          // 2. is it hovering over the school? then they race
+          let cx = 0, cy = 0; fish.forEach((f) => { cx += f.x; cy += f.y; }); cx /= N; cy /= N;
+          hovering = !reduced && P.in && Math.hypot((P.x - (ox + cx * k)) / (210 * k), (P.y - (oy + cy * k)) / (250 * k)) < (hovering ? 1.25 : 1);
+          fast = Math.min(1.4, F.set(hovering ? 1 : 0, t).tick(t));              // springs: a burst of speed that eases back to cruising
+          const mul = 1 + 0.5 * attract + 1.7 * fast;
+          const centreX = (0.5 * W - ox) / k;                                     // the middle of the screen, in film pixels
+          const tgtX = Math.max(pvx, centreX), tgtY = clamp(pvy, 130, 940);
+
+          if (burst) {
+            const bx = (burst.x - ox) / k, by = (burst.y - oy) / k;
+            for (const f of fish) { const dx = f.x - bx, dy = f.y - by, d = Math.hypot(dx, dy) || 1, w = 1 - clamp(d / 700); f.vx += dx / d * 520 * w + (Math.random() - 0.5) * 90; f.vy += dy / d * 520 * w + (Math.random() - 0.5) * 90; }
+            burst = null;
+          }
+          for (let i = 0; i < N; i++) {
+            const f = fish[i]; let ax = 0, ay = 0, nx = 0, ny = 0, sx = 0, sy = 0, al = 0, c = 0;
+            for (let j = 0; j < N; j++) {
+              if (j === i) continue; const o = fish[j], dx = o.x - f.x, dy = o.y - f.y, d2 = dx * dx + dy * dy;
+              if (d2 < 190 * 190) { c++; nx += o.x; ny += o.y; al += Math.atan2(o.vy, o.vx); }
+              if (d2 < 74 * 74 && d2 > 0.01) { const d = Math.sqrt(d2); sx -= dx / d * (74 - d); sy -= dy / d * (74 - d); }
+            }
+            if (c) { ax += (nx / c - f.x) * 0.18; ay += (ny / c - f.y) * 0.18; }
+            ax += sx * 4.2; ay += sy * 4.2;
+            // wander
+            f.w += (Math.random() - 0.5) * 3.2 * dt; ax += Math.cos(f.w) * 34; ay += Math.sin(f.w) * 34;
+            // home: stay in the beam, and head back when the pointer lets go
+            const hx = (f.x - HOME.x) / HOME.rx, hy = (f.y - HOME.y) / HOME.ry, hd = Math.hypot(hx, hy);
+            const homeK = Math.max(0, 1 - attract) * (0.55 + Math.max(0, hd - 1) * 2.2) + 0.08;
+            ax -= hx * 62 * homeK; ay -= hy * 62 * homeK;
+            // chase: each fish circles its own point around the pointer so they swarm it rather than pile up
+            if (attract > 0.01) {
+              f.ring += dt * (0.6 + 0.4 * fast);
+              const px = tgtX + Math.cos(f.ring) * f.ringR, py = tgtY + Math.sin(f.ring) * f.ringR * 0.8;
+              ax += (px - f.x) * 3.1 * attract; ay += (py - f.y) * 3.1 * attract;
+            }
+            f.vx += ax * dt; f.vy += ay * dt;
+            const sp = Math.hypot(f.vx, f.vy), maxSp = f.top * mul * (1 + 0.5 * Math.min(attract, 1)), minSp = 14 * mul;
+            if (sp > maxSp) { const k2 = Math.max(maxSp / sp, 1 - dt * 3.2); f.vx *= k2; f.vy *= k2; }   // fast fish ease down to cruising speed rather than snapping else if (sp < minSp && sp > 0.01) { f.vx *= minSp / sp; f.vy *= minSp / sp; }
+            f.x += f.vx * dt; f.y += f.vy * dt;
+            f.x = clamp(f.x, 60, VW - 40); f.y = clamp(f.y, 110, 960);
+            const want2 = Math.atan2(f.vy, f.vx); let da = want2 - f.ang; da = Math.atan2(Math.sin(da), Math.cos(da));
+            f.ang += da * (1 - Math.exp(-dt * 6));
+            f.ph += dt * (7 + Math.hypot(f.vx, f.vy) * 0.2) * (1 + 0.5 * fast);
+            f.sx = ox + f.x * k; f.sy = oy + f.y * k;
+          }
+          // the beam lights them; in the dark beside it they dim
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+          const order = fish.slice().sort((a, b) => a.len - b.len);
+          for (const f of order) {
+            const light = Math.exp(-Math.pow((f.x - BEAM.x) / BEAM.sx, 2)) * sstep(120, 300, f.y);
+            const wag = clamp(0.5 + Math.hypot(f.vx, f.vy) / 80, 0.5, 1.7);
+            const R = f.len * k * 1.1; const g = ctx.createRadialGradient(f.sx, f.sy, 0, f.sx, f.sy, R);
+            g.addColorStop(0, `rgba(255,150,60,${(0.11 * (0.3 + 0.7 * light)).toFixed(3)})`); g.addColorStop(1, 'rgba(255,150,60,0)');
+            ctx.globalCompositeOperation = 'lighter'; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(f.sx, f.sy, R, 0, 6.283); ctx.fill(); ctx.globalCompositeOperation = 'source-over';
+            drawFish(ctx, f, k, light, wag);
+          }
+          if (videoRef.current) videoRef.current.playbackRate = 1 + 0.5 * fast;   // the light shimmers faster too
+        };
+        if (/[?&]debug\b/.test(location.search)) window.__school = { fish, get attract() { return attract; }, get fast() { return fast; }, get L() { return L; }, kick() { cancelAnimationFrame(raf); raf = requestAnimationFrame(step); } };   // for testing only
+        raf = requestAnimationFrame(step);
+        return () => { cancelAnimationFrame(raf); removeEventListener('pointermove', onMove); removeEventListener('pointerdown', onDown); removeEventListener('pointerup', onUp); removeEventListener('pointercancel', onUp); document.documentElement.removeEventListener('mouseleave', onLeave); removeEventListener('resize', fit); };
+      }, []);
+      return <canvas ref={cv} className="absolute inset-0 z-[5] pointer-events-none" aria-hidden="true" />;
+    }
 
     function App() {
       const [open, setOpen] = useState(false);
       const close = () => setOpen(false);
+      const bg = useRef(null);
       return (
-        <div className="relative h-screen w-full overflow-hidden bg-black font-geist">
-          <video autoPlay muted loop playsInline className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: '70% center' }}
-            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260622_204221_5339e40b-e73d-4ab0-9c65-79c18c66fd50.mp4" />
+        <div className="relative w-full overflow-hidden font-geist" style={{ height: '100dvh', background: '#02040a' }}>
+          {/* the empty light shaft; the fish are drawn live above it */}
+          <video ref={bg} autoPlay muted loop playsInline preload="auto" className="absolute inset-0 h-full w-full object-cover" style={{ objectPosition: '70% center' }}
+            src="assets/fish/beam.mp4" poster="assets/fish/beam.webp" aria-hidden="true" />
+          <School videoRef={bg} />
 
           <div className={`absolute inset-x-0 top-0 z-20 overflow-hidden bg-black/98 backdrop-blur-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${open ? 'h-screen opacity-100' : 'h-0 opacity-0 pointer-events-none'}`}>
             <div className={`flex h-full flex-col justify-center px-8 gap-6 transition-all duration-500 delay-100 ${open ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-              {LINKS.map((l) => <a key={l} href="#" onClick={close} className="text-3xl font-medium text-white/90 hover:text-white">{l}</a>)}
-              <button onClick={close} className="mt-6 self-start rounded-full bg-white px-8 py-3.5 text-base font-medium text-black hover:scale-105 transition-transform">Let's Talk</button>
+              {LINKS.map((l) => <a key={l.label} href={l.href} target="_top" onClick={close} className="text-3xl font-medium text-white/90 hover:text-white">{l.label}</a>)}
+              <a href={SOCIAL} target="_top" onClick={close} className="mt-6 self-start rounded-full bg-white px-8 py-3.5 text-base font-medium text-black hover:scale-105 transition-transform">Get in touch</a>
             </div>
           </div>
 
-          <nav className="relative z-30 flex items-center justify-between px-6 py-5 md:px-12 lg:px-16">
+          <nav className="relative z-30 flex items-center justify-between px-6 py-4 md:px-12 lg:px-16">
             <div className="flex items-center gap-10">
-              <span className="text-lg font-semibold tracking-tight text-white sm:text-xl">Foldcraft</span>
+              <a href="#" aria-label="Manisha Baroliya" className="block relative z-50"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199" className="logo-sticker" /></a>
               <div className="hidden md:flex items-center gap-8">
-                {LINKS.map((l) => <a key={l} href="#" className="text-sm text-white/80 hover:text-white transition-colors">{l}</a>)}
+                {LINKS.map((l) => <a key={l.label} href={l.href} target="_top" className="text-sm text-white/80 hover:text-white transition-colors">{l.label}</a>)}
               </div>
             </div>
-            <button className="hidden md:block rounded-lg bg-white px-5 py-2 text-sm font-medium text-black hover:scale-105 transition-transform">Let's Talk</button>
+            <a href={SOCIAL} target="_top" className="hidden md:block rounded-lg bg-white px-5 py-2 text-sm font-medium text-black hover:scale-105 transition-transform">Get in touch</a>
             <button onClick={() => setOpen(!open)} aria-label="Toggle menu" className="relative z-50 h-10 w-10 text-white active:scale-90 transition-transform md:hidden">
               <Menu className={`absolute inset-0 m-auto transition-all duration-300 ${open ? 'rotate-90 scale-50 opacity-0' : 'rotate-0 scale-100 opacity-100'}`} />
               <X className={`absolute inset-0 m-auto transition-all duration-300 ${open ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-50 opacity-0'}`} />
             </button>
           </nav>
 
-          <div className="relative z-10 flex h-[calc(100vh-80px)] flex-col justify-between px-6 pb-10 pt-12 sm:pb-12 sm:pt-16 md:px-12 md:pb-16 md:pt-20 lg:px-16">
+          <div className="relative z-10 flex flex-col justify-between px-6 pb-10 pt-12 sm:pb-12 sm:pt-16 md:px-12 md:pb-16 md:pt-20 lg:px-16 pointer-events-none" style={{ height: 'calc(100dvh - 80px)' }}>
             <div className="max-w-3xl">
-              <p className="mb-4 sm:mb-6 text-xs sm:text-sm text-white/90 animate-[fadeSlideUp_0.8s_ease_0.2s_both]">Brand & Visual Storytelling</p>
+              <p className="mb-4 sm:mb-6 text-xs sm:text-sm text-white/90 animate-[fadeSlideUp_0.8s_ease_0.2s_both]">Product Design &amp; UX Research</p>
               <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-medium leading-[1.1] tracking-tight text-white animate-[fadeSlideUp_0.8s_ease_0.4s_both]">
-                Shaping visual<br />narratives,<br />one pixel at a time.
+                Designing calm,<br />human interfaces,<br />one pixel at a time.
               </h1>
             </div>
             <div>
               <p className="text-sm sm:text-base md:text-lg leading-relaxed text-white/60 max-w-sm sm:max-w-lg mb-5 sm:mb-6 animate-[fadeSlideUp_0.8s_ease_0.7s_both]">
-                Turning vision into reality through craft, motion, and an endless pursuit of beauty.
+                I'm Manisha, turning messy ideas into clean, playful products that feel human and brands that look like themselves.
               </p>
-              <button className="rounded-lg bg-white px-5 py-2.5 sm:px-6 sm:py-3 text-sm font-medium text-black hover:scale-105 transition-transform inline-flex items-center gap-2 animate-[fadeSlideUp_0.8s_ease_0.9s_both]">
-                Explore Work <ArrowRight size={16} />
-              </button>
+              <a href="shelf-library.html#library" target="_top" className="pointer-events-auto rounded-lg bg-white px-5 py-2.5 sm:px-6 sm:py-3 text-sm font-medium text-black hover:scale-105 transition-transform inline-flex items-center gap-2 animate-[fadeSlideUp_0.8s_ease_0.9s_both]">
+                View my work <ArrowRight size={16} />
+              </a>
             </div>
           </div>
+
+          <p id="hint" className="pointer-events-none absolute bottom-5 left-1/2 z-10 -translate-x-1/2 text-[11px] tracking-wide text-white/45 hidden md:block transition-opacity duration-700">move through the light · hover to race · click to scatter</p>
         </div>
       );
     }
