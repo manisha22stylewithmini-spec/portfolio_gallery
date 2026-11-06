@@ -123,71 +123,37 @@
         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_074625_a81f018a-956b-43fb-9aee-4d1508e30e6a.mp4" />;
     }
 
-    // The head follows the cursor like a real one: the eyes lead on a fast spring, the head trails on a slower one
-    // and overshoots a touch; the nine turns of the 3x3 sheet are cross-faded by position, never snapped.
+    // The head follows the cursor. Nine head turns on a 3x3 sheet; the one nearest the pointer is shown outright,
+    // like cutting between frames of a film (no easing or blending). Clicking pulls a face from the second sheet.
     function Mascot() {
-      const outer = useRef(null), head = useRef(null), rx = useRef(null), layers = useRef([]);
+      const box = useRef(null);
+      const [cell, setCell] = useState(4);
+      const [react, setReact] = useState(-1);
+      const timer = useRef(0);
       useEffect(() => {
-        const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const clamp = (v, a = -1, b = 1) => Math.min(b, Math.max(a, v));
-        const pos = (i) => `${(i % 3) * 50}% ${Math.floor(i / 3) * 50}%`;
-        let tx = 0, ty = 0, ex = 0, ey = 0, evx = 0, evy = 0, hx = 0, hy = 0, hvx = 0, hvy = 0;
-        let raf = 0, last = performance.now(), idleSince = last, nextGlance = last + 2500, gx = 0, gy = 0, rxTimer = 0;
-        const onMove = (e) => {
-          const r = outer.current.getBoundingClientRect();
-          tx = Math.tanh((e.clientX - (r.left + r.width / 2)) / (innerWidth * 0.28)) * 1.05;
-          ty = Math.tanh((e.clientY - (r.top + r.height * 0.4)) / (innerHeight * 0.34)) * 1.05;
-          tx = clamp(tx); ty = clamp(ty); idleSince = performance.now(); gx = gy = 0;
+        const move = (e) => {
+          const r = box.current.getBoundingClientRect();
+          const nx = (e.clientX - (r.left + r.width / 2)) / (innerWidth * 0.5);
+          const ny = (e.clientY - (r.top + r.height * 0.35)) / (innerHeight * 0.5);
+          const col = nx < -0.14 ? 0 : nx > 0.14 ? 2 : 1;
+          const row = ny < -0.2 ? 0 : ny > 0.2 ? 2 : 1;
+          setCell(row * 3 + col);
         };
-        const onLeave = () => { tx = ty = 0; };
-        const spring = (x, v, target, k, c, dt) => { v += ((target - x) * k - v * c) * dt; return [x + v * dt, v]; };
-        const frame = (now) => {
-          raf = requestAnimationFrame(frame);
-          const dt = Math.min(0.05, (now - last) / 1000); last = now;
-          if (now - idleSince > 2600 && now > nextGlance) {      // when nobody is moving, she glances about a little
-            gx = (Math.random() - 0.5) * 0.9; gy = (Math.random() - 0.5) * 0.5; nextGlance = now + 1600 + Math.random() * 2400;
-          }
-          const aimX = clamp(tx + gx), aimY = clamp(ty + gy);
-          if (reduced) { ex = aimX; ey = aimY; hx = aimX * 0.8; hy = aimY * 0.8; }
-          else {
-            [ex, evx] = spring(ex, evx, aimX, 190, 21, dt);      // eyes: quick, settled
-            [ey, evy] = spring(ey, evy, aimY, 190, 21, dt);
-            [hx, hvx] = spring(hx, hvx, aimX * 0.85, 46, 8.5, dt); // head: slower, a little overshoot
-            [hy, hvy] = spring(hy, hvy, aimY * 0.85, 46, 8.5, dt);
-          }
-          const u = clamp(ex + 1, 0, 2), v = clamp(ey + 1, 0, 2);
-          const c0 = Math.min(1, Math.floor(u)), r0 = Math.min(1, Math.floor(v)), fu = u - c0, fv = v - r0;
-          const cells = [[r0 * 3 + c0, (1 - fu) * (1 - fv)], [r0 * 3 + c0 + 1, fu * (1 - fv)], [(r0 + 1) * 3 + c0, (1 - fu) * fv], [(r0 + 1) * 3 + c0 + 1, fu * fv]].sort((a, b) => b[1] - a[1]);
-          let acc = 0;
-          cells.forEach(([i, w], k) => {
-            const el = layers.current[k]; acc += w;
-            el.style.backgroundPosition = pos(i);
-            el.style.opacity = k === 0 ? 1 : (acc > 0 ? (w / acc).toFixed(3) : 0);
-          });
-          const t = now / 1000, breath = reduced ? 0 : Math.sin(t * 1.7);
-          head.current.style.transform = `perspective(900px) translate3d(${(hx * 16).toFixed(2)}px, ${(hy * 9 + breath * 2.2).toFixed(2)}px, 0) rotateY(${(hx * 8).toFixed(2)}deg) rotateX(${(-hy * 5).toFixed(2)}deg) rotateZ(${(hx * 1.6).toFixed(2)}deg) scale(${(1 + breath * 0.006).toFixed(4)})`;
-        };
-        raf = requestAnimationFrame(frame);
-        addEventListener('pointermove', onMove); addEventListener('pointerdown', onMove);
-        document.documentElement.addEventListener('mouseleave', onLeave);
-        const poke = () => {
-          const el = rx.current; el.style.backgroundPosition = pos(Math.floor(Math.random() * 9)); el.style.opacity = 1;
-          clearTimeout(rxTimer); rxTimer = setTimeout(() => { el.style.opacity = 0; }, 1300);
-        };
-        outer.current.addEventListener('click', poke);
-        const o = outer.current;
-        return () => { cancelAnimationFrame(raf); clearTimeout(rxTimer); removeEventListener('pointermove', onMove); removeEventListener('pointerdown', onMove); document.documentElement.removeEventListener('mouseleave', onLeave); o.removeEventListener('click', poke); };
+        const leave = () => setCell(4);
+        addEventListener('pointermove', move); addEventListener('pointerdown', move);
+        document.documentElement.addEventListener('mouseleave', leave);
+        return () => { removeEventListener('pointermove', move); removeEventListener('pointerdown', move); document.documentElement.removeEventListener('mouseleave', leave); };
       }, []);
-      const sheet = (u) => ({ position: 'absolute', inset: 0, backgroundImage: `url(${u})`, backgroundSize: '300% 300%', backgroundRepeat: 'no-repeat' });
+      const poke = () => { setReact(Math.floor(Math.random() * 9)); clearTimeout(timer.current); timer.current = setTimeout(() => setReact(-1), 1300); };
+      const i = react >= 0 ? react : cell;
+      const fade = 'linear-gradient(90deg, transparent, #000 24%, #000 76%, transparent), linear-gradient(180deg, transparent, #000 10%, #000 88%, transparent)';
       return (
-        <div ref={outer} role="img" aria-label="Animated portrait that follows your cursor" className="relative mx-auto shrink-0 cursor-pointer select-none"
-          style={{ width: 'min(86vw, 40vh, 460px)', minWidth: 220, aspectRatio: '1 / 1',
-            WebkitMaskImage: 'radial-gradient(ellipse 50% 50% at 50% 46%, #000 52%, transparent 100%)', maskImage: 'radial-gradient(ellipse 50% 50% at 50% 46%, #000 52%, transparent 100%)' }}>
-          <div ref={head} style={{ position: 'absolute', inset: 0, willChange: 'transform' }}>
-            {[0, 1, 2, 3].map((k) => <div key={k} ref={(el) => (layers.current[k] = el)} style={sheet('assets/asme/mascot-dirs.webp')} />)}
-            <div ref={rx} style={{ ...sheet('assets/asme/mascot-reacts.webp'), opacity: 0, transition: 'opacity .18s ease-out' }} />
-          </div>
-        </div>
+        <div ref={box} onClick={poke} role="img" aria-label="Animated portrait that follows your cursor"
+          className="relative mx-auto shrink-0 cursor-pointer select-none"
+          style={{ width: 'min(84vw, 38vh, 440px)', minWidth: 220, aspectRatio: '1 / 1',
+            backgroundImage: `url(${react >= 0 ? 'assets/asme/mascot-reacts.webp' : 'assets/asme/mascot-dirs.webp'})`, backgroundSize: '300% 300%', backgroundRepeat: 'no-repeat',
+            backgroundPosition: `${(i % 3) * 50}% ${Math.floor(i / 3) * 50}%`,
+            WebkitMaskImage: fade, maskImage: fade, WebkitMaskComposite: 'source-in', maskComposite: 'intersect' }} />
       );
     }
 
@@ -302,47 +268,8 @@
       );
     }
 
-    const SERVICES = [
-      { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4', tag: 'Research', title: 'UX Research & Insight', body: 'Interviews, journeys and flows grounded in psychology, so every decision has a reason behind it.' },
-      { src: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260324_151826_c7218672-6e92-402c-9e45-f1e0f454bdc4.mp4', tag: 'Craft', title: 'Product & Systems Design', body: 'From first sketch to live product, I care about the details that make interfaces feel effortless.' },
-    ];
-
-    function Services() {
-      return (
-        <section className="bg-black py-28 md:py-40 px-6 overflow-hidden relative">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,0.02)_0%,_transparent_60%)]" />
-          <div className="relative max-w-6xl mx-auto">
-            <Reveal y={30} duration={0.7} className="flex items-end justify-between mb-12 md:mb-16">
-              <h2 className="text-3xl md:text-5xl text-white tracking-tight">What I do</h2>
-              <p className="hidden md:block text-white/40 text-sm">My services</p>
-            </Reveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              {SERVICES.map((s, i) => (
-                <Reveal key={s.title} y={50} duration={0.8} delay={i * 0.15}>
-                  <div className="liquid-glass rounded-3xl overflow-hidden group">
-                    <div className="relative aspect-video overflow-hidden">
-                      <Video src={s.src} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-                    </div>
-                    <div className="p-6 md:p-8">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="uppercase tracking-widest text-white/40 text-xs">{s.tag}</span>
-                        <span className="liquid-glass rounded-full p-2 text-white"><ArrowUpRight size={16} /></span>
-                      </div>
-                      <h3 className="text-white text-xl md:text-2xl mb-3 tracking-tight">{s.title}</h3>
-                      <p className="text-white/50 text-sm leading-relaxed">{s.body}</p>
-                    </div>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </section>
-      );
-    }
-
     ReactDOM.createRoot(document.getElementById('root')).render(
-      <div className="bg-black"><Hero /><About /><Playground /><Philosophy /><Services /></div>
+      <div className="bg-black"><Hero /><About /><Playground /><Philosophy /></div>
     );
   </script>
   <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
