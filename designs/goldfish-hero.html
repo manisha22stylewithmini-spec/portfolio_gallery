@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
+  if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manisha Baroliya — Product designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #000; color: #fff; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .hero { position: relative; min-height: 100vh; min-height: 100dvh; overflow: hidden; display: flex; flex-direction: column; background: #000; }
+    /* the goldfish film is the background of the whole container: black, so the fish simply swims across the hero */
+    .bg { position: absolute; inset: 0; display: flex; justify-content: center; background: radial-gradient(ellipse 50% 60% at 50% 55%, rgba(255,150,60,.10), transparent 70%), #000; }
+    .bg video { height: 100%; width: auto; max-width: none; mix-blend-mode: screen; }
+    @media (max-width: 767px) { .bg video { width: 100%; height: 100%; object-fit: cover; } }
+    .glass { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.22); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+    nav { position: relative; z-index: 3; margin: 24px auto 0; width: calc(100% - 48px); max-width: 1024px; border-radius: 999px; padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; }
+    nav img { height: 42px; width: auto; display: block; }
+    nav .links { display: none; gap: 32px; margin-left: 32px; font-size: 14px; font-weight: 500; color: rgba(255,255,255,.8); }
+    nav .links a:hover { color: #fff; }
+    nav .left { display: flex; align-items: center; }
+    nav .cta { border-radius: 999px; padding: 8px 22px; font-size: 14px; font-weight: 500; }
+    @media (min-width: 768px) { nav .links { display: flex; } nav img { height: 46px; } }
+    .content { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 40px 24px 120px; text-shadow: 0 2px 24px rgba(0,0,0,.65); }
+    .eyebrow { font-size: 12px; letter-spacing: .32em; text-transform: uppercase; color: rgba(255,255,255,.55); margin: 0 0 22px; }
+    h1 { font-family: 'Instrument Serif', serif; font-weight: 400; letter-spacing: -.02em; line-height: .98; margin: 0; font-size: clamp(54px, 10.5vw, 148px); }
+    h1 em { color: rgba(255,255,255,.62); }
+    .lead { max-width: 560px; margin: 26px 0 0; font-size: 16px; line-height: 1.6; color: rgba(255,255,255,.82); }
+    .stats { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 28px; margin: 28px 0 0; padding: 0; list-style: none; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.7); }
+    .stats b { color: #fff; font-weight: 600; }
+    .btns { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 34px; }
+    .btn { border-radius: 999px; padding: 13px 30px; font-size: 14px; font-weight: 500; transition: background .2s, transform .2s; }
+    .btn.solid { background: #fff; color: #000; text-shadow: none; }
+    .btn.solid:hover { background: #e8e8e8; }
+    .btn.ghost:hover { background: rgba(255,255,255,.12); }
+    .social { position: absolute; z-index: 3; left: 0; right: 0; bottom: 36px; display: flex; justify-content: center; gap: 14px; }
+    .social a { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; color: rgba(255,255,255,.85); }
+    .social a:hover { background: rgba(255,255,255,.12); color: #fff; }
+    .social svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 60; font: 12px system-ui, sans-serif; color: #fff; padding: 6px 12px; border-radius: 999px; background: rgba(0,0,0,.55); }
+    .embed .back-link { display: none !important; }
+    @media (max-width: 767px) { .social { bottom: 28px; } .content { padding-bottom: 130px; } }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+  <header class="hero">
+    <div class="bg"><video autoplay loop muted playsinline preload="auto" aria-hidden="true" src="assets/fish/goldfish.mp4"></video></div>
+
+    <nav class="glass">
+      <div class="left">
+        <a href="#" aria-label="Manisha Baroliya"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199"></a>
+        <div class="links">
+          <a href="shelf-library.html#library" target="_top">Work</a>
+          <a href="halcyon-hero.html" target="_top">About</a>
+          <a href="shelf-library.html#social" target="_top">Social</a>
+        </div>
+      </div>
+      <a class="cta glass" href="shelf-library.html#social" target="_top">Get in touch</a>
+    </nav>
+
+    <div class="content">
+      <p class="eyebrow">Product designer · UX researcher</p>
+      <h1>Calm on the surface,<br><em>curious underneath.</em></h1>
+      <p class="lead">Hi, I’m Manisha. My psychology background shapes every flow I design: quiet interfaces that follow how people actually think and feel.</p>
+      <ul class="stats">
+        <li><b>3+</b> years</li>
+        <li><b>20+</b> live designs</li>
+        <li><b>10+</b> SaaS &amp; B2B platforms</li>
+      </ul>
+      <div class="btns">
+        <a class="btn solid" href="shelf-library.html#library" target="_top">See my work</a>
+        <a class="btn glass ghost" href="shelf-library.html#social" target="_top">Say hello</a>
+      </div>
+    </div>
+
+    <div class="social">
+      <a class="glass" href="shelf-library.html#social" target="_top" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect width="20" height="20" x="2" y="2" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+      <a class="glass" href="shelf-library.html#social" target="_top" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></a>
+      <a class="glass" href="shelf-library.html#social" target="_top" aria-label="Mail"><svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-10 6L2 7"/></svg></a>
+    </div>
+  </header>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+</body>
+</html>

@@ -8,7 +8,7 @@
   <title>Clothing Rail — Hero</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
   <script>
     tailwind.config = { darkMode: 'class', theme: { extend: { colors: {
@@ -28,6 +28,60 @@
   <style>
     html, body { margin: 0; background: #f7f6f3; color: #171717; font-family: 'DM Sans', system-ui, sans-serif; }
     .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 9999; font: 12px system-ui, sans-serif; color: #111; padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(255,255,255,.85); backdrop-filter: blur(6px); box-shadow: 0 0 0 1px rgba(0,0,0,.08); }
+    /* ---- shop front: scroll rolls the shutter up, then the view walks into the shop ---- */
+    .gz-scroll { position: relative; height: 360vh; background: #fff; }
+    .gz-sticky { --mx: 0; --my: 0; position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; background: #3a1d12 url(assets/rail/wall.jpg) center / cover no-repeat; color: #111; font-family: 'Syne', 'DM Sans', sans-serif; }
+    .gz-sticky::before { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(ellipse 70% 60% at 50% 55%, rgba(0,0,0,.05), rgba(0,0,0,.45) 100%); }
+    .gz-ticker { position: absolute; z-index: 9; left: -2%; right: -2%; top: 10px; overflow: hidden; background: #ffd23f; color: #111; border-bottom: 3px solid #111; transform: rotate(-1deg); }
+    .gz-ticker div { display: flex; width: max-content; animation: gzmarq 22s linear infinite; font-weight: 800; font-size: 15px; letter-spacing: .08em; text-transform: uppercase; padding: 9px 0; white-space: nowrap; }
+    .gz-ticker span { padding: 0 22px; }
+    @keyframes gzmarq { to { transform: translateX(-50%); } }
+    .gz-head { position: absolute; z-index: 8; left: 0; right: 0; top: 62px; display: flex; flex-direction: column; align-items: center; gap: 20px; pointer-events: none; }
+    .gz-title { position: relative; margin: 0; text-align: center; font-weight: 800; font-size: clamp(30px, 5.2vw, 72px); line-height: .92; letter-spacing: -.04em; text-transform: uppercase; color: #fff; text-shadow: 4px 4px 0 #111, 0 0 28px rgba(0,0,0,.5); pointer-events: none; }
+    .gz-title em { font-style: normal; color: #ffd23f; }
+    /* the shop is laid out at its fully-open size and shrunk by scale, so once open the rail inside is at its real size */
+    .gz-front { position: absolute; z-index: 3; aspect-ratio: 634 / 592; transform-origin: 34.7% 100%; will-change: transform; }
+    .gz-front > .gz-wall { position: absolute; inset: 0; background: url(assets/rail/fotoprix-shop.png?v=6) center / 100% 100% no-repeat; filter: drop-shadow(16px 0px 0 #fff) drop-shadow(-16px 0px 0 #fff) drop-shadow(0px 16px 0 #fff) drop-shadow(0px -16px 0 #fff) drop-shadow(11px 11px 0 #fff) drop-shadow(-11px 11px 0 #fff) drop-shadow(11px -11px 0 #fff) drop-shadow(-11px -11px 0 #fff) drop-shadow(9px 0px 0 #fff) drop-shadow(-9px 0px 0 #fff) drop-shadow(0px 9px 0 #fff) drop-shadow(0px -9px 0 #fff) drop-shadow(6px 6px 0 #fff) drop-shadow(-6px 6px 0 #fff) drop-shadow(6px -6px 0 #fff) drop-shadow(-6px -6px 0 #fff) drop-shadow(0 22px 28px rgba(0,0,0,.5)); }
+    /* the doorway: everything inside is clipped to it, so the shutter rolls up into its housing instead of over the shop */
+    .gz-opening { position: absolute; left: 7.57%; top: 45.6%; width: 54.26%; height: 47.3%; overflow: hidden; z-index: 2; background: #1b1424; }
+    .gz-room { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden;
+      background: #ece6da; }
+    .gz-room > * { width: 100%; }
+    .gz-room > section, .gz-room [data-slot="clothing-rail-hero"] { background: transparent !important; }
+    .gz-room [data-slot="clothing-rail-hero"] > div[aria-hidden="true"].pointer-events-none.absolute.inset-0 { display: none !important; }
+    .gz-room::before { content: ''; position: absolute; left: 6%; right: 6%; top: 0; height: 10px; background: rgba(255,240,200,.9); filter: blur(6px); z-index: 2; pointer-events: none; }
+    .gz-room::after { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.4), inset 0 18px 36px -12px rgba(0,0,0,.55), inset 18px 0 30px -18px rgba(0,0,0,.45), inset -18px 0 30px -18px rgba(0,0,0,.45); }
+    .gz-door { position: absolute; inset: 0; z-index: 4; background: url(assets/rail/fotoprix-shutter.jpg?v=3) center / 100% 100% no-repeat; will-change: transform; box-shadow: 0 6px 10px rgba(0,0,0,.35); }
+    .gz-door::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 4%; background: linear-gradient(#777, #333); pointer-events: none; }
+    .gz-door i { position: absolute; left: 50%; bottom: 1.2%; width: 14%; height: 1.6%; background: #222; border-radius: 99px; transform: translateX(-50%); z-index: 1; }
+    .gz-lip { position: absolute; left: 0; right: 0; top: 0; height: 9%; z-index: 5; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.55), transparent); }
+    .gz-sign { position: absolute; left: 3.95%; top: 26.7%; width: 68.15%; height: 19.1%; z-index: 3; display: flex; align-items: center; justify-content: center; pointer-events: none;
+      background: url(assets/rail/sign.jpg) center / 100% 100%; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), inset 0 -6px 10px rgba(0,0,0,.5), 0 6px 10px rgba(0,0,0,.35); border-radius: 2px; }
+    /* the logo reads as paint on the sign: slightly flat, with the board's grime showing through */
+    .gz-sign img { height: 74%; width: auto; display: block; opacity: .93; filter: saturate(.85) contrast(.95) drop-shadow(0 1px 0 rgba(0,0,0,.6)); }
+    .gz-sign::after { content: ''; position: absolute; inset: 0; background: url(assets/rail/sign.jpg) center / 100% 100%; mix-blend-mode: overlay; opacity: .45; }
+    .gz-prop { position: absolute; z-index: 3; pointer-events: none; user-select: none; }
+    .gz-prop img { position: relative; z-index: 1; display: block; width: 100%; height: auto; filter: drop-shadow(0 2px 2px rgba(0,0,0,.25)); }
+    /* a contact shadow on the pavement under each piece, so it stands in the scene */
+    .gz-prop::after { content: ''; position: absolute; z-index: 0; left: var(--sl, 2%); right: var(--sr, 2%); bottom: var(--sb, -2.5%); height: var(--sh, 9%); border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(20,16,12,.55) 0%, rgba(20,16,12,.28) 45%, transparent 72%); filter: blur(3px); }
+    .gz-prop.phone { --sl: 6%; --sr: 2%; --sb: -1.5%; --sh: 5%; }
+    .gz-prop.razr { --sl: 0%; --sr: 0%; --sb: -4%; --sh: 10%; }
+    .gz-prop.dump-b, .gz-prop.dump-g { --sl: -2%; --sr: -4%; --sb: -4%; --sh: 14%; }
+    .gz-prop.phone { left: -15%; bottom: 3%; width: 13.5%; }
+    .gz-prop.razr { left: 63.5%; bottom: 1.5%; width: 6%; transform: rotate(-8deg); z-index: 5; }
+    .gz-prop.dump-b { left: 70%; bottom: -1%; width: 25%; z-index: 4; }
+    .gz-prop.dump-g { left: 97%; bottom: -1%; width: 25%; }
+    .gz-hint { position: relative; z-index: 9; background: #111; color: #fff; border-radius: 99px; padding: 12px 22px; font: 700 14px 'Syne', sans-serif; letter-spacing: .04em; box-shadow: 0 6px 0 #ffd23f; pointer-events: none; white-space: nowrap; }
+    .gz-hint b { display: inline-block; animation: gzbob 1.4s ease-in-out infinite; }
+    @keyframes gzbob { 50% { transform: translateY(4px); } }
+    .gz-stickers { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+    .gz-sticker { position: absolute; border: 6px solid #fff; border-radius: 14px; box-shadow: 0 14px 30px rgba(0, 20, 50, .35); background: #fff; transform: translate(calc(var(--mx) * var(--k, 10) * 1px), calc(var(--my) * var(--k, 10) * 1px)) rotate(var(--r, 0deg)); animation: gzfloat 6s ease-in-out infinite; animation-delay: var(--d, 0s); }
+    .gz-sticker img { display: block; width: 100%; height: auto; border-radius: 8px; }
+    .gz-sticker::before { content: ''; position: absolute; left: 50%; top: -14px; width: 60px; height: 20px; background: rgba(255, 220, 90, .85); transform: translateX(-50%) rotate(-3deg); box-shadow: 0 2px 4px rgba(0,0,0,.2); }
+    @keyframes gzfloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -14px; } }
+    @media (max-width: 860px) { .gz-sticker.big { display: none; } }
+    @media (prefers-reduced-motion: reduce) { .gz-sticker, .gz-ticker div, .gz-hint b { animation: none; } }
     .load-error { white-space: pre-wrap; font: 12px/1.5 ui-monospace, monospace; color: #b00020; padding: 24px; }
   </style>
 </head>
@@ -1050,7 +1104,7 @@ export function ClothingRailHero({
                 {item.tag && (
                   <span ref={(node) => { tags.current[i] = node; }} aria-hidden="true" className="pointer-events-none absolute left-1/2 origin-top" style={{ top: (32 / VB_H) * h, transform: "rotate(-12deg)" }}>
                     <span className="block h-[14px] w-px translate-x-[3px] bg-foreground/35" />
-                    <span className="block -translate-x-1/2 translate-x-[3px] whitespace-nowrap rounded-[3px] border border-foreground/10 bg-card px-1.5 pb-1 pt-2 text-[9px] font-semibold leading-none tracking-wide text-card-foreground shadow-[0_2px_6px_color-mix(in_oklab,var(--color-foreground)_18%,transparent)]">
+                    <span className="block -translate-x-1/2 translate-x-[3px] whitespace-nowrap rounded-[3px] border border-foreground/10 bg-card px-1 pb-1 pt-2 text-[8px] font-semibold leading-none tracking-normal text-card-foreground shadow-[0_2px_6px_color-mix(in_oklab,var(--color-foreground)_18%,transparent)]">
                       <span className="absolute left-1/2 top-[3px] size-[3px] -translate-x-1/2 rounded-full bg-foreground/30" />
                       {item.tag}
                     </span>
@@ -1284,143 +1338,246 @@ import type { RailGarment } from "@/components/ui/product-rail-gallery";
 export const RAIL_DEMO_ITEMS: RailGarment[] = [
   {
     id: "bone-tee",
-    name: "Heavyweight tee · Bone",
+    name: "UX Research",
     kind: "tee",
     color: "#EFEBE2",
-    tag: "$48",
-    description: "240 gsm organic cotton with a tonal DHxWHY embroidery on the chest.",
-    details: ["240 gsm", "Regular fit", "Tonal embroidery"],
+    tag: "Research",
+    description: "Interviews, surveys and usability tests that turn how people behave into clear decisions.",
+    details: ["User interviews", "Usability testing", "Insight synthesis"],
     image: "https://cdn.21st.dev/assets/mirror/14/1485bf44725b18fcdba71bfae54d67d648ab3bff4b24215a042c0cc4c895a2e6.webp",
     backImage: "https://cdn.21st.dev/assets/mirror/69/69937e656430ae33d950303e0d53051273e5b02189750ef1e7429ec4bbf95e20.webp",
     sideImage: "https://cdn.21st.dev/assets/mirror/83/838468c32f16b4acba62e4601276737411156052444712ff2534fefe994a7bed.webp",
   },
   {
     id: "cc-graphic",
-    name: "Graphic tee · CCgather",
+    name: "UI Design",
     kind: "tee",
     color: "#101214",
-    tag: "$52",
-    description: "Black tee with the CCgather wordmark printed front and back.",
-    details: ["240 gsm", "Regular fit", "Screen print"],
+    tag: "UI Design",
+    description: "Clean, calm screens with one playful detail that makes people smile.",
+    details: ["Visual design", "Type & colour", "Responsive layouts"],
     image: "https://cdn.21st.dev/assets/mirror/d7/d769f183472d0fd98a7aff2a643593748cd36ef9da1497d9bf6f0d87d1025a9b.webp",
     backImage: "https://cdn.21st.dev/assets/mirror/fe/fec6f7e96b198cc5b9aad333ca2c4c10968a746d87f6dc11d9c118607b509058.webp",
     sideImage: "https://cdn.21st.dev/assets/mirror/b3/b3b6984ea94b8b8cd19fb15387e89dca457ac0f947115c2a54a33217e4fb4571.webp",
   },
   {
     id: "oxford-sky",
-    name: "Oxford shirt · Sky",
+    name: "Prototyping",
     kind: "shirt",
     color: "#A3D3EB",
-    tag: "$74",
-    description: "Pale sky oxford with a button-down collar and a tiny Maestiq embroidery.",
-    details: ["Oxford cotton", "Button-down collar", "Chest pocket"],
+    tag: "Prototype",
+    description: "Clickable prototypes so a team can feel an idea before anyone builds it.",
+    details: ["Figma", "Interaction flows", "Quick tests"],
     image: "https://cdn.21st.dev/assets/mirror/47/470a7723cef068f81e8a4c09d1ab3f8630c61b734c2168b10f3858e45efbf31f.webp",
     backImage: "https://cdn.21st.dev/assets/mirror/9b/9be14e5dce879756775677e2d82dadc2ad9a1690b7df2f82de360cb3600d0ee5.webp",
     sideImage: "https://cdn.21st.dev/assets/mirror/59/5984d5ca60fd1aeee7e688ec33c2219a1c537fcde90d2accab813c13985f8632.webp",
   },
   {
     id: "cardigan-olive",
-    name: "Knit cardigan · Olive",
+    name: "Design Systems",
     kind: "knit",
     color: "#758151",
-    tag: "$96",
-    description: "Chunky olive wool cardigan with wooden buttons and ribbed trims.",
-    details: ["Lambswool", "Wooden buttons", "V-neck"],
+    tag: "Systems",
+    description: "One tidy, reusable system shared across 10+ SaaS and B2B platforms.",
+    details: ["Components", "Tokens", "Documentation"],
     image: "https://cdn.21st.dev/assets/mirror/58/581b13c5ca241c653dc94d2c8048c92a60f022cfbaaf153261076d3a6655827e.webp",
     backImage: "https://cdn.21st.dev/assets/mirror/d9/d9178d906d37268565cf10af3431aee543aacfc73610f7fa7b0fa4758c498cb3.webp",
     sideImage: "https://cdn.21st.dev/assets/mirror/de/dee1c529600e0460413f1a9b07a29bedb7ea7dc96181fce5d9d6501231e6e45d.webp",
   },
   {
     id: "hoodie-heather",
-    name: "Hoodie · Maestiq",
+    name: "Product Design",
     kind: "hoodie",
     color: "#A0A5AB",
-    tag: "$88",
-    description: "Heather fleece hoodie with the Maestiq wordmark across the chest.",
-    details: ["400 gsm fleece", "Kangaroo pocket", "Chest print"],
+    tag: "Product",
+    description: "From first sketch to shipped product, I design the whole journey end to end.",
+    details: ["Discovery", "Concept to launch", "Handoff"],
     image: "https://cdn.21st.dev/assets/mirror/51/51750ba098dd622df46695bca781b3f0ec336a36b93b070e638cc04455def6d6.webp",
     backImage: "https://cdn.21st.dev/assets/mirror/e7/e75c4ac8fb7f14caae756338a31f81f1437bb312b78e0d7d906e9f956e7968fa.webp",
     sideImage: "https://cdn.21st.dev/assets/mirror/a2/a2eb2463d52146c341ede6bb9f6067e917a23eb29b7b1d1d4c40ac084a01c7ce.webp",
   },
   {
     id: "sweat-lilac",
-    name: "Crewneck sweatshirt · Lilac",
+    name: "User Flows",
     kind: "knit",
     color: "#CCB2E0",
-    tag: "$78",
-    description: "Muted lilac fleece crewneck with a raised DHxWHY puff print.",
-    details: ["400 gsm fleece", "Ribbed trims", "Puff print"],
+    tag: "Flows",
+    description: "Every step mapped, so people never wonder what to do next.",
+    details: ["Journey maps", "Information architecture", "Edge cases"],
     image: "https://cdn.21st.dev/assets/mirror/8e/8e38660e2add9637c27846d9b8d620f2abb228a5a153ccfd7b1c808b6845e1f8.webp",
     backImage: "https://cdn.21st.dev/assets/mirror/b9/b9214a6e009ce4b3044595a51ea010c299135bab5b26775c43d7175c86e77898.webp",
     sideImage: "https://cdn.21st.dev/assets/mirror/59/591872e42b483c43c1cd08a3ac4d7d40c0b5fa2bc585a36096faded2e696e84e.webp",
   },
   {
     id: "polo-forest",
-    name: "Piqué polo · Forest",
+    name: "Wireframes",
     kind: "tee",
     color: "#185B37",
-    tag: "$62",
-    description: "Forest piqué polo with a bone CCgather embroidery on the chest.",
-    details: ["Piqué knit", "Two-button placket", "Embroidered"],
+    tag: "Wireframe",
+    description: "Fast, honest structure first, before any pixels are polished.",
+    details: ["Low-fi sketches", "Layout logic", "Early feedback"],
     image: "https://cdn.21st.dev/assets/mirror/19/19fe43cb681195ae227e3164088d86a07a1b6e33cc54c6e35637374736a16894.webp",
     backImage: "https://cdn.21st.dev/assets/mirror/e0/e095182b1a7f04e600c5662aa871b4c055c294b152586817d84e312c22f744cf.webp",
     sideImage: "https://cdn.21st.dev/assets/mirror/00/005a8e10be234bc40917f3153208b8196ba1610c53c987e39942da1f4a7cd808.webp",
   },
   {
     id: "henley-brick",
-    name: "Henley · Brick",
+    name: "Psychology",
     kind: "knit",
     color: "#B05139",
-    tag: "$56",
-    description: "Dusty brick henley with a three-button placket, worn in from day one.",
-    details: ["Slub cotton", "Three buttons", "Long sleeve"],
+    tag: "Psychology",
+    description: "My psychology background shapes how I read behaviour, needs and friction.",
+    details: ["Behaviour patterns", "Cognitive load", "Empathy"],
     image: "https://cdn.21st.dev/assets/mirror/84/84aa4b0e21ed11fcbc083647a607b94ee3a6c21cb66c114cfb1dad0792c15499.webp",
     backImage: "https://cdn.21st.dev/assets/mirror/01/01c299df56a29afca8dad4a64858bd506667338bfbd0435118e6c3698c7881b3.webp",
     sideImage: "https://cdn.21st.dev/assets/mirror/9c/9ca38eeb156aae7d199d3c1ffb7947e395f77d1f094eea006c1b5fbb22352b4e.webp",
   },
   {
     id: "breton",
-    name: "Breton long sleeve",
+    name: "B2B & SaaS",
     kind: "knit",
     color: "#E4DFD3",
-    tag: "$58",
-    description: "Classic ink-and-bone Breton stripe with a boat neck.",
-    details: ["220 gsm", "Boat neck", "Long sleeve"],
+    tag: "B2B SaaS",
+    description: "Dashboards, workflows and tools for teams, built to feel simple.",
+    details: ["Dashboards", "Complex workflows", "10+ platforms"],
     image: "https://cdn.21st.dev/assets/mirror/09/096002a95aba7de9c197de4cb5c78cbbe17c1677b19c547cc20c6dbef47a899c.webp",
     backImage: "https://cdn.21st.dev/assets/mirror/74/74408a7dbb4f4fc6761ebb8d6ed93187248cddf75e1c2e70d38d04dfdd328776.webp",
     sideImage: "https://cdn.21st.dev/assets/mirror/ed/eda3afca537071a80d7d82b3f0d1055b56f1f3263c20772224bae6660bf4072c.webp",
   },
   {
     id: "oversized-ochre",
-    name: "Oversized tee · CCgather",
+    name: "Product Strategy",
     kind: "tee",
     color: "#DE9C31",
-    tag: "$52",
-    description: "Boxy ochre tee with a small chest mark and a large CCgather back print.",
-    details: ["Oversized", "Dropped shoulder", "Back print"],
+    tag: "Strategy",
+    description: "Research and design tied to what the product and its people actually need.",
+    details: ["Problem framing", "Roadmaps", "Metrics"],
     image: "https://cdn.21st.dev/assets/mirror/72/7208c811f54e123dd7b1a5c1c3926f43ca832f6c4c20c45de10671ffd544409d.webp",
     backImage: "https://cdn.21st.dev/assets/mirror/d3/d356989b7bc741c5cfc934cac34983dfb24d5d6a6b6e7b8b7f6b27cd3eceae69.webp",
     sideImage: "https://cdn.21st.dev/assets/mirror/bf/bf94beeafb21f9cb21aa45057a67dc8a2e23ba95c7ac0f79dd27ba3ce4a1230c.webp",
   },
 ];
 
+const STICKERS = [
+];
+const TICKER = ["New drop", "T-shirts", "Shirts", "Hoodies", "Knits", "Thrift it", "Wear it loud", "New drop", "T-shirts", "Shirts", "Hoodies", "Knits", "Thrift it", "Wear it loud"];
+const SHOP_AR = 592 / 634;
+const DOOR = { x: 0.0757, y: 0.456, w: 0.5426, h: 0.473 };
+const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
+const smooth = (a: number, b: number, v: number) => { const t = clamp01((v - a) / (b - a)); return t * t * (3 - 2 * t); };
+
+// Scroll drives the whole scene: the shutter rolls up inside its doorway, then the view walks into the shop
+// until the rail inside is at its real size (scale 1), so it can be handled normally once you are in.
+function ShopFront() {
+  const wrapRef = React.useRef<HTMLDivElement | null>(null);
+  const stickyRef = React.useRef<HTMLDivElement | null>(null);
+  const frontRef = React.useRef<HTMLDivElement | null>(null);
+  const doorRef = React.useRef<HTMLDivElement | null>(null);
+  const titleRef = React.useRef<HTMLHeadingElement | null>(null);
+  const hintRef = React.useRef<HTMLDivElement | null>(null);
+  const stickersRef = React.useRef<HTMLDivElement | null>(null);
+  const [dims, setDims] = React.useState({ F: 0, left: 0, top: 0, s0: 1, lift: 0, shiftX: 0 });
+  const dimsRef = React.useRef(dims);
+
+  React.useLayoutEffect(() => {
+    const measure = () => {
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const start = Math.min(vw * 0.92, (vh - 300) / SHOP_AR, 800);
+      const F = Math.min(Math.min(vw * 0.94, 1120) / DOOR.w, (vh * 0.84) / (DOOR.h * SHOP_AR));
+      const H = F * SHOP_AR;
+      const s0 = start / F;
+      const ox = DOOR.x + DOOR.w / 2, oy = DOOR.y + DOOR.h / 2;
+      // the shop stands on the bottom edge of the screen and the zoom grows from that edge, so it never leaves it
+      const shiftX = (ox - 0.5) * F * s0;
+      const d = { F, left: vw / 2 - ox * F, top: vh - H, s0, lift: 0, shiftX };
+      dimsRef.current = d; setDims(d);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  React.useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let target = 0, shown = 0, raf = 0, first = true;
+    const read = () => {
+      const w = wrapRef.current; if (!w) return;
+      const r = w.getBoundingClientRect(), max = w.offsetHeight - window.innerHeight;
+      target = max > 0 ? clamp01(-r.top / max) : 0;
+    };
+    const paint = (p: number) => {
+      const d = dimsRef.current;
+      const roll = smooth(0.02, 0.5, p);       // shutter
+      const zoom = smooth(0.38, 0.96, p);      // walking in
+      const s = Math.pow(d.s0, 1 - zoom);
+      const ty = (1 - zoom) * d.lift;
+      const tx = (1 - zoom) * d.shiftX;
+      if (frontRef.current) frontRef.current.style.transform = `translate3d(${tx.toFixed(2)}px, ${ty.toFixed(2)}px, 0) scale(${s.toFixed(4)})`;
+      if (doorRef.current) doorRef.current.style.transform = `translate3d(0, ${(-roll * 101).toFixed(2)}%, 0)`;
+      if (titleRef.current) { const o = 1 - smooth(0.0, 0.3, p); titleRef.current.style.opacity = String(o); titleRef.current.style.transform = `translateY(${(-40 * (1 - o)).toFixed(1)}px)`; }
+      if (hintRef.current) hintRef.current.style.opacity = String(1 - smooth(0.0, 0.12, p));
+      if (stickersRef.current) stickersRef.current.style.opacity = String(1 - smooth(0.3, 0.6, p));
+    };
+    const tick = () => {
+      raf = 0;
+      shown = reduce || first ? target : shown + (target - shown) * 0.1;
+      if (Math.abs(target - shown) < 0.0005) shown = target;
+      first = false;
+      paint(shown);
+      if (shown !== target) raf = requestAnimationFrame(tick);
+    };
+    const onScroll = () => { read(); if (!raf) raf = requestAnimationFrame(tick); };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); };
+  }, [dims]);
+
+  const move = (e: React.PointerEvent) => {
+    const el = stickyRef.current!; const r = el.getBoundingClientRect();
+    el.style.setProperty("--mx", ((e.clientX - r.left) / r.width - 0.5).toFixed(3));
+    el.style.setProperty("--my", ((e.clientY - r.top) / r.height - 0.5).toFixed(3));
+  };
+
+  return (
+    <div className="gz-scroll" ref={wrapRef}>
+      <div className="gz-sticky" ref={stickyRef} onPointerMove={move}>
+        <div className="gz-ticker" aria-hidden="true"><div>{[...TICKER, ...TICKER].map((t, i) => <span key={i}>{t} ✺</span>)}</div></div>
+        <div className="gz-head">
+          <h1 className="gz-title" ref={titleRef}>Scroll to open the <em>shop</em></h1>
+          <div className="gz-hint" ref={hintRef}>Scroll to pull up the shutter <b>↓</b></div>
+        </div>
+        {dims.F > 0 && (
+          <div ref={frontRef} className="gz-front" style={{ width: dims.F, left: dims.left, top: dims.top, transform: `translate3d(${dims.shiftX}px, ${dims.lift}px, 0) scale(${dims.s0})` }}>
+            <div className="gz-wall" />
+            <div className="gz-sign"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" draggable={false} /></div>
+            <div className="gz-prop phone"><img src="assets/rail/cardphone.png?v=3" alt="" draggable={false} /></div>
+            <div className="gz-prop dump-g"><img src="assets/rail/dumpster-green.png?v=3" alt="" draggable={false} /></div>
+            <div className="gz-opening">
+              <div className="gz-room">
+                <ClothingRailHero
+                  items={RAIL_DEMO_ITEMS}
+                  hanger="none"
+                  eyebrow="Manisha Baroliya · Ten skills on the rail"
+                  caption="Brush along the rail, slide a hanger, lift a skill to see how I work."
+                  autoplay
+                />
+              </div>
+              <div className="gz-door" ref={doorRef}><i /></div>
+              <div className="gz-lip" />
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function ClothingRailHeroDemo({ autoplay = true }: { autoplay?: boolean }) {
   return (
-    <div data-rail-demo className="flex min-h-svh w-full items-center justify-center bg-background text-foreground">
-      <ClothingRailHero
-        items={RAIL_DEMO_ITEMS}
-        hanger="none"
-        eyebrow="New season · Ten pieces on the rail"
-        heading="A clothing rail you can handle, right on the page."
-        caption="Brush along the rail, slide a hanger, lift a piece to see the back."
-        autoplay={autoplay}
-        action={
-          <button type="button" className="rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background shadow-sm outline-none transition-[transform,box-shadow] hover:-translate-y-px hover:shadow-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none">
-            Shop the edit
-          </button>
-        }
-      />
-    </div>
+    <>
+    <ShopFront />
+    </>
   );
 }
 

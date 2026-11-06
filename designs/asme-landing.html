@@ -119,48 +119,19 @@
         return () => { cancelAnimationFrame(raf); v.removeEventListener('canplay', onCanPlay); v.removeEventListener('timeupdate', onTime); v.removeEventListener('ended', onEnded); };
       }, []);
       return <video ref={ref} muted autoPlay playsInline preload="auto" style={{ opacity: 0 }}
-        className="absolute inset-0 w-full h-full object-cover object-bottom"
-        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260405_074625_a81f018a-956b-43fb-9aee-4d1508e30e6a.mp4" />;
-    }
-
-    // The head follows the cursor. Nine head turns on a 3x3 sheet; the one nearest the pointer is shown outright,
-    // like cutting between frames of a film (no easing or blending). Clicking pulls a face from the second sheet.
-    function Mascot() {
-      const box = useRef(null);
-      const [cell, setCell] = useState(4);
-      const [react, setReact] = useState(-1);
-      const timer = useRef(0);
-      useEffect(() => {
-        const move = (e) => {
-          const r = box.current.getBoundingClientRect();
-          const nx = (e.clientX - (r.left + r.width / 2)) / (innerWidth * 0.5);
-          const ny = (e.clientY - (r.top + r.height * 0.35)) / (innerHeight * 0.5);
-          const col = nx < -0.14 ? 0 : nx > 0.14 ? 2 : 1;
-          const row = ny < -0.2 ? 0 : ny > 0.2 ? 2 : 1;
-          setCell(row * 3 + col);
-        };
-        const leave = () => setCell(4);
-        addEventListener('pointermove', move); addEventListener('pointerdown', move);
-        document.documentElement.addEventListener('mouseleave', leave);
-        return () => { removeEventListener('pointermove', move); removeEventListener('pointerdown', move); document.documentElement.removeEventListener('mouseleave', leave); };
-      }, []);
-      const poke = () => { setReact(Math.floor(Math.random() * 9)); clearTimeout(timer.current); timer.current = setTimeout(() => setReact(-1), 1300); };
-      const i = react >= 0 ? react : cell;
-      const fade = 'linear-gradient(90deg, transparent, #000 24%, #000 76%, transparent), linear-gradient(180deg, transparent, #000 10%, #000 88%, transparent)';
-      return (
-        <div ref={box} onClick={poke} role="img" aria-label="Animated portrait that follows your cursor"
-          className="relative mx-auto shrink-0 cursor-pointer select-none"
-          style={{ width: 'min(84vw, 38vh, 440px)', minWidth: 220, aspectRatio: '1 / 1',
-            backgroundImage: `url(${react >= 0 ? 'assets/asme/mascot-reacts.webp' : 'assets/asme/mascot-dirs.webp'})`, backgroundSize: '300% 300%', backgroundRepeat: 'no-repeat',
-            backgroundPosition: `${(i % 3) * 50}% ${Math.floor(i / 3) * 50}%`,
-            WebkitMaskImage: fade, maskImage: fade, WebkitMaskComposite: 'source-in', maskComposite: 'intersect' }} />
-      );
+        className="absolute inset-0 w-full h-full object-cover object-center"
+        src="assets/asme/robot.mp4" />;
     }
 
     function Hero() {
       return (
         <div className="min-h-screen overflow-hidden relative flex flex-col">
-          <div className="absolute inset-0 overflow-hidden" style={{ background: 'radial-gradient(ellipse 70% 55% at 50% 68%, #1b2a6b 0%, #0b1334 48%, #05060f 85%)' }}>
+          <div className="absolute inset-0 overflow-hidden bg-black">
+            {/* the film sits below the words, so the figure is never behind the text */}
+            <div className="absolute inset-x-0 bottom-0 top-[40%] sm:top-[30%]" style={{ WebkitMaskImage: 'linear-gradient(180deg, transparent 0%, #000 22%)', maskImage: 'linear-gradient(180deg, transparent 0%, #000 22%)' }}>
+              <HeroVideo />
+              <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0) 70%, rgba(0,0,0,.55) 100%)' }} />
+            </div>
           </div>
           <nav className="relative z-20 px-6 py-6">
             <div className="liquid-glass rounded-full max-w-5xl mx-auto px-6 py-3 flex items-center justify-between">
@@ -178,13 +149,13 @@
           </nav>
 
           <div className="relative z-10 flex-1 flex flex-col items-center px-6 pt-4 md:pt-6 pb-8 md:pb-10 text-center">
-            <h1 className="serif text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-white tracking-tight whitespace-nowrap mb-2 md:mb-3">
+            <h1 className="serif text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-white tracking-tight md:whitespace-nowrap leading-[0.95] mb-3 md:mb-3">
               Design with <em className="italic">calm</em>.
             </h1>
             <p className="text-white text-sm leading-relaxed px-4 max-w-xl">
               Hi, I’m Manisha, a product designer and UX researcher with a psychology background. 3+ years, 20+ live designs, 10+ SaaS and B2B platforms.
             </p>
-            <div className="flex-1 flex items-center justify-center w-full min-h-0 py-2"><Mascot /></div>
+            <div className="flex-1" />
             <a href={LIB} target="_top" className="inline-block liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium hover:bg-white/5 transition-colors">See my work</a>
           </div>
 
@@ -199,13 +170,13 @@
 
     function About() {
       return (
-        <section className="bg-black pt-32 md:pt-44 pb-10 md:pb-14 px-6 overflow-hidden relative">
+        <section className="bg-black pt-32 md:pt-44 pb-2 md:pb-4 px-6 overflow-hidden relative">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.03)_0%,_transparent_70%)]" />
           <div className="relative max-w-6xl mx-auto text-center">
             <Reveal y={20} duration={0.6}><p className="text-white/40 text-sm tracking-widest uppercase mb-6">About me</p></Reveal>
             <Reveal y={40} duration={0.8} delay={0.1}>
               <h2 className="text-4xl md:text-6xl lg:text-7xl text-white leading-[1.1] tracking-tight">
-                Turning messy <span className="serif italic text-white/60">ideas</span> into<br className="hidden md:block" />
+                Turning messy <span className="serif italic text-white/60">ideas</span> into{" "}<br className="hidden md:block" />
                 interfaces that <span className="serif italic text-white/60">feel clear and human.</span>
               </h2>
             </Reveal>
@@ -214,62 +185,8 @@
       );
     }
 
-    function Philosophy() {
-      return (
-        <section className="bg-black py-28 md:py-40 px-6 overflow-hidden">
-          <div className="max-w-6xl mx-auto">
-            <Reveal y={40} duration={0.8}>
-              <h2 className="text-5xl md:text-7xl lg:text-8xl text-white tracking-tight mb-16 md:mb-24">
-                Research <span className="serif italic text-white/40">x</span> Design
-              </h2>
-            </Reveal>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-              <Reveal x={-40} duration={0.8}>
-                <div className="rounded-3xl overflow-hidden aspect-[4/3]">
-                  <Video className="w-full h-full object-cover" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260307_083826_e938b29f-a43a-41ec-a153-3d4730578ab8.mp4" />
-                </div>
-              </Reveal>
-              <Reveal x={40} duration={0.8} delay={0.1} className="flex flex-col justify-center gap-8">
-                <div>
-                  <p className="text-white/40 text-xs tracking-widest uppercase mb-4">Start with people</p>
-                  <p className="text-white/70 text-base md:text-lg leading-relaxed">Good products begin with listening. I map real behaviour, needs and friction before a single screen is drawn.</p>
-                </div>
-                <div className="w-full h-px bg-white/10" />
-                <div>
-                  <p className="text-white/40 text-xs tracking-widest uppercase mb-4">Shape the product</p>
-                  <p className="text-white/70 text-base md:text-lg leading-relaxed">Then I turn insight into clean flows and one tidy design system, shipped across 10+ SaaS and B2B platforms.</p>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </section>
-      );
-    }
-
-    function Playground() {
-      return (
-        <section className="bg-black py-24 md:py-36 px-6 overflow-hidden relative">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(255,160,60,0.07)_0%,_transparent_60%)]" />
-          <div className="relative max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 items-center gap-10 md:gap-6">
-            <Reveal x={-40} duration={0.8} className="order-2 md:order-1">
-              <p className="text-white/40 text-xs tracking-widest uppercase mb-5">Small joys</p>
-              <h2 className="text-4xl md:text-6xl text-white tracking-tight leading-[1.1]">
-                Calm on the surface, <span className="serif italic text-white/50">curious underneath.</span>
-              </h2>
-              <p className="mt-6 text-white/60 text-base md:text-lg leading-relaxed max-w-md">I like products that glide: quiet interfaces with one playful detail that makes people smile.</p>
-              <a href={SOCIAL} target="_top" className="mt-8 inline-block liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium hover:bg-white/5 transition-colors">Say hello</a>
-            </Reveal>
-            <Reveal x={40} duration={0.8} delay={0.1} className="order-1 md:order-2 flex justify-center">
-              <video src="assets/fish/goldfish.mp4" muted autoPlay loop playsInline preload="auto" aria-hidden="true"
-                className="w-full max-w-[400px] h-[440px] md:h-[560px] object-cover" style={{ mixBlendMode: 'screen' }} />
-            </Reveal>
-          </div>
-        </section>
-      );
-    }
-
     ReactDOM.createRoot(document.getElementById('root')).render(
-      <div className="bg-black"><Hero /><About /><Playground /><Philosophy /></div>
+      <div className="bg-black"><Hero /><About /></div>
     );
   </script>
   <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>

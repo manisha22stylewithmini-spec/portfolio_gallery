@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
+  if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manisha Baroliya — Product designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #000; color: #fff; font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .hero { position: relative; min-height: 100vh; min-height: 100dvh; overflow: hidden; display: flex; flex-direction: column; background: #000; }
+    .bg { position: absolute; left: 0; right: 0; bottom: 0; top: 21vh; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%); mask-image: linear-gradient(180deg, transparent 0%, #000 22%); }
+    .bg video { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; display: block; }
+    .bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.3) 0%, rgba(0,0,0,.05) 30%, rgba(0,0,0,.12) 60%, rgba(0,0,0,.28) 100%); }
+    .glass { background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    nav { position: relative; z-index: 3; margin: 24px auto 0; width: calc(100% - 48px); max-width: 1024px; border-radius: 999px; padding: 10px 24px; display: flex; align-items: center; justify-content: space-between; }
+    nav img { height: 42px; width: auto; display: block; }
+    nav .left { display: flex; align-items: center; }
+    nav .links { display: none; gap: 32px; margin-left: 32px; font-size: 14px; font-weight: 500; color: rgba(255,255,255,.8); }
+    nav .links a:hover { color: #fff; }
+    nav .cta { border-radius: 999px; padding: 8px 22px; font-size: 14px; font-weight: 500; }
+    @media (min-width: 768px) { nav .links { display: flex; } nav img { height: 46px; } }
+    .top { position: relative; z-index: 2; padding: clamp(36px, 7vh, 72px) 24px 0; text-align: center; text-shadow: 0 2px 28px rgba(0,0,0,.6); }
+    .eyebrow { font-size: 12px; letter-spacing: .32em; text-transform: uppercase; color: rgba(255,255,255,.6); margin: 0 0 18px; }
+    h1 { font-family: 'Instrument Serif', serif; font-weight: 400; letter-spacing: -.02em; line-height: .96; margin: 0; font-size: clamp(54px, 11vw, 160px); }
+    h1 em { color: rgba(255,255,255,.62); padding: 0 .04em; }
+    .spacer { flex: 1; min-height: 40px; }
+    .bottom { position: relative; z-index: 2; width: calc(100% - 48px); max-width: 1024px; margin: 0 auto 36px; display: grid; gap: 14px; grid-template-columns: 1fr; }
+    @media (min-width: 768px) { .bottom { grid-template-columns: 1fr 1fr; } }
+    .card { border-radius: 22px; padding: 22px 24px; }
+    .card small { display: block; font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: rgba(255,255,255,.55); margin-bottom: 10px; }
+    .card p { margin: 0; font-size: 15px; line-height: 1.6; color: rgba(255,255,255,.88); }
+    .row { position: relative; z-index: 2; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 0 24px 56px; }
+    .btn { border-radius: 999px; padding: 13px 30px; font-size: 14px; font-weight: 500; transition: background .2s; }
+    .btn.solid { background: #fff; color: #000; }
+    .btn.solid:hover { background: #e8e8e8; }
+    .btn.ghost:hover { background: rgba(255,255,255,.14); }
+    .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 60; font: 12px system-ui, sans-serif; color: #fff; padding: 6px 12px; border-radius: 999px; background: rgba(0,0,0,.55); }
+    .embed .back-link { display: none !important; }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+  <header class="hero">
+    <div class="bg"><video autoplay loop muted playsinline preload="auto" aria-hidden="true" src="assets/garden/garden.mp4"></video></div>
+
+    <nav class="glass">
+      <div class="left">
+        <a href="#" aria-label="Manisha Baroliya"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199"></a>
+        <div class="links">
+          <a href="shelf-library.html#library" target="_top">Work</a>
+          <a href="halcyon-hero.html" target="_top">About</a>
+          <a href="shelf-library.html#social" target="_top">Social</a>
+        </div>
+      </div>
+      <a class="cta glass" href="shelf-library.html#social" target="_top">Get in touch</a>
+    </nav>
+
+    <div class="top">
+      <p class="eyebrow">Manisha Baroliya · Product designer &amp; UX researcher</p>
+      <h1>Research <em>×</em> Design</h1>
+    </div>
+
+    <div class="spacer"></div>
+
+    <div class="bottom">
+      <div class="card glass"><small>Start with people</small><p>Good products begin with listening. I map real behaviour, needs and friction before a single screen is drawn.</p></div>
+      <div class="card glass"><small>Shape the product</small><p>Then I turn insight into clean flows and one tidy design system, shipped across 10+ SaaS and B2B platforms.</p></div>
+    </div>
+
+    <div class="row">
+      <a class="btn solid" href="shelf-library.html#library" target="_top">See my work</a>
+      <a class="btn glass ghost" href="shelf-library.html#social" target="_top">Say hello</a>
+    </div>
+  </header>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+</body>
+</html>

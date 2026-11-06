@@ -56,13 +56,6 @@
 
     const fade = (d) => ({ animationDelay: `${d}s`, opacity: 0 });
 
-    const LOGOS = [
-      <span className="font-semibold tracking-wide">UX RESEARCH</span>,
-      <span className="font-semibold tracking-wide">UI DESIGN</span>,
-      <span className="font-semibold tracking-wide">DESIGN SYSTEMS</span>,
-      <span className="font-semibold tracking-wide">PROTOTYPING</span>,
-      <span className="font-semibold tracking-wide">10+ SAAS &amp; B2B PLATFORMS</span>,
-    ];
 
     function App() {
       return (
@@ -103,10 +96,6 @@
                   See my work
                 </a>
               </div>
-            </div>
-
-            <div className="animate-fade-in-up mt-24 flex flex-wrap items-center justify-center gap-x-12 gap-y-6 text-gray-700 text-lg" style={fade(0.8)}>
-              {LOGOS.map((l, i) => <div key={i}>{l}</div>)}
             </div>
           </section>
         </div>

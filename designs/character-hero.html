@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
+  if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manisha Baroliya — Product designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #ffffff; --dim: rgba(255,255,255,.7);
+      --purple: #fff; --mint: #fff; --yellow: #fff; --pink: #fff; --blue: #fff; --ink: #fff; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #000; color: var(--ink); font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .hand { font-family: 'Syne', sans-serif; font-weight: 500; }
+
+    .hero { position: relative; min-height: 100vh; min-height: 100dvh; overflow: hidden; display: flex; flex-direction: column; background: #000; isolation: isolate; }
+    /* pure black in the middle; a little colour and film grain only in the four corners */
+    .corners { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+    .corners i { position: absolute; width: min(46vw, 560px); height: min(46vw, 560px); border-radius: 50%; filter: blur(60px); opacity: .5; }
+    .corners .tl { left: -14vw; top: -18vw; background: radial-gradient(circle, rgba(110,140,255,.9), transparent 68%); }
+    .corners .tr { right: -14vw; top: -18vw; background: radial-gradient(circle, rgba(110,140,255,.9), transparent 68%); }
+    .corners .bl { left: -14vw; bottom: -18vw; background: radial-gradient(circle, rgba(110,140,255,.85), transparent 68%); }
+    .corners .br { right: -14vw; bottom: -18vw; background: radial-gradient(circle, rgba(110,140,255,.85), transparent 68%); }
+    .grain { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .5; mix-blend-mode: screen;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+      -webkit-mask-image: radial-gradient(ellipse 62% 58% at 50% 50%, transparent 55%, #000 100%); mask-image: radial-gradient(ellipse 62% 58% at 50% 50%, transparent 55%, #000 100%); }
+
+    /* header: handwritten links, nothing boxed */
+    header.bar { position: relative; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px clamp(20px, 4vw, 48px); }
+    .bar img { height: 46px; width: auto; display: block; }
+    .bar nav { display: none; gap: 34px; font-size: 15px; letter-spacing: .02em; }
+    .bar nav a { position: relative; color: var(--dim); transition: color .2s; }
+    .bar nav a:hover { color: var(--ink); }
+    .bar nav a::after { content: ''; position: absolute; left: -2px; right: -2px; bottom: -2px; height: 6px; background: no-repeat center/100% 100% url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 8' preserveAspectRatio='none'><path d='M1 5 Q 12 1 25 5 T 50 4 T 75 5 T 99 3' fill='none' stroke='%23ffffff' stroke-width='2.2' stroke-linecap='round'/></svg>"); opacity: 0; transform: scaleX(.6); transition: .25s; }
+    .bar nav a:hover::after { opacity: 1; transform: none; }
+    .bar .status { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #fff; }
+    .bar .status i { width: 8px; height: 8px; border-radius: 50%; background: #fff; box-shadow: 0 0 10px rgba(255,255,255,.8); }
+    @media (min-width: 900px) { .bar nav { display: flex; } }
+
+    .stage { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; align-items: center; padding: 0 clamp(20px, 4vw, 48px); min-width: 0; }
+    .hello { margin: clamp(10px, 2.4vh, 26px) 0 0; font-size: clamp(14px, 1.3vw, 17px); letter-spacing: .02em; color: var(--dim); }
+    h1 { margin: 8px 0 0; text-align: center; font-family: 'Syne', sans-serif; font-weight: 700; letter-spacing: -.045em; line-height: 1; white-space: nowrap; font-size: clamp(40px, 9.4vw, 148px); color: #fff; max-width: 100%; }
+    h1 .im { font-weight: 500; }
+    h1 .nm { display: inline-block; white-space: nowrap; }
+    .scribble { display: block; width: clamp(180px, 34vw, 480px); height: 18px; margin: 4px auto 0; }
+
+    .who { position: relative; margin-top: auto; z-index: 3; width: min(92vw, 60vh, 640px); aspect-ratio: 1 / 1; cursor: pointer; user-select: none; -webkit-user-select: none; touch-action: manipulation;
+      background-size: 300% 300%; background-repeat: no-repeat; background-position: 50% 50%;
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent), linear-gradient(180deg, transparent, #000 6%, #000 80%, transparent); -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent), linear-gradient(180deg, transparent, #000 6%, #000 80%, transparent); mask-composite: intersect; }
+
+    /* notes, scribbled around her */
+    .below { position: relative; z-index: 4; display: grid; gap: 30px; grid-template-columns: 1fr; padding: 8px clamp(20px, 4vw, 48px) 64px; }
+    .note { max-width: 330px; }
+    .note h3 { margin: 0 0 10px; font-size: 20px; letter-spacing: -.01em; color: #fff; font-weight: 700; display: inline-block; }
+    .note p { margin: 0 0 16px; font-size: 15px; line-height: 1.65; color: rgba(244,241,234,.84); }
+    .stickers { display: flex; flex-wrap: wrap; gap: 10px; }
+    .stickers span { font-family: 'Syne', sans-serif; font-weight: 500; font-size: 13px; line-height: 1; padding: 9px 16px; border-radius: 999px; color: #fff; border: 1px solid rgba(255,255,255,.5); }
+    .tally { display: grid; gap: 10px; }
+    .tally div { display: flex; align-items: baseline; gap: 12px; }
+    .tally b { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 30px; letter-spacing: -.04em; line-height: 1; min-width: 70px; color: #fff; }
+    .tally small { font-family: 'Syne', sans-serif; font-weight: 400; font-size: 13px; line-height: 1.3; color: var(--dim); }
+    .cta { display: inline-flex; align-items: center; gap: 10px; margin-top: 18px; border-radius: 999px; padding: 14px 28px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: #0b0b10; background: #fff; transition: transform .15s; position: relative; }
+    .cta:hover { transform: scale(1.04); }
+    .try { display: block; margin: 10px 0 0 12px; font-size: 13px; color: var(--dim); }
+    .arrow { display: none; position: absolute; z-index: 4; pointer-events: none; }
+    @media (min-width: 1100px) {
+      .below { position: absolute; left: 0; right: 0; bottom: clamp(24px, 6vh, 64px); display: flex; justify-content: space-between; align-items: flex-end; padding: 0 clamp(20px, 4vw, 48px); pointer-events: none; }
+      .note { pointer-events: auto; }
+      .note.r { text-align: right; } .note.r .tally div { justify-content: flex-end; } .note.r .try { margin-right: 12px; }
+      .arrow { display: block; }
+    }
+    @media (max-width: 1099px) { .note.r { max-width: none; } }
+    .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 60; font: 12px system-ui, sans-serif; color: #fff; padding: 6px 12px; border-radius: 999px; background: rgba(255,255,255,.12); }
+    .embed .back-link { display: none !important; }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+  <section class="hero" id="hero">
+    <div class="corners"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
+    <div class="grain"></div>
+
+    <header class="bar">
+      <a href="#" aria-label="Manisha Baroliya"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199"></a>
+      <nav class="hand">
+        <a href="shelf-library.html#library" target="_top">my work</a>
+        <a href="halcyon-hero.html" target="_top">about me</a>
+        <a href="shelf-library.html#social" target="_top">say hi</a>
+      </nav>
+      <div class="status hand"><i></i>taking new projects</div>
+    </header>
+
+    <div class="stage">
+      <p class="hello hand">hey, nice to meet you!</p>
+      <h1><span class="im">Hi, I’m</span> <span class="nm" aria-label="Manisha"><span>M</span><span>a</span><span>n</span><span>i</span><span>s</span><span>h</span><span>a</span></span></h1>
+      <svg class="scribble" viewBox="0 0 480 18" preserveAspectRatio="none" aria-hidden="true"><path d="M4 11 C 60 3, 110 16, 170 8 S 290 14, 340 7 S 440 12, 476 5" fill="none" stroke="#ffffff" stroke-opacity=".8" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <div class="who" id="who" role="img" aria-label="Animated portrait of Manisha that watches your cursor"></div>
+    </div>
+
+    <div class="below">
+      <aside class="note l">
+        <h3 class="hand">what I do</h3>
+        <p>I study how people think, then design things that feel easy. My psychology background is in every flow I make.</p>
+        <div class="stickers"><span>UX research</span><span>UI design</span><span>design systems</span><span>prototyping</span></div>
+      </aside>
+      <aside class="note r">
+        <div class="tally">
+          <div><b>3+</b><small>years of making<br>screens behave</small></div>
+          <div><b>20+</b><small>designs out in<br>the wild</small></div>
+          <div><b>10+</b><small>SaaS &amp; B2B<br>platforms</small></div>
+        </div>
+        <a class="cta" id="cta" href="shelf-library.html#social" target="_top">Let’s talk →</a>
+        <span class="try hand">(go on, she reacts)</span>
+      </aside>
+    </div>
+
+    <svg class="arrow" id="arrow" width="190" height="120" viewBox="0 0 190 120" fill="none" aria-hidden="true" style="left: calc(50% - 480px); bottom: 38vh">
+      <text x="0" y="34" fill="#f4f1ea" opacity=".75" font-family="Syne" font-weight="500" font-size="15" transform="rotate(-4 0 34)">that’s me!</text>
+      <path d="M14 48 C 40 90, 100 104, 168 78" stroke="#f4f1ea" stroke-opacity=".7" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M150 66 L 170 78 L 148 90" stroke="#f4f1ea" stroke-opacity=".7" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </section>
+
+  <script>
+    // Her head follows the cursor with hard cuts between nine head turns (columns run left to right as you see them).
+    // Hover the "Let's talk" button: she winks and blows kisses. Leave it: she gets cross. Wander far away: she is confused. Click her: a random face.
+    (function () {
+      var who = document.getElementById('who'), cta = document.getElementById('cta');
+      var dirs = 'assets/asme/char-dirs-k.webp', reacts = 'assets/asme/char-reacts-k.webp';
+      // face indices in the reactions sheet
+      var F = { kissNotes: 0, angry: 1, skeptical: 2, angry2: 3, bite: 4, grin: 5, kiss: 6, winkL: 7, winkR: 8 };
+      var HAPPY = [F.winkL, F.kiss, F.winkR, F.kissNotes, F.grin], hi = 0;
+      var cell = 4, face = -1, pokeUntil = 0, visited = false, happyTimer = 0, last = { x: innerWidth / 2, y: 0 };
+      function paint() {
+        var useFace = face >= 0, i = useFace ? face : cell;
+        who.style.backgroundImage = 'url(' + (useFace ? reacts : dirs) + ')';
+        who.style.backgroundPosition = ((i % 3) * 50) + '% ' + (Math.floor(i / 3) * 50) + '%';
+      }
+      function setFace(f) { if (f !== face) { face = f; paint(); } }
+      function update(e) {
+        if (e) last = { x: e.clientX, y: e.clientY };
+        if (performance.now() < pokeUntil) return;                       // a click face is showing
+        var c = cta.getBoundingClientRect(), x = last.x, y = last.y;
+        var inside = x >= c.left && x <= c.right && y >= c.top && y <= c.bottom;
+        var dx = Math.max(c.left - x, 0, x - c.right), dy = Math.max(c.top - y, 0, y - c.bottom), d = Math.hypot(dx, dy);
+        if (inside) {
+          visited = true;
+          if (!happyTimer) { hi = 0; setFace(HAPPY[0]); happyTimer = setInterval(function () { hi = (hi + 1) % HAPPY.length; if (performance.now() >= pokeUntil) setFace(HAPPY[hi]); }, 650); }
+          return;
+        }
+        if (happyTimer) { clearInterval(happyTimer); happyTimer = 0; }
+        if (visited) {
+          if (d < 260) { setFace(d < 130 ? F.angry : F.angry2); return; }   // just left the button: cross
+          if (d < 720) { setFace(d < 480 ? F.skeptical : F.bite); return; } // further away: confused
+          visited = false;                                                  // far enough: forget it
+        }
+        var r = who.getBoundingClientRect();
+        var nx = (x - (r.left + r.width / 2)) / (innerWidth * 0.5);        // negative: cursor is left of her
+        var ny = (y - (r.top + r.height * 0.35)) / (innerHeight * 0.5);    // negative: cursor is above her head
+        var col = nx < -0.12 ? 0 : nx > 0.12 ? 2 : 1, row = ny < -0.18 ? 0 : ny > 0.18 ? 2 : 1;
+        cell = row * 3 + col; face = -1; paint();
+      }
+      addEventListener('pointermove', update); addEventListener('pointerdown', update);
+      document.documentElement.addEventListener('mouseleave', function () { visited = false; cell = 4; face = -1; if (happyTimer) { clearInterval(happyTimer); happyTimer = 0; } paint(); });
+      who.addEventListener('click', function () {
+        face = Math.floor(Math.random() * 9); pokeUntil = performance.now() + 1300; paint();
+        setTimeout(function () { pokeUntil = 0; update(); }, 1320);
+      });
+      paint();
+    })();
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+</body>
+</html>

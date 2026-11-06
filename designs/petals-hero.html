@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
+  if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manisha Baroliya — Product designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --cream: #f6ead3; --gold: #e8bd72; --rose: #d9453d; --dim: rgba(246,234,211,.74); }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #0d0905; color: var(--cream); font-family: 'Jost', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .hero { position: relative; min-height: 100vh; min-height: 100dvh; overflow: hidden; display: flex; flex-direction: column; isolation: isolate; }
+    .bg { position: absolute; inset: 0; z-index: -2; overflow: hidden; background: #0d0905; }
+    /* the story is shown whole, never cropped: the sharp film keeps its own landscape frame, and its edges melt into a blurred glow of the same film */
+    .bg .glow { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; filter: blur(38px) saturate(1.1) brightness(.62); }
+    .frame { position: absolute; left: 50%; top: 50%; width: min(100vw, calc(100dvh * 16 / 9)); aspect-ratio: 16 / 9; transform: translate(-50%, -50%);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent), linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent); -webkit-mask-composite: source-in;
+      mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent), linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent); mask-composite: intersect; }
+    .frame video { width: 100%; height: 100%; object-fit: contain; display: block; }
+    /* the film's own corner mark, softened in place */
+    .frame .mark { position: absolute; left: 42%; width: 16%; bottom: 2%; height: 7%; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); -webkit-mask-image: radial-gradient(ellipse, #000 55%, transparent 100%); mask-image: radial-gradient(ellipse, #000 55%, transparent 100%); }
+    @media (max-width: 759px) { .frame { top: 96px; transform: translate(-50%, 0); } }
+    /* golden-hour wash and a soft vignette so the type sits in the shadows of the grass */
+    .shade { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+      background: linear-gradient(180deg, rgba(13,9,5,.55) 0%, rgba(13,9,5,0) 26%, rgba(13,9,5,0) 46%, rgba(13,9,5,.82) 100%),
+                  radial-gradient(ellipse 80% 70% at 50% 45%, transparent 55%, rgba(13,9,5,.5) 100%); }
+
+    /* header: logo in the middle, small-caps links either side, a hairline underneath */
+    header.bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 18px clamp(20px, 4vw, 56px) 14px; border-bottom: 1px solid rgba(246,234,211,.22); }
+    .bar nav { display: flex; gap: 28px; font-size: 12px; letter-spacing: .26em; text-transform: uppercase; }
+    .bar nav.r { justify-content: flex-end; }
+    .bar nav a { color: var(--dim); transition: color .2s; position: relative; padding-bottom: 4px; }
+    .bar nav a:hover { color: var(--gold); }
+    .bar nav a::after { content: ''; position: absolute; left: 0; right: 100%; bottom: 0; height: 1px; background: var(--gold); transition: right .3s; }
+    .bar nav a:hover::after { right: 0; }
+    .bar img { height: 52px; width: auto; display: block; }
+    @media (max-width: 760px) { .bar nav.l a:not(:first-child) { display: none; } .bar nav { gap: 18px; font-size: 11px; } .bar img { height: 44px; } }
+
+    .copy { margin-top: auto; padding: 0 clamp(20px, 4vw, 56px) clamp(34px, 7vh, 72px); display: grid; gap: 28px; grid-template-columns: 1fr; align-items: end; }
+    @media (min-width: 960px) { .copy { grid-template-columns: minmax(0, 1.5fr) minmax(280px, .7fr); gap: 56px; } }
+    .eyebrow { margin: 0 0 20px; font-size: 12px; letter-spacing: .34em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 14px; }
+    .eyebrow::before { content: ''; width: 38px; height: 1px; background: var(--gold); }
+    h1 { margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 500; letter-spacing: -.02em; line-height: .94; font-size: clamp(54px, 9.2vw, 148px); text-shadow: 0 4px 40px rgba(13,9,5,.55); }
+    h1 em { font-style: italic; font-weight: 400; color: var(--gold); }
+    .side { display: grid; gap: 22px; text-shadow: 0 2px 20px rgba(13,9,5,.7); }
+    .side p { margin: 0; font-size: 16px; line-height: 1.7; color: var(--cream); }
+    .stats { display: flex; gap: 28px; flex-wrap: wrap; padding-top: 18px; border-top: 1px solid rgba(246,234,211,.28); }
+    .stats div { font-family: 'Cormorant Garamond', serif; font-size: 44px; line-height: 1; font-weight: 500; }
+    .stats small { display: block; margin-top: 6px; font-family: 'Jost', sans-serif; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--dim); }
+    .btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { padding: 14px 28px; font-size: 12px; letter-spacing: .24em; text-transform: uppercase; border: 1px solid var(--cream); border-radius: 999px; transition: background .25s, color .25s, border-color .25s; text-shadow: none; }
+    .btn.solid { background: var(--cream); color: #1a1008; }
+    .btn.solid:hover { background: var(--gold); border-color: var(--gold); }
+    .btn.ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* a few petals drifting down */
+    .petals { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .petals i { position: absolute; top: -30px; width: 12px; height: 16px; background: radial-gradient(circle at 30% 30%, #ff7a6b, var(--rose) 60%, #8f1d1a); border-radius: 80% 0 80% 0; opacity: .0; animation: fall linear infinite; }
+    @keyframes fall { 0% { transform: translate3d(0,-30px,0) rotate(0deg); opacity: 0; } 8% { opacity: .85; } 100% { transform: translate3d(var(--dx), 110vh, 0) rotate(var(--rot)); opacity: .0; } }
+    @media (prefers-reduced-motion: reduce) { .petals { display: none; } }
+    .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 60; font: 12px system-ui, sans-serif; color: #fff; padding: 6px 12px; border-radius: 999px; background: rgba(13,9,5,.6); }
+    .embed .back-link { display: none !important; }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+  <section class="hero">
+    <div class="bg"><video class="glow" autoplay loop muted playsinline preload="auto" aria-hidden="true" src="assets/petals/petals.mp4"></video><div class="frame"><video autoplay loop muted playsinline preload="auto" aria-hidden="true" src="assets/petals/petals.mp4"></video><i class="mark"></i></div></div>
+    <div class="shade"></div>
+    <div class="petals" id="petals"></div>
+
+    <header class="bar">
+      <nav class="l"><a href="shelf-library.html#library" target="_top">Work</a><a href="halcyon-hero.html" target="_top">About</a></nav>
+      <a href="#" aria-label="Manisha Baroliya"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199"></a>
+      <nav class="r"><a href="shelf-library.html#social" target="_top">Say hello</a></nav>
+    </header>
+
+    <div class="copy">
+      <div>
+        <p class="eyebrow">Manisha Baroliya · Product designer &amp; UX researcher</p>
+        <h1>Design that<br><em>outlives</em> the trend.</h1>
+      </div>
+      <div class="side">
+        <p>Psychology taught me how people think. I use it to make quiet, honest interfaces for SaaS and B2B teams, the kind that still feel right years later.</p>
+        <div class="stats">
+          <div>3+<small>Years</small></div>
+          <div>20+<small>Live designs</small></div>
+          <div>10+<small>Platforms</small></div>
+        </div>
+        <div class="btns">
+          <a class="btn solid" href="shelf-library.html#library" target="_top">See my work</a>
+          <a class="btn ghost" href="shelf-library.html#social" target="_top">Say hello</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script>
+    (function () {
+      var box = document.getElementById('petals');
+      for (var i = 0; i < 14; i++) {
+        var p = document.createElement('i');
+        p.style.left = (Math.random() * 100) + '%';
+        p.style.animationDuration = (9 + Math.random() * 9) + 's';
+        p.style.animationDelay = (-Math.random() * 14) + 's';
+        p.style.setProperty('--dx', (Math.random() * 160 - 80) + 'px');
+        p.style.setProperty('--rot', (Math.random() * 540 - 270) + 'deg');
+        p.style.transform = 'scale(' + (0.6 + Math.random() * 0.9) + ')';
+        box.appendChild(p);
+      }
+    })();
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+</body>
+</html>

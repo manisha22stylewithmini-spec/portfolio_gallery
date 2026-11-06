@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
+  if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manisha Baroliya — Product designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root { --moss: #0e1a0f; --moss2: #172a17; --leaf: #b7e07a; --cream: #f1f0e2; --dim: rgba(241,240,226,.7); --line: rgba(241,240,226,.18); }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--moss); color: var(--cream); font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .hero { position: relative; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; overflow: hidden;
+      background: radial-gradient(ellipse 70% 60% at 78% 55%, #1f3a1c 0%, var(--moss2) 40%, var(--moss) 80%); }
+    .bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; background: #0a120a; }
+    /* the film is the background and is always shown whole: its sharp frame sits to the right and melts into a blurred glow of itself on the left, where the words are */
+    .bg .glow { position: absolute; inset: -6%; width: 112%; height: 112%; object-fit: cover; filter: blur(40px) saturate(1.1) brightness(.55); }
+    .frame { position: absolute; right: 0; top: 50%; width: min(82vw, calc(100dvh * 16 / 9)); aspect-ratio: 16 / 9; transform: translateY(-50%);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 22%, #000 94%, transparent), linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent); -webkit-mask-composite: source-in;
+      mask-image: linear-gradient(90deg, transparent, #000 22%, #000 94%, transparent), linear-gradient(180deg, transparent, #000 9%, #000 91%, transparent); mask-composite: intersect; }
+    .frame video { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(10,18,10,.78) 0%, rgba(10,18,10,.5) 34%, rgba(10,18,10,0) 62%), linear-gradient(180deg, rgba(10,18,10,.5) 0%, rgba(10,18,10,0) 22%, rgba(10,18,10,0) 78%, rgba(10,18,10,.55) 100%); }
+    @media (max-width: 759px) { .frame { right: auto; left: 0; top: 96px; width: 100%; transform: none; } .shade { background: linear-gradient(180deg, rgba(10,18,10,.5) 0%, rgba(10,18,10,0) 22%, rgba(10,18,10,.1) 40%, rgba(10,18,10,.88) 62%); } }
+    .hero::after { content: ''; position: absolute; z-index: 1; inset: 0; pointer-events: none; opacity: .35; mix-blend-mode: soft-light;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+
+    /* header: logo left, links with leaf dots in the middle, a rounded outline button on the right */
+    header.bar { position: relative; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px clamp(20px, 4vw, 56px); }
+    .bar img { height: 50px; width: auto; display: block; }
+    .bar nav { display: none; gap: 36px; font-size: 15px; }
+    .bar nav a { color: var(--dim); display: flex; align-items: center; gap: 10px; transition: color .2s; }
+    .bar nav a::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--leaf); opacity: 0; transform: scale(.4); transition: .25s; }
+    .bar nav a:hover { color: var(--cream); }
+    .bar nav a:hover::before { opacity: 1; transform: none; }
+    .bar .pill { border: 1px solid var(--cream); border-radius: 999px; padding: 10px 22px; font-size: 14px; transition: background .2s, color .2s; }
+    .bar .pill:hover { background: var(--cream); color: var(--moss); }
+    @media (min-width: 860px) { .bar nav { display: flex; } }
+
+    .main { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 8px clamp(20px, 4vw, 56px) clamp(28px, 5vh, 56px); }
+    .copy { max-width: 520px; text-shadow: 0 2px 24px rgba(5,10,5,.6); }
+    @media (max-width: 759px) { .main { justify-content: flex-end; } }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 22px; padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; color: var(--dim); }
+    .eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: var(--leaf); box-shadow: 0 0 10px var(--leaf); }
+    h1 { margin: 0; font-family: 'Fraunces', serif; font-weight: 300; letter-spacing: -.03em; line-height: .98; font-size: clamp(46px, 6.4vw, 104px); }
+    h1 em { font-style: italic; font-weight: 300; color: var(--leaf); }
+    .lead { margin: 24px 0 0; max-width: 480px; font-size: 17px; line-height: 1.7; color: var(--dim); }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 26px 0 0; padding: 0; list-style: none; }
+    .tags li { border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; font-size: 13px; color: var(--cream); }
+    .btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .btn { border-radius: 999px; padding: 15px 30px; font-size: 15px; font-weight: 500; transition: transform .2s, background .2s; }
+    .btn.solid { background: var(--leaf); color: #0e1a0f; }
+    .btn.solid:hover { transform: translateY(-2px); background: #c8ee8e; }
+    .btn.ghost { border: 1px solid var(--cream); }
+    .btn.ghost:hover { background: rgba(241,240,226,.1); }
+    .stats { display: flex; gap: 34px; flex-wrap: wrap; margin-top: 38px; padding-top: 22px; border-top: 1px solid var(--line); }
+    .stats div { font-family: 'Fraunces', serif; font-size: 40px; font-weight: 300; line-height: 1; }
+    .stats small { display: block; margin-top: 6px; font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--dim); }
+
+    .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 60; font: 12px system-ui, sans-serif; color: #fff; padding: 6px 12px; border-radius: 999px; background: rgba(0,0,0,.55); }
+    .embed .back-link { display: none !important; }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+  <section class="hero">
+    <div class="bg"><video class="glow" autoplay loop muted playsinline preload="auto" aria-hidden="true" src="assets/meadow/meadow.mp4"></video><div class="frame"><video autoplay loop muted playsinline preload="auto" aria-hidden="true" src="assets/meadow/meadow.mp4"></video></div><div class="shade"></div></div>
+    <header class="bar">
+      <a href="#" aria-label="Manisha Baroliya"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199"></a>
+      <nav>
+        <a href="shelf-library.html#library" target="_top">Work</a>
+        <a href="halcyon-hero.html" target="_top">About</a>
+        <a href="shelf-library.html#social" target="_top">Social</a>
+      </nav>
+      <a class="pill" href="shelf-library.html#social" target="_top">Get in touch</a>
+    </header>
+
+    <div class="main">
+      <div class="copy">
+        <p class="eyebrow"><i></i>Product designer · UX researcher</p>
+        <h1>Room to <em>breathe</em>,<br>space to design.</h1>
+        <p class="lead">Hi, I’m Manisha. With a psychology background, I design calm, uncluttered products for SaaS and B2B teams, so people can slow down and simply get things done.</p>
+        <ul class="tags"><li>UX research</li><li>UI design</li><li>Design systems</li><li>Prototyping</li></ul>
+        <div class="btns">
+          <a class="btn solid" href="shelf-library.html#library" target="_top">See my work</a>
+          <a class="btn ghost" href="shelf-library.html#social" target="_top">Say hello</a>
+        </div>
+        <div class="stats">
+          <div>3+<small>years designing</small></div>
+          <div>20+<small>live designs</small></div>
+          <div>10+<small>SaaS &amp; B2B platforms</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+</body>
+</html>

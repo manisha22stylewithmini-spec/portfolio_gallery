@@ -868,24 +868,25 @@
     // and swaps to the live page while you hover it.
     const T = [
       ['lumora-hero','Manisha Hero','#4d6b2f,#10170f','Video','hero'],['quietpress-hero','Sound Diary','#1d4ed8,#0f172a','Canvas','hero'],
-      ['halcyon-hero','Design POV','#0C0A09,#B87333','Magnetic','hero'],['orbis-intro','Hello, I\'m Manisha','#010828,#2a3a8f','Video','hero'],
-      ['mainframe-contact','Get in touch','#1a1450,#000000','Typewriter','hero'],['foldcraft-hero','Designing Calm','#000,#1f2937','Menu','hero'],
+      ['halcyon-hero','Design POV','#0C0A09,#B87333','Magnetic','scroll'],['orbis-intro','Hello, I\'m Manisha','#010828,#2a3a8f','Video','hero'],
+      ['mainframe-contact','Get in touch','#1a1450,#000000','Typewriter','character'],['foldcraft-hero','Designing Calm','#000,#1f2937','Menu','character'],
       ['flowpath-hero','Products People Understand','#000000,#ff7a3d','Dropdown','hero'],['measured-hero','Measured','#0a0a0a,#334155','Mask','hero'],
-      ['mentality-hero','Hi, I\'m Manisha','#0b0a14,#ff3fa4','Light','hero'],['fearless-vision','Design That Feels Human','#ffffff,#C6F135','Motion','hero'],
-      ['mainframe-aria','Mainframe A.R.I.A','#f2f2f2,#111','Scrub','hero'],['vortxlab','Moonlit Journey','#111,#4b5563','Clip-path','hero'],
-      ['stellar-ai','Stellar.ai','#fff,#a1a1aa','Tabs','landing'],['asme-landing','Asme','#000,#3a3a46','Scroll','landing'],
-      ['novaai-scroll','NovaAI','#0a0a0a,#5a4a2a','Scrub','landing'],['synapsex','SynapseX','#000,#3b2f45','Scramble','landing'],
-      ['studio-showcase','Studio Showcase','#E4E4E4,#75C5DE','Reveal','landing'],['prmpt-archive','prmpt','#000,#444','Grid','landing'],
-      ['neuralyn-landing','Neuralyn','#000,#1f2937','Parallax','landing'],['bloom-ai','Bloom','#2a1a2a,#b86a8a','Glass','landing'],
-      ['mostar-city','Mostar city','#79b7dd,#2f6d86','Parallax','landing'],
-      ['red-manifesto','Red Manifesto','#ff0000,#b00000','Type','featured'],['clothing-rail','Clothing Rail','#f7f6f3,#171717','Physics','featured'],
+      ['mentality-hero','Hi, I\'m Manisha','#0b0a14,#ff3fa4','Light','hero'],['fearless-vision','Design That Feels Human','#ffffff,#C6F135','Motion','character'],
+      ['mainframe-aria','Mainframe A.R.I.A','#f2f2f2,#111','Scrub','hero'],['vortxlab','Moonlit Journey','#111,#4b5563','Clip-path','scroll'],['goldfish-hero','Calm & Curious','#000,#b45309','Video','hero'],['garden-hero','Research x Design','#04120f,#2f6d4f','Video','hero'],['meadow-hero','Room to Breathe','#0e1a0f,#b7e07a','Video','hero'],['petals-hero','Made to Last','#2a1a08,#d9453d','Video','hero'],['character-hero','Hi, I\'m Manisha','#0d1540,#ffb066','Cursor','character'],
+      ['stellar-ai','Stellar.ai','#fff,#a1a1aa','Tabs','hero'],['asme-landing','Asme','#000,#3a3a46','Scroll','hero'],
+      ['novaai-scroll','NovaAI','#0a0a0a,#5a4a2a','Scrub','scroll'],['synapsex','Mind And Pixels','#000,#3b2f45','Scramble','character'],
+      ['studio-showcase','Studio Showcase','#E4E4E4,#75C5DE','Reveal','featured'],['prmpt-archive','prmpt','#000,#444','Grid','character'],
+      
+      ['mostar-city','Soft Light','#79b7dd,#2f6d86','Parallax','scroll'],
+      ['red-manifesto','Red Manifesto','#ff0000,#b00000','Type','featured'],['clothing-rail','Shutter Drop','#f7f6f3,#171717','Physics','featured'],
       ['disc-cascade','Disc Cascade','#0b0b0d,#ecebe7','Carousel','featured'],['type-remix','Type Remix','#161514,#e5432f','Preloader','featured'],
       ['doodle-footer','Doodle Crew','#ffd94a,#141414','Footer','footer'],['sticker-slap-footer','Sticker Slap','#f1ece4,#4a6cf0','Footer','footer'],
     ].map(([f, t, g, k, c]) => ({ f, t, g, k, c }));
 
     const SHELVES = [
       { name: 'Hero sections', c: 'hero', live: true },
-      { name: 'Full landing pages', c: 'landing' },
+      { name: 'Character & cursor heroes', c: 'character' },
+      { name: 'Scroll & parallax animations', c: 'scroll' },
       { name: 'Featured sections & components', c: 'featured' },
       { name: 'Footers', c: 'footer' },
     ].map((s) => ({ ...s, items: T.filter((d) => d.c === s.c) }));
@@ -914,7 +915,7 @@
         <div class="row"><span class="bracket l"></span><span class="bracket r"></span><div class="track">${s.items.map((d) => cover(d)).join('')}</div></div>
       </section>`).join('');
     document.getElementById('sShelves').textContent = SHELVES.length;
-    document.getElementById('sHero').textContent = SHELVES[0].items.length;
+    document.getElementById('sHero').textContent = SHELVES[0].items.length + SHELVES[1].items.length;
     document.getElementById('all').innerHTML = T.map((d) => cover(d).replace(/<\/a>$/, `<p>${d.t}<br><small>${d.k}</small></p></a>`)).join('');
 
     // continue card
