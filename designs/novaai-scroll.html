@@ -5,7 +5,7 @@
   <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
   if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NOVA_AI — Today AI Aligns With Bold Dreams</title>
+  <title>Manisha Baroliya — Product designer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -32,9 +32,10 @@
 
   <script type="text/babel" data-presets="react">
     const { useState, useEffect, useRef } = React;
-    const VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260729_102822_0e6c87e8-c141-4744-bf32-ad30db296371.mp4';
-    const PORTRAIT = 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260728_050334_5b076e26-0ce7-4898-b432-d764190e448f.png&w=1280&q=85';
+    const VIDEO = 'assets/novaai/lumina.mp4';
+    const PORTRAIT_OLD = 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260728_050334_5b076e26-0ce7-4898-b432-d764190e448f.png&w=1280&q=85';
 
+    const PORTRAIT = 'assets/me.jpg', SOCIAL = 'shelf-library.html#social', LIB = 'shelf-library.html#library';
     const Icon = ({ size = 24, strokeWidth = 2, className, children }) => (
       <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
         strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
@@ -151,22 +152,20 @@
     const shell = 'flex flex-col justify-between min-h-screen supports-[height:100svh]:min-h-[100svh] px-5 sm:px-8 md:px-12 pt-24 sm:pt-28 pb-12 md:pb-16';
 
     function Navbar() {
-      const links = ['Projects', 'About', 'Blog', 'Contact'];
+      const links = [['Work', LIB], ['About', 'halcyon-hero.html'], ['Social', SOCIAL]];
       return (
         <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/15">
           <div className="flex items-center justify-between px-5 sm:px-8 md:px-12 py-4">
-            <Reveal className="flex items-center gap-2"><Hexagon size={24} strokeWidth={1.5} /><span className="text-lg sm:text-xl font-medium tracking-tight">novaai</span></Reveal>
+            <Reveal className="flex items-center"><a href="#" aria-label="Manisha Baroliya"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199" className="h-11 sm:h-12 w-auto" /></a></Reveal>
             <nav className="hidden md:flex items-center gap-8 lg:gap-10">
-              {links.map((l, i) => (
+              {links.map(([l, href], i) => (
                 <Reveal key={l} delay={100 + i * 100}>
-                  <a href="#" className="text-sm text-white/85 hover:text-white transition-colors duration-300">
-                    {l}{l === 'Projects' && <sup className="ml-0.5 font-mono text-[10px] text-white/60">6</sup>}
-                  </a>
+                  <a href={href} target="_top" className="text-sm text-white/85 hover:text-white transition-colors duration-300">{l}</a>
                 </Reveal>
               ))}
             </nav>
             <Reveal delay={500}>
-              <button className="rounded-md border border-white/20 bg-white/15 backdrop-blur-md px-4 py-2 text-xs sm:px-5 sm:text-sm hover:bg-white/25 transition-colors duration-300">Get Free Consultation</button>
+              <a href={SOCIAL} target="_top" className="inline-block rounded-md border border-white/20 bg-white/15 backdrop-blur-md px-4 py-2 text-xs sm:px-5 sm:text-sm hover:bg-white/25 transition-colors duration-300">Get in touch</a>
             </Reveal>
           </div>
         </header>
@@ -178,28 +177,28 @@
         <section className={shell}>
           <div className="flex flex-col gap-8 sm:flex-row justify-between">
             <div className="flex flex-col gap-2">
-              {['AI AUTOMATION', 'AI INTEGRATION', 'AI AGENT DEVELOPMENT'].map((s, i) => (
+              {['UX RESEARCH', 'PRODUCT DESIGN', 'DESIGN SYSTEMS'].map((s, i) => (
                 <Reveal key={s} delay={150 + i * 120}><span className="font-mono text-xs uppercase tracking-[0.15em] text-white/90 drop-shadow-md">/ {s}</span></Reveal>
               ))}
             </div>
             <Reveal delay={300} className="max-w-xs sm:text-right">
-              <p className="text-lg sm:text-xl leading-relaxed text-white drop-shadow-md">We design automation that brings clarity, precision, and efficiency to the way your company operates.</p>
+              <p className="text-lg sm:text-xl leading-relaxed text-white drop-shadow-md">I design calm, clear products that bring ease and understanding to the way people use software.</p>
             </Reveal>
           </div>
           <div className="flex flex-col gap-8 md:flex-row items-end justify-between mt-24">
             <div className="self-start md:self-end">
-              <Reveal delay={150} className="mb-5"><span className={glassBadge}>We Automate 100+ Businesses</span></Reveal>
-              <Reveal delay={280}><h1 className={h}>Clear. Precise.<br />Automated.</h1></Reveal>
+              <Reveal delay={150} className="mb-5"><span className={glassBadge}>3+ years · 20+ live designs</span></Reveal>
+              <Reveal delay={280}><h1 className={h}>Clear. Human.<br />Designed.</h1></Reveal>
             </div>
             <Reveal delay={420}>
               <div className="flex items-center gap-4 rounded-xl bg-white/15 p-3 backdrop-blur-md">
-                <img src={PORTRAIT} alt="Mitha, co-founder of NovaAI" className="h-24 w-20 rounded-lg object-cover" />
+                <img src={PORTRAIT} alt="Manisha Baroliya" className="h-24 w-20 rounded-lg object-cover" />
                 <div className="flex flex-col gap-1.5 pr-2">
-                  <span className="text-sm font-medium text-white">Talk with Mitha</span>
-                  <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/60">Co-founder of NovaAI</span>
-                  <button className="mt-1.5 flex items-center gap-1 self-start rounded-full bg-white px-4 py-2 text-xs font-medium text-black hover:bg-white/85 transition-colors duration-300">
-                    Book 15-mins call <ChevronRight size={14} />
-                  </button>
+                  <span className="text-sm font-medium text-white">Talk with Manisha</span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/60">Product designer · UX researcher</span>
+                  <a href={SOCIAL} target="_top" className="mt-1.5 flex items-center gap-1 self-start rounded-full bg-white px-4 py-2 text-xs font-medium text-black hover:bg-white/85 transition-colors duration-300">
+                    Say hello <ChevronRight size={14} />
+                  </a>
                 </div>
               </div>
             </Reveal>
@@ -208,42 +207,23 @@
       );
     }
 
-    const CAPS = [
-      ['01', 'Real-time vision', 'Reads context as it happens and surfaces what matters before you ask.'],
-      ['02', 'Layered insight', 'Moves from rough outline to sharp output without losing the thread.'],
-      ['03', 'Adaptive speed', 'Learns your cadence and tightens every pass as you work.'],
-    ];
-
     function SectionTwo() {
       return (
         <section className={shell}>
           <div className="flex flex-col gap-6 sm:flex-row justify-between">
-            <Reveal delay={120}><span className={glassBadge}>Insight On Demand</span></Reveal>
+            <Reveal delay={120}><span className={glassBadge}>How I work</span></Reveal>
             <Reveal delay={220} className="max-w-sm sm:text-right">
-              <p className="text-lg sm:text-xl leading-relaxed text-white drop-shadow-md">Our AI doesn't just respond — it interprets, sharpens, and delivers the signal you need.</p>
+              <p className="text-lg sm:text-xl leading-relaxed text-white drop-shadow-md">Psychology first, pixels second: I turn messy ideas into interfaces people understand.</p>
             </Reveal>
           </div>
           <div className="flex flex-1 flex-col justify-end gap-12 md:flex-row items-end md:justify-between md:gap-16 mt-24">
             <div className="max-w-xl">
-              <Reveal delay={180}><h2 className={h}>Learn to see<br />brilliantly.</h2></Reveal>
-              <Reveal delay={320}><p className="mt-6 max-w-md text-sm sm:text-base text-white/80 drop-shadow-md">From the first sketch to the final render, Nova turns raw intent into decisions your team can act on — quietly, precisely, at speed.</p></Reveal>
+              <Reveal delay={180}><h2 className={h}>Design for how<br />people think.</h2></Reveal>
+              <Reveal delay={320}><p className="mt-6 max-w-md text-sm sm:text-base text-white/80 drop-shadow-md">From the first sketch to the final handoff, I turn raw ideas into clean flows and one tidy design system, across 10+ SaaS and B2B platforms.</p></Reveal>
               <Reveal delay={420} className="mt-8 flex flex-wrap gap-3">
-                <button className="flex items-center gap-1 rounded-full bg-white px-5 py-2.5 text-xs sm:text-sm font-medium text-black hover:bg-white/85 transition-colors duration-300">Run the demo <ChevronRight size={14} /></button>
-                <button className="rounded-full border border-white/25 bg-white/10 backdrop-blur-md px-5 py-2.5 text-xs sm:text-sm hover:bg-white/20 transition-colors duration-300">Free consultation</button>
+                <a href={LIB} target="_top" className="flex items-center gap-1 rounded-full bg-white px-5 py-2.5 text-xs sm:text-sm font-medium text-black hover:bg-white/85 transition-colors duration-300">See my work <ChevronRight size={14} /></a>
+                <a href={SOCIAL} target="_top" className="rounded-full border border-white/25 bg-white/10 backdrop-blur-md px-5 py-2.5 text-xs sm:text-sm hover:bg-white/20 transition-colors duration-300">Get in touch</a>
               </Reveal>
-            </div>
-            <div className="w-full max-w-md rounded-2xl border border-white/15 bg-white/10 backdrop-blur-md px-5 sm:px-6">
-              {CAPS.map(([n, t, b], i) => (
-                <Reveal key={n} delay={300 + i * 110} className={`group flex gap-5 py-5 ${i < CAPS.length - 1 ? 'border-b border-white/15' : ''}`}>
-                  <span className="font-mono text-[11px] tracking-[0.15em] text-white/55 pt-1.5">{n}</span>
-                  <div>
-                    <div className="flex items-center gap-1 text-base sm:text-lg font-medium text-white">{t}
-                      <ChevronRight size={16} className="text-white/40 transition-all group-hover:translate-x-0.5 group-hover:text-white" />
-                    </div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-white/70">{b}</p>
-                  </div>
-                </Reveal>
-              ))}
             </div>
           </div>
         </section>
