@@ -5,7 +5,7 @@
   <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
   if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mainframe — A.R.I.A</title>
+  <title>Manisha Baroliya — Product designer</title>
   <link href="https://db.onlinewebfonts.com/c/5ac3fe7c6abd2f62067f266d89671492?family=HelveticaNowDisplay-Medium" rel="stylesheet">
   <link href="https://db.onlinewebfonts.com/c/1aa3377e489837a26d019bba501e779d?family=HelveticaNowDisplayW01-Rg" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com/3.4.16"></script>
@@ -31,7 +31,7 @@
     const { useState, useEffect, useRef } = React;
     const VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260530_042513_df96a13b-6155-4f6e-8b93-c9dee66fba08.mp4';
     const SENSITIVITY = 0.8;
-    const EMAIL = 'hello@mainframe.co';
+    const SOCIAL = 'shelf-library.html#social', LIB = 'shelf-library.html#library', ABOUT = 'halcyon-hero.html';
 
     function useTypewriter(text, speed = 38, startDelay = 600) {
       const [displayed, setDisplayed] = useState('');
@@ -76,26 +76,25 @@
       return <video ref={ref} muted playsInline preload="auto" src={VIDEO} style={{ position: 'fixed', inset: 0, zIndex: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: '70% center' }} />;
     }
 
-    const LINKS = ['Labs', 'Studio', 'Openings', 'Shop'];
+    const LINKS = [['Work', LIB], ['About', ABOUT], ['Skills', 'clothing-rail.html'], ['Social', SOCIAL]];
     function Navbar() {
       const [open, setOpen] = useState(false);
       const bar = 'w-6 h-[2px] bg-black transition-all duration-300';
       return (
         <>
           <header className="fixed top-0 inset-x-0 px-5 sm:px-8 py-4 sm:py-5 flex flex-row justify-between items-center" style={{ zIndex: 10 }}>
-            <a href="#" className="flex flex-row items-center gap-3 text-black">
-              <span className="text-[21px] sm:text-[26px] tracking-tight" style={{ fontFamily: 'var(--font-heading)' }}>Mainframe®</span>
-              <span className="text-[25px] sm:text-[30px] select-none leading-none" style={{ letterSpacing: '-0.02em' }}>✳︎</span>
+            <a href="#" aria-label="Manisha Baroliya" className="flex flex-row items-center">
+              <img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186" className="h-[46px] sm:h-[58px] w-auto" />
             </a>
             <nav className="hidden md:flex flex-row text-[23px] text-black">
-              {LINKS.map((l, i) => (
+              {LINKS.map(([l, h], i) => (
                 <React.Fragment key={l}>
-                  <a href="#" className="hover:opacity-60 transition-opacity">{l}</a>
+                  <a href={h} target="_top" className="hover:opacity-60 transition-opacity">{l}</a>
                   {i < LINKS.length - 1 && <span>,&nbsp;</span>}
                 </React.Fragment>
               ))}
             </nav>
-            <a href="#" className="hidden md:inline text-[23px] text-black underline underline-offset-2 hover:opacity-60 transition-opacity">Get in touch</a>
+            <a href={SOCIAL} target="_top" className="hidden md:inline text-[23px] text-black underline underline-offset-2 hover:opacity-60 transition-opacity">Get in touch</a>
             <button aria-label="Menu" aria-expanded={open} onClick={() => setOpen((o) => !o)} className="md:hidden flex flex-col gap-[5px] p-1 relative" style={{ zIndex: 11 }}>
               <span className={bar + (open ? ' rotate-45 translate-y-[7px]' : '')} />
               <span className={bar + (open ? ' opacity-0' : '')} />
@@ -104,8 +103,8 @@
           </header>
           <div className="md:hidden fixed inset-0 bg-white/95 backdrop-blur-sm flex flex-col justify-center items-start px-8 gap-8 transition-opacity duration-300"
             style={{ zIndex: 9, opacity: open ? 1 : 0, pointerEvents: open ? 'auto' : 'none' }}>
-            {LINKS.map((l) => <a key={l} href="#" className="text-[32px] font-medium text-black" onClick={() => setOpen(false)}>{l}</a>)}
-            <a href="#" className="text-[32px] font-medium text-black underline underline-offset-2">Get in touch</a>
+            {LINKS.map(([l, h]) => <a key={l} href={h} target="_top" className="text-[32px] font-medium text-black" onClick={() => setOpen(false)}>{l}</a>)}
+            <a href={SOCIAL} target="_top" className="text-[32px] font-medium text-black underline underline-offset-2">Get in touch</a>
           </div>
         </>
       );
@@ -115,36 +114,32 @@
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.2"><rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1.2" /><path d="M8.5 3.5V2.2A1.2 1.2 0 0 0 7.3 1H2.2A1.2 1.2 0 0 0 1 2.2v5.1a1.2 1.2 0 0 0 1.2 1.2h1.3" /></svg>
     );
 
-    const PILLS = ['Pitch us an idea', 'Come work here', 'Send a brief hello', 'See how we operate'];
+    const PILLS = [['Tell me about your project', SOCIAL], ['See my work', LIB], ['How I research', 'garden-hero.html'], ['Meet my skills', 'clothing-rail.html']];
     const pill = 'inline-flex items-center justify-center rounded-full text-[13px] sm:text-[15px] px-4 sm:px-5 py-[0.3em] mx-[0.2em] mb-[0.4em] whitespace-nowrap transition-colors duration-200';
 
     function Hero() {
-      const { displayed, done } = useTypewriter('Glad you stopped in. Good taste tends to find us. Now, what are we building?');
+      const { displayed, done } = useTypewriter('Glad you stopped in. Good products start with people. Now, what are we designing?');
       const [shown, setShown] = useState(false);
       const [copied, setCopied] = useState(false);
       useEffect(() => { const t = setTimeout(() => setShown(true), 400); return () => clearTimeout(t); }, []);
-      const copy = () => {
-        navigator.clipboard?.writeText(EMAIL).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1600); }).catch(() => {});
-      };
       const type = { fontSize: 'clamp(18px, 4vw, 26px)', fontWeight: 400, color: '#000' };
       return (
         <section className="relative h-screen flex flex-col justify-end pb-12 md:justify-center md:pb-0 px-5 sm:px-8 md:px-10 overflow-hidden" style={{ zIndex: 1 }}>
           <div className="max-w-xl relative z-10">
             <p className="pointer-events-none select-none mb-5 sm:mb-6" style={{ ...type, lineHeight: 1.3, filter: 'blur(4px)' }}>
-              Hey there, meet A.R.I.A,<br />Mainframe's Adaptive Response Interface Agent
+              Hey there, I'm Manisha,<br />product designer and UX researcher
             </p>
             <p className="mb-5 sm:mb-6" style={{ ...type, lineHeight: 1.35, minHeight: 54 }}>
               {displayed}
               {!done && <span className="inline-block w-[2px] h-[1.1em] bg-black align-middle ml-[2px] cursor-blink" />}
             </p>
             <div className="flex flex-wrap gap-y-1" style={{ opacity: shown ? 1 : 0, transform: shown ? 'none' : 'translateY(8px)', transition: 'opacity 0.4s ease, transform 0.4s ease' }}>
-              {PILLS.map((p) => (
-                <button key={p} type="button" className={pill + ' bg-white text-black border border-black/10 hover:bg-black hover:text-white'}>{p}</button>
+              {PILLS.map(([p, h]) => (
+                <a key={p} href={h} target="_top" className={pill + ' bg-white text-black border border-black/10 hover:bg-black hover:text-white'}>{p}</a>
               ))}
-              <button type="button" onClick={copy} className={pill + ' gap-2 sm:gap-3 text-white bg-transparent border border-white hover:bg-white hover:text-black'}>
-                <span>{copied ? 'Copied to clipboard' : <>Reach us: <span className="underline underline-offset-1">{EMAIL}</span></>}</span>
-                <CopyIcon />
-              </button>
+              <a href={SOCIAL} target="_top" className={pill + ' gap-2 sm:gap-3 text-white bg-transparent border border-white hover:bg-white hover:text-black'}>
+                <span>3+ years · 20+ live designs</span>
+              </a>
             </div>
           </div>
         </section>

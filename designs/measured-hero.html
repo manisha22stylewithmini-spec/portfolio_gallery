@@ -5,7 +5,7 @@
   <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
   if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Measured — Hero</title>
+  <title>Manisha Baroliya — Product designer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -63,18 +63,15 @@
     const BG_IMAGE = 'https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260713_140344_79e1296a-86d7-43fd-9b5f-63ffe560f291.png&w=1280&q=85';
     const FRONT_VIDEO = 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260713_162101_0d7498c5-29bb-47bf-a99f-2773c0a880a9.mp4';
     const OVERLAY = 'https://soft-zoom-63098134.figma.site/_assets/v11/3f10f1876e118f72a396e05a6c2d099569478272.png';
-    const NAV = ['Device', 'Real Stories', 'Science', 'Plans', 'Reach Us'];
+    const SOCIAL = 'shelf-library.html#social';
+    const NAV = [['Work', 'shelf-library.html#library'], ['About', 'halcyon-hero.html'], ['Skills', 'clothing-rail.html'], ['Process', 'garden-hero.html'], ['Social', SOCIAL]];
     const RADIUS = 260;
 
-    const Logo = () => (
-      <svg width="28" height="28" viewBox="0 0 256 256" fill="white" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 256 64 L 256 128 L 192.5 128 L 160 95 L 128 64 L 96 95 L 63.5 128 L 64 128 L 128 192 L 128 256 L 64.5 256 L 32 223 L 0 192 L 0 64 L 64 0 L 192 0 Z M 256 192 L 256 256 L 192.5 256 L 160 223 L 128 192 L 128 128 L 192 128 Z" />
-      </svg>
-    );
+    const Logo = () => <a href="shelf-library.html#library" target="_top" aria-label="Manisha Baroliya"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199" style={{ height: 44, width: 'auto', display: 'block' }} /></a>;
     const Cta = ({ className = '' }) => (
-      <button className={`liquid-glass rounded-full px-5 py-2.5 text-white text-sm font-medium flex items-center gap-2 ${className}`}>
-        <span className="w-2 h-2 rounded-full bg-green-400" />Reserve Yours
-      </button>
+      <a href={SOCIAL} target="_top" className={`liquid-glass rounded-full px-5 py-2.5 text-white text-sm font-medium flex items-center gap-2 ${className}`}>
+        <span className="w-2 h-2 rounded-full bg-green-400" />Say hello
+      </a>
     );
 
     function Hero() {
@@ -140,7 +137,7 @@
           <div className="absolute inset-0 z-10 bg-center bg-cover bg-no-repeat" style={{ backgroundImage: `url("${BG_IMAGE}")` }} />
 
           <h1 className="serif-hero absolute z-20 left-0 right-0 top-20 sm:top-28 md:top-32 text-center uppercase text-white leading-[0.9] text-[4.5rem] xs:text-[5.5rem] sm:text-[10rem] md:text-[13rem] lg:text-[16rem] pointer-events-none">
-            Measured
+            Manisha
           </h1>
 
           <img src={OVERLAY} alt="" className="absolute inset-0 z-[25] w-full h-full object-cover pointer-events-none" />
@@ -167,7 +164,7 @@
           <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-5 sm:px-8 py-5 pointer-events-none">
             <div className="pointer-events-auto"><Logo /></div>
             <nav className="hidden md:flex liquid-glass rounded-full px-2 py-1.5 absolute left-1/2 -translate-x-1/2 pointer-events-auto">
-              {NAV.map((n) => <button key={n} className="text-white/70 hover:text-white text-sm font-medium rounded-full px-4 py-2 transition-colors">{n}</button>)}
+              {NAV.map(([n, h]) => <a key={n} href={h} target="_top" className="text-white/70 hover:text-white text-sm font-medium rounded-full px-4 py-2 transition-colors">{n}</a>)}
             </nav>
             <div className="hidden md:block pointer-events-auto"><Cta /></div>
             <button onClick={() => setOpen(true)} aria-label="Open menu" className="md:hidden liquid-glass rounded-full px-4 py-3 flex flex-col items-end gap-1.5 pointer-events-auto">
@@ -181,7 +178,7 @@
               style={{ transition: `transform 500ms ${ease}, opacity 500ms ${ease}`, transform: open ? 'rotate(0) scale(1)' : 'rotate(-90deg) scale(0.8)', opacity: open ? 1 : 0 }}>
               <span className="absolute w-5 h-[1.5px] bg-white rotate-45" /><span className="absolute w-5 h-[1.5px] bg-white -rotate-45" />
             </button>
-            {NAV.map((n, i) => <button key={n} onClick={() => setOpen(false)} className="text-3xl sm:text-4xl text-white/90 font-medium" style={item(i)}>{n}</button>)}
+            {NAV.map(([n, h], i) => <a key={n} href={h} target="_top" onClick={() => setOpen(false)} className="text-3xl sm:text-4xl text-white/90 font-medium" style={item(i)}>{n}</a>)}
             <div style={item(NAV.length)} className="mt-6"><Cta /></div>
           </div>
 

@@ -5,7 +5,7 @@
   <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
   if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sticker Slap — Footer</title>
+  <title>Manisha Baroliya — Product designer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
@@ -1000,10 +1000,8 @@ export default function StickerSlapFooter({
         ) : (
           <span />
         )}
-        <a className="ssf-logo" {...linkProps(homeHref)} aria-label={wordmark + ", home"}>
-          <svg viewBox={smallVb} aria-hidden="true" focusable="false">
-            <path d={small.main + small.extra.join("")} data-draw="" transform="skewX(-9)" />
-          </svg>
+        <a className="ssf-logo" {...linkProps(homeHref)} aria-label="Manisha Baroliya, home">
+          <img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186" style={{ height: "clamp(34px, 4cqw, 52px)", width: "auto", display: "block" }} />
         </a>
         {chatHref ? (
           <a className="ssf-chat" {...linkProps(chatHref)} aria-label={chatLabel || "Message us"}>
@@ -1113,7 +1111,32 @@ import StickerSlapFooter from "@/components/ui/sticker-slap-footer"
 export default function Demo() {
   return (
     <div className="w-full">
-      <StickerSlapFooter />
+      <StickerSlapFooter
+        wordmark="manisha"
+        homeHref="shelf-library.html#library"
+        navLabel="work"
+        navHref="shelf-library.html#library"
+        chatHref="shelf-library.html#social"
+        chatLabel="say hello to Manisha"
+        jobsLabel="what i do"
+        jobs={[{ title: "ux research", href: "garden-hero.html" }, { title: "product & ui design", href: "clothing-rail.html" }, { title: "design systems", href: "clothing-rail.html" }]}
+        officeLabel="role"
+        address={["product designer", "& ux researcher"]}
+        mapLabel="my design pov"
+        mapHref="halcyon-hero.html"
+        contactLabel="contact"
+        email=""
+        note="3+ years, 20+ live designs, 10+ SaaS and B2B platforms. psychology first, pixels second."
+        socials={[
+          { kind: "linkedin", href: "shelf-library.html#social" },
+          { kind: "instagram", href: "shelf-library.html#social" },
+        ]}
+        credits={[
+          { role: "design", name: "manisha baroliya" },
+          { role: "stickers", name: "drawn in code, peel freely" },
+          { role: "type", name: "a felt-tip and your system font" },
+        ]}
+      />
     </div>
   )
 }

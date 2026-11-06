@@ -33,7 +33,6 @@
     /* die-cut sticker outline, so the black script stays readable over the footage */
     .logo-sticker {
       height: 48px; width: auto; display: block;
-      filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff) drop-shadow(0 6px 10px rgba(0,0,0,.3));
     }
     @media (min-width: 640px) { .logo-sticker { height: 54px; } }
     .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 200; font: 12px system-ui, sans-serif; color: #0C0A09; padding: 6px 12px; border-radius: 999px; text-decoration: none; background: rgba(232,224,208,.85); backdrop-filter: blur(6px); }
@@ -163,7 +162,7 @@
         <>
           <nav className={'fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-5 sm:px-7 py-4 transition-opacity duration-[600ms] delay-200 ' + (mounted ? 'opacity-100' : 'opacity-0')}>
             <a href="#" aria-label="Manisha Baroliya" className={'flex items-center rounded-full' + focusRing}>
-              <img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186" className="logo-sticker" />
+              <img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199" className="logo-sticker" />
             </a>
             <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 bg-cream/10 backdrop-blur-md border border-cream/15 rounded-full px-2 py-1.5 items-center gap-1">
               {NAV.map((n) => item(n, 'px-4 py-1.5 rounded-full text-sm font-medium text-cream/80 hover:bg-cream/15 hover:text-cream transition-colors'))}

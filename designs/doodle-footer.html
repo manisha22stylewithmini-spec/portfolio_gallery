@@ -5,7 +5,7 @@
   <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
   if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Doodle Crew — Footer</title>
+  <title>Manisha Baroliya — Product designer</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
@@ -1034,19 +1034,7 @@ export default function DoodleCrewFooter({
 
       <div className="dcf-top dcf-rise" style={{ "--d": "0ms" } as React.CSSProperties}>
         <div className="dcf-brand">
-          <span className="dcf-logo" aria-hidden="true">
-            <svg viewBox="-60 -150 120 120" width="30" height="30">
-              <g className="dcf-art">
-                <path d="M-30 -104 C-40 -112 -44 -124 -40 -138 C-32 -129 -22 -122 -13 -114 Z" />
-                <path d="M18 -114 C26 -124 36 -130 47 -133 C45 -120 41 -110 32 -101 Z" />
-                <path d="M-44 -30 C-54 -56 -54 -70 -42 -90 C-32 -110 -14 -118 2 -118 C22 -118 40 -108 48 -88 C58 -68 56 -54 48 -30 Z" />
-                <circle className="k" cx="-15" cy="-84" r="5.5" />
-                <circle className="k" cx="13" cy="-86" r="5.5" />
-                <path className="n" d="M-12 -66 C-6 -60 6 -60 12 -67" />
-              </g>
-            </svg>
-          </span>
-          <span className="dcf-brandname">{brand}</span>
+          <img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186" style={{ height: 54, width: "auto", display: "block" }} />
         </div>
         {blurb && <p className="dcf-blurb">{blurb}</p>}
         {columns.length > 0 && (
@@ -1404,29 +1392,29 @@ export default function DemoSunny() {
     <div className="w-full">
       <DoodleCrewFooter
         preset="sunny"
-        wordmark="PICNIC"
-        brand="picnic club"
-        blurb="Small-batch snacks, packed by hand and delivered by bike every Saturday morning."
-        tagline="Lunch, but make it an adventure."
+        wordmark="MANISHA"
+        brand="Manisha Baroliya"
+        blurb="Product designer and UX researcher with a psychology background. I make calm, human interfaces for SaaS and B2B teams."
+        tagline="Thanks for stopping by. Let's make something people love."
         actions={[
-          { label: "Build a basket", href: "#", icon: "sandwich", variant: "outline" },
-          { label: "Order now", href: "#", icon: "heart", variant: "solid" },
+          { label: "See my work", href: "shelf-library.html#library", icon: "star", variant: "outline" },
+          { label: "Say hello", href: "shelf-library.html#social", icon: "heart", variant: "solid" },
         ]}
         crew={[
-          { kind: "cat", letter: 0, seat: "front", offset: -0.36, name: "Patch", says: "I only eat the fancy tuna." },
-          { kind: "bird", letter: 1, seat: "top", name: "Pip", says: "Crumbs? Any crumbs?" },
-          { kind: "ghost", letter: 3, seat: "behind", name: "Boo", says: "I'm here for the cheese." },
-          { kind: "kid", letter: 4, seat: "top", offset: 0.05, name: "Juno", says: "Window seat!" },
-          { kind: "yeti", letter: 5, seat: "front", offset: 0.4, scale: 0.92, flip: true, name: "Bruno", says: "Seconds, please." },
+          { kind: "cat", letter: 0, seat: "front", offset: -0.36, name: "Pixel", says: "She checks every flow twice." },
+          { kind: "bird", letter: 1, seat: "top", name: "Pip", says: "Research first, pixels second." },
+          { kind: "ghost", letter: 3, seat: "behind", name: "Boo", says: "I haunt unclear buttons." },
+          { kind: "kid", letter: 5, seat: "top", offset: 0.05, name: "Juno", says: "20+ designs live!" },
+          { kind: "yeti", letter: 6, seat: "front", offset: 0.1, scale: 0.92, flip: true, name: "Bruno", says: "10+ platforms, still calm." },
         ]}
-        doodles={["sandwich", "heart", "star", "sandwich", "sparkle"]}
+        doodles={["star", "heart", "sparkle", "bolt", "spiral"]}
         doodleCount={10}
         columns={[
-          { title: "Menu", links: [{ label: "Baskets", href: "#" }, { label: "Drinks", href: "#" }, { label: "Sweets", href: "#" }] },
-          { title: "Club", links: [{ label: "Membership", href: "#" }, { label: "Gift a basket", href: "#" }, { label: "FAQ", href: "#" }] },
-          { title: "Say hi", links: [{ label: "Instagram", href: "#" }, { label: "hello@picnic.club", href: "#" }] },
+          { title: "Work", links: [{ label: "My library", href: "shelf-library.html#library" }, { label: "Skills", href: "clothing-rail.html" }, { label: "Character", href: "character-hero.html" }] },
+          { title: "About", links: [{ label: "Design POV", href: "halcyon-hero.html" }, { label: "Process", href: "garden-hero.html" }, { label: "3+ years", href: "halcyon-hero.html" }] },
+          { title: "Say hi", links: [{ label: "Instagram", href: "shelf-library.html#social" }, { label: "LinkedIn", href: "shelf-library.html#social" }] },
         ]}
-        copyright="© 2026 Picnic Club, Oakland CA"
+        copyright="© 2026 Manisha Baroliya"
       />
     </div>
   )

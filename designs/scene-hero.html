@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
+  if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manisha Baroliya — Product designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink: #fff; --dim: rgba(255,255,255,.78); --line: rgba(255,255,255,.28); --accent: #ffd9a0; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #0b1a14; color: var(--ink); font-family: 'DM Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    .hero { position: relative; height: 100vh; height: 100dvh; min-height: 640px; overflow: hidden; display: flex; flex-direction: column; isolation: isolate; }
+    .vids { position: absolute; inset: 0; z-index: -2; background: #0b1a14; }
+    .vids video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.1s ease; }
+    .vids video.on { opacity: 1; }
+    .shade { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+      background: linear-gradient(180deg, rgba(5,12,10,.62) 0%, rgba(5,12,10,.1) 30%, rgba(5,12,10,.05) 52%, rgba(5,12,10,.72) 100%), linear-gradient(90deg, rgba(5,12,10,.5) 0%, rgba(5,12,10,0) 55%); }
+
+    header.bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px clamp(20px, 4vw, 56px); }
+    .bar img { height: 50px; width: auto; display: block; }
+    .bar nav { display: none; gap: 34px; font-size: 15px; font-weight: 500; }
+    .bar nav a { color: var(--dim); transition: color .2s; padding: 6px 0; border-bottom: 1px solid transparent; }
+    .bar nav a:hover { color: #fff; border-color: var(--accent); }
+    .pill { border: 1px solid var(--line); border-radius: 999px; padding: 10px 22px; font-size: 14px; font-weight: 500; background: rgba(255,255,255,.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: background .2s, color .2s; }
+    .pill:hover { background: #fff; color: #10201a; }
+    @media (min-width: 860px) { .bar nav { display: flex; } }
+
+    .copy { margin-top: auto; padding: 0 clamp(20px, 4vw, 56px); max-width: 980px; text-shadow: 0 2px 28px rgba(0,0,0,.45); }
+    .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 18px; padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; background: rgba(255,255,255,.08); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); text-shadow: none; }
+    .eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+    h1 { margin: 0; font-family: 'Fraunces', serif; font-weight: 300; letter-spacing: -.03em; line-height: .96; font-size: clamp(46px, 8.4vw, 124px); }
+    h1 em { font-style: italic; color: var(--accent); }
+    .lead { margin: 20px 0 0; max-width: 540px; font-size: 17px; line-height: 1.65; color: var(--dim); }
+    .now { margin: 18px 0 0; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+    .now b { color: var(--accent); font-weight: 600; }
+
+    /* the scene picker: environment, mood and weather each switch the film behind the hero */
+    .panel { position: absolute; right: clamp(20px, 4vw, 56px); top: 50%; transform: translateY(-50%); z-index: 3; width: 252px; padding: 18px; border-radius: 22px; background: rgba(10,20,16,.42); border: 1px solid var(--line); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+    .panel h2 { margin: 0 0 14px; font-size: 12px; letter-spacing: .24em; text-transform: uppercase; font-weight: 600; color: var(--accent); }
+    .row { margin: 0 0 14px; }
+    .row:last-child { margin: 0; }
+    .row small { display: block; margin: 0 0 7px 2px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip { font: 500 13px 'DM Sans', sans-serif; color: #fff; background: rgba(255,255,255,.1); border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+    .chip:hover { background: rgba(255,255,255,.22); }
+    .chip.on { background: #fff; color: #10201a; border-color: #fff; }
+    @media (max-width: 859px) {
+      .panel { position: relative; right: auto; top: auto; transform: none; width: auto; margin: 16px 20px 0; }
+      .copy { margin-top: auto; }
+      .hero { height: auto; min-height: 100dvh; }
+      .row { margin-bottom: 10px; }
+    }
+
+    footer.foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px; padding: 22px clamp(20px, 4vw, 56px) 26px; margin-top: 26px; border-top: 1px solid var(--line); font-size: 14px; }
+    .links { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+    .links a { color: var(--dim); transition: color .2s; }
+    .links a:hover { color: #fff; }
+    .links a.tree { display: inline-flex; align-items: center; gap: 8px; color: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; background: rgba(255,255,255,.08); }
+    .links a.tree svg { width: 14px; height: 14px; }
+    .by { color: var(--dim); }
+    .by b { color: #fff; font-weight: 600; }
+    .back-link { position: fixed; left: 12px; bottom: 76px; z-index: 60; font: 12px system-ui, sans-serif; color: #fff; padding: 6px 12px; border-radius: 999px; background: rgba(0,0,0,.55); }
+    .embed .back-link { display: none !important; }
+    @media (prefers-reduced-motion: reduce) { .vids video { transition: none; } }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+  <section class="hero" id="hero">
+    <div class="vids" id="vids">
+      <video muted loop playsinline preload="auto" src="assets/scene/meadow.mp4" class="on"></video>
+      <video muted loop playsinline preload="metadata" src="assets/scene/migration.mp4"></video>
+      <video muted loop playsinline preload="metadata" src="assets/scene/golden.mp4"></video>
+      <video muted loop playsinline preload="metadata" src="assets/scene/sky.mp4"></video>
+    </div>
+    <div class="shade"></div>
+
+    <header class="bar">
+      <a href="#" aria-label="Manisha Baroliya"><img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199"></a>
+      <nav>
+        <a href="shelf-library.html#library" target="_top">Work</a>
+        <a href="halcyon-hero.html" target="_top">About</a>
+        <a href="clothing-rail.html" target="_top">Skills</a>
+        <a href="shelf-library.html#social" target="_top">Social</a>
+      </nav>
+      <a class="pill" href="shelf-library.html#social" target="_top">Say hello</a>
+    </header>
+
+    <aside class="panel" aria-label="Change the scene">
+      <h2>Set the scene</h2>
+      <div class="row"><small>Environment</small><div class="chips" data-key="env"></div></div>
+      <div class="row"><small>Mood</small><div class="chips" data-key="mood"></div></div>
+      <div class="row"><small>Weather</small><div class="chips" data-key="weather"></div></div>
+    </aside>
+
+    <div class="copy">
+      <p class="eyebrow"><i></i>Product designer · UX researcher</p>
+      <h1>Design that feels like <em id="word">fresh air</em>.</h1>
+      <p class="lead">Hi, I’m Manisha. With a psychology background, I design calm, human products for SaaS and B2B teams. 3+ years, 20+ live designs, 10+ platforms.</p>
+      <p class="now">Right now: <b id="nowEnv"></b> · <b id="nowMood"></b> · <b id="nowWeather"></b></p>
+    </div>
+
+    <footer class="foot">
+      <div class="links">
+        <a href="shelf-library.html#social" target="_top">Instagram</a>
+        <a href="shelf-library.html#social" target="_top">LinkedIn</a>
+        <a href="shelf-library.html#social" target="_top">Behance</a>
+        <a class="tree" href="shelf-library.html#social" target="_top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v18M12 8l-5 4M12 8l5 4M12 14l-4 3M12 14l4 3"/></svg>All my links</a>
+      </div>
+      <div class="by">Created by <b>Manisha Baroliya</b> · © 2026</div>
+    </footer>
+  </section>
+
+  <script>
+    // Each scene is one film; environment, mood and weather are three ways of choosing it.
+    var SCENES = [
+      { env: 'Wildflower meadow', mood: 'Joyful',  weather: 'Bright sun',   word: 'a spring meadow' },
+      { env: 'Butterfly canopy',  mood: 'Dreamy',  weather: 'Light breeze', word: 'a butterfly sky' },
+      { env: 'Golden woodland',   mood: 'Warm',    weather: 'Golden hour',  word: 'golden light' },
+      { env: 'Open sky',          mood: 'Calm',    weather: 'Clear day',    word: 'fresh air' }
+    ];
+    var vids = Array.prototype.slice.call(document.querySelectorAll('#vids video'));
+    var cur = 0, timer = 0;
+    function show(i) {
+      cur = i;
+      vids.forEach(function (v, k) {
+        if (k === i) { v.classList.add('on'); var p = v.play(); if (p && p.catch) p.catch(function () {}); v.preload = 'auto'; }
+        else { v.classList.remove('on'); setTimeout(function () { if (!v.classList.contains('on')) v.pause(); }, 1200); }
+      });
+      var sc = SCENES[i];
+      document.getElementById('word').textContent = sc.word;
+      document.getElementById('nowEnv').textContent = sc.env;
+      document.getElementById('nowMood').textContent = sc.mood;
+      document.getElementById('nowWeather').textContent = sc.weather;
+      document.querySelectorAll('.chip').forEach(function (c) { c.classList.toggle('on', +c.dataset.i === i); });
+    }
+    document.querySelectorAll('.chips').forEach(function (box) {
+      var key = box.dataset.key;
+      SCENES.forEach(function (sc, i) {
+        var b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.dataset.i = i; b.textContent = sc[key];
+        b.addEventListener('click', function () { clearInterval(timer); show(i); });
+        box.appendChild(b);
+      });
+    });
+    show(0);
+    // a gentle auto-change until you pick one yourself
+    timer = setInterval(function () { show((cur + 1) % SCENES.length); }, 9000);
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+</body>
+</html>

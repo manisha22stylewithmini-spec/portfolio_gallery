@@ -31,7 +31,6 @@
     /* die-cut sticker outline, so the black script keeps its shape on the sky */
     .logo-sticker {
       height: 46px; width: auto; display: block;
-      filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff) drop-shadow(0 -1.5px 0 #fff);
     }
     @media (min-width: 640px) { .logo-sticker { height: 54px; } }
     .back-link {
@@ -61,7 +60,7 @@
         <header className="fixed top-0 left-0 w-full z-50 py-4 md:py-6 bg-gradient-to-b from-[#06040f]/55 to-transparent">
           <div className="grid grid-cols-12 max-w-7xl mx-auto px-6 md:px-16 lg:px-20 items-center gap-x-4">
             <a href="#" aria-label="Manisha Baroliya" className="col-span-8 md:col-span-3 flex items-center">
-              <img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186" className="logo-sticker" />
+              <img src="assets/logo-dark.webp" alt="Manisha Baroliya" width="380" height="199" className="logo-sticker" />
             </a>
             <nav className="hidden md:flex md:col-span-6 justify-center gap-10">
               {LINKS.map((l) => <a key={l.label} href={l.href} target="_top" className="shade text-sm lowercase text-white/90 hover:text-white transition-colors">{l.label}</a>)}

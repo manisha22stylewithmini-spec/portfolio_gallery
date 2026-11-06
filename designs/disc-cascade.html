@@ -5,7 +5,7 @@
   <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
   if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Disc Cascade — Carousel</title>
+  <title>Manisha Baroliya — Product designer</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
@@ -1001,7 +1001,7 @@ export default function DiscCascadeCarousel({
 
       {brand || nav.length || (indexLabel && n > 1) ? (
         <nav className="dcc-nav" data-dcc-ui="" aria-label="Catalogue">
-          {brand ? <span className="dcc-brand">{brand}</span> : null}
+          {brand ? <a className="dcc-brand" href="shelf-library.html#library" target="_top" aria-label={brand}><img src="assets/logo-dark.webp" alt={brand} width="380" height="199" style={{ height: 46, width: "auto", display: "block" }} /></a> : null}
           {nav.map((l, k) =>
             l.href ? (
               <a key={k} className="dcc-link" href={l.href} aria-current={k === navActive ? "page" : undefined}>
@@ -1196,13 +1196,13 @@ const u = (id: string) =>
 
 // Photos as disc labels, a dark stage, looping autoplay and real fonts.
 const records: DiscCascadeItem[] = [
-  { title: "Cable Car", src: u("1506744038136-46273834b3fb"), credits: [{ label: "Side A", value: "Ascent" }, { label: "Year", value: "2018" }, { label: "Length", value: "41 min" }], reviews: [{ source: "Low Fidelity", quote: "Climbs and never stops" }, { source: "The Wax", quote: "A record for windows", stars: 4 }] },
-  { title: "Pale House", src: u("1501785888041-af3ef285b470"), labelStyle: "block", credits: [{ label: "Side A", value: "Rooms" }, { label: "Year", value: "2019" }, { label: "Length", value: "38 min" }], reviews: [{ source: "Groove Notes", quote: "Sunlit and spare" }, { source: "Low Fidelity", quote: "Every song a doorway" }] },
-  { title: "Cherry Season", src: u("1470071459604-3b5ec3a7fe05"), credits: [{ label: "Side A", value: "Blossom" }, { label: "Year", value: "2020" }, { label: "Length", value: "44 min" }], reviews: [{ source: "The Wax", quote: "Soft as April" }, { source: "Groove Notes", quote: "Pink noise, perfected" }] },
-  { title: "Bottle Shop", src: u("1441974231531-c6227db76b6e"), credits: [{ label: "Side A", value: "Last Call" }, { label: "Year", value: "2021" }, { label: "Length", value: "36 min" }], reviews: [{ source: "Low Fidelity", quote: "Fizzes from the first bar" }, { source: "The Wax", quote: "Bright, sweet, gone", stars: 4 }] },
-  { title: "Tree-Lined Road", src: u("1500530855697-b586d89ba3ee"), labelStyle: "block", credits: [{ label: "Side A", value: "Mile One" }, { label: "Year", value: "2022" }, { label: "Length", value: "52 min" }], reviews: [{ source: "Groove Notes", quote: "Made for the long way home" }, { source: "Low Fidelity", quote: "Shade and motion" }] },
-  { title: "Window Seat", src: u("1469474968028-56623f02e42e"), credits: [{ label: "Side A", value: "7A" }, { label: "Year", value: "2023" }, { label: "Length", value: "40 min" }], reviews: [{ source: "The Wax", quote: "The view does the talking" }, { source: "Groove Notes", quote: "Gentle velocity" }] },
-  { title: "Low Tide", src: u("1507525428034-b723cf961d3e"), credits: [{ label: "Side A", value: "Gulls" }, { label: "Year", value: "2024" }, { label: "Length", value: "47 min" }], reviews: [{ source: "Low Fidelity", quote: "Salt air on tape" }, { source: "The Wax", quote: "Wide open, wind-blown" }] },
+  { title: "UX Research", src: u("1506744038136-46273834b3fb"), credits: [{ label: "Focus", value: "Listening" }, { label: "Since", value: "2021" }, { label: "Scope", value: "Interviews" }], reviews: [{ source: "Behaviour", quote: "Starts with people" }, { source: "Method", quote: "Evidence over opinion", stars: 4 }] },
+  { title: "UI Design", src: u("1501785888041-af3ef285b470"), labelStyle: "block", credits: [{ label: "Focus", value: "Screens" }, { label: "Since", value: "2022" }, { label: "Scope", value: "20+ live" }], reviews: [{ source: "Visual", quote: "Calm and clear" }, { source: "Detail", quote: "One playful touch" }] },
+  { title: "Prototyping", src: u("1470071459604-3b5ec3a7fe05"), credits: [{ label: "Focus", value: "Testing" }, { label: "Since", value: "2022" }, { label: "Scope", value: "Figma" }], reviews: [{ source: "Speed", quote: "Feel it before it is built" }, { source: "Flow", quote: "Clickable ideas" }] },
+  { title: "Design Systems", src: u("1441974231531-c6227db76b6e"), credits: [{ label: "Focus", value: "Scale" }, { label: "Since", value: "2023" }, { label: "Scope", value: "10+ platforms" }], reviews: [{ source: "Order", quote: "One tidy system" }, { source: "Reuse", quote: "Built to be shared", stars: 4 }] },
+  { title: "User Flows", src: u("1500530855697-b586d89ba3ee"), labelStyle: "block", credits: [{ label: "Focus", value: "Journeys" }, { label: "Since", value: "2023" }, { label: "Scope", value: "Every step" }], reviews: [{ source: "Clarity", quote: "Nobody gets lost" }, { source: "Edge cases", quote: "Covered early" }] },
+  { title: "B2B & SaaS", src: u("1469474968028-56623f02e42e"), credits: [{ label: "Focus", value: "Dashboards" }, { label: "Since", value: "2024" }, { label: "Scope", value: "Workflows" }], reviews: [{ source: "Complexity", quote: "Made to feel simple" }, { source: "Teams", quote: "Designed for daily use" }] },
+  { title: "Psychology", src: u("1507525428034-b723cf961d3e"), credits: [{ label: "Focus", value: "Mindset" }, { label: "Since", value: "2021" }, { label: "Scope", value: "Background" }], reviews: [{ source: "Roots", quote: "How people think and feel" }, { source: "Practice", quote: "Empathy in every flow" }] },
 ]
 
 export default function Demo() {
@@ -1210,9 +1210,9 @@ export default function Demo() {
     <div className="w-full">
       <DiscCascadeCarousel
         items={records}
-        brand="side/b"
-        nav={[{ label: "Records" }, { label: "Sessions" }]}
-        indexLabel="Catalogue"
+        brand="Manisha Baroliya"
+        nav={[{ label: "Work", href: "shelf-library.html#library" }, { label: "Say hello", href: "shelf-library.html#social" }]}
+        indexLabel="Skills"
         defaultIndex={1}
         loop
         autoplay={3600}
@@ -1220,7 +1220,7 @@ export default function Demo() {
         color="#ecebe7"
         fontHref="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter:wght@400;600;800&family=Oswald:wght@600;700&display=swap"
         hint="Drag · ← →"
-        ariaLabel="Record catalogue"
+        ariaLabel="Manisha's skills"
       />
     </div>
   )

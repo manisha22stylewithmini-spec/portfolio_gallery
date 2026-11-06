@@ -5,7 +5,7 @@
   <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
   if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Creative Studio Showcase</title>
+<title>Manisha Baroliya — Product designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
@@ -127,12 +127,13 @@ html, body {
 /* ===== NAVIGATION ===== */
 .logo-wrapper {
   position: fixed; top: 30px; left: 0; width: 50%; z-index: 10;
-  display: flex; justify-content: flex-start; align-items: center; mix-blend-mode: difference;
+  display: flex; justify-content: flex-start; align-items: center;
 }
 @media (min-width: 768px) { .logo-wrapper { top: 40px; } }
 .logo-wrapper .inner { padding-left: 20px; }
 @media (min-width: 768px) { .logo-wrapper .inner { padding-left: 40px; } }
-.logo-wrapper img { width: 32px; height: 32px; }
+.logo-wrapper img { height: 50px; width: auto; display: block; }
+@media (min-width: 768px) { .logo-wrapper img { height: 60px; } }
 
 .burger-wrapper {
   position: fixed; top: 16px; right: 0; width: 50%; z-index: 10;
@@ -284,8 +285,8 @@ html, body {
 <!-- LOGO -->
 <div class="logo-wrapper">
   <div class="inner">
-    <a href="#" aria-label="Home">
-      <img src="https://framerusercontent.com/images/VMcS7YYTM5PXfXvlHc9u3hSCMM.svg" alt=""/>
+    <a href="#" aria-label="Manisha Baroliya">
+      <img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186"/>
     </a>
   </div>
 </div>
@@ -303,20 +304,20 @@ html, body {
 <!-- MENU PANEL -->
 <div class="menu-panel" id="menu-panel">
   <nav>
-    <a href="#work">Work</a>
-    <a href="#about">About</a>
-    <a href="#blog">Blog</a>
+    <a href="shelf-library.html#library" target="_top">Work</a>
+    <a href="halcyon-hero.html" target="_top">About</a>
+    <a href="clothing-rail.html" target="_top">Skills</a>
   </nav>
   <div class="menu-contact">
-    <a href="mailto:studio@norakessler.com" class="menu-email">studio@norakessler.com</a>
+    <a href="shelf-library.html#social" target="_top" class="menu-email">Say hello on social</a>
     <div class="menu-socials">
-      <a href="#">Pinterest</a>
-      <a href="#">Behance</a>
-      <a href="#">Letterboxd</a>
+      <a href="shelf-library.html#social" target="_top">Instagram</a>
+      <a href="shelf-library.html#social" target="_top">LinkedIn</a>
+      <a href="shelf-library.html#social" target="_top">Behance</a>
     </div>
   </div>
   <div style="margin-top:32px;">
-    <button class="menu-cta-btn">
+    <button class="menu-cta-btn" onclick="top.location.href='shelf-library.html#social'">
       <span class="menu-cta-bg"></span>
       <span class="menu-cta-text">Let's talk</span>
       <span class="menu-cta-circle">
@@ -332,7 +333,7 @@ html, body {
 <main class="hero">
   <!-- Big text behind image -->
   <div class="hero-big-text creator-text-animate">
-    <h2>Visuals</h2>
+    <h2>Design</h2>
   </div>
 
   <!-- Base image -->
@@ -350,9 +351,9 @@ html, body {
   <div class="hero-content">
     <div class="hero-content-inner">
       <h1 class="hero-headline" id="headline"></h1>
-      <button class="cta-btn cta-animate">
+      <button class="cta-btn cta-animate" onclick="top.location.href='shelf-library.html#social'">
         <span class="cta-btn-bg"></span>
-        <span class="cta-btn-text">Start a project now</span>
+        <span class="cta-btn-text">See how I can help</span>
         <span class="cta-btn-circle">
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M5 13L13 5M13 5H6M13 5V12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -369,7 +370,7 @@ html, body {
 (function() {
   // Word reveal
   const headline = document.getElementById('headline');
-  const text = "I build compelling visual stories & motion that make ideas shine.";
+  const text = "I design calm, human products that make complex ideas feel easy.";
   const words = text.split(' ');
   words.forEach(function(word, i) {
     const span = document.createElement('span');
