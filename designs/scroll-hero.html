@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
+  if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manisha Baroliya — Product designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Cormorant+SC:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    :root { --paper:#ece5d3; --paper2:#e2d9c1; --ink:#4a3b2c; --ink2:#7a6a55; --roof:#34404d; }
+    * { box-sizing:border-box; }
+    html, body { margin:0; background:var(--paper); color:var(--ink); }
+    body { font-family:'Cormorant Garamond', Georgia, serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+    a { color:inherit; text-decoration:none; }
+    .hero { position:relative; min-height:100vh; min-height:100svh; overflow:hidden; display:flex; flex-direction:column; isolation:isolate;
+      background:radial-gradient(ellipse 80% 70% at 50% 40%, #efe9d9 0%, var(--paper) 60%, var(--paper2) 100%); }
+    /* paper grain */
+    .hero::before { content:''; position:absolute; inset:0; z-index:-1; pointer-events:none; opacity:.5; mix-blend-mode:multiply;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45  0 0 0 0 .38  0 0 0 0 .27  0 0 0 .35 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+    header.bar { position:relative; z-index:6; display:flex; align-items:center; justify-content:space-between; gap:16px; padding:16px clamp(18px,4vw,56px); }
+    .bar img { height:50px; width:auto; display:block; }
+    .bar nav { display:none; gap:34px; font-family:'Cormorant SC',serif; font-size:19px; font-weight:600; letter-spacing:.06em; }
+    .bar nav a { color:var(--ink2); transition:color .2s; }
+    .bar nav a:hover { color:var(--ink); }
+    .pill { border:1.5px solid var(--ink); border-radius:999px; padding:8px 22px; font:600 18px 'Cormorant SC',serif; letter-spacing:.05em; transition:background .2s, color .2s; }
+    .pill:hover { background:var(--ink); color:var(--paper); }
+    @media (min-width:820px) { .bar nav { display:flex; } }
+
+    .stage { position:relative; flex:1; min-height:0; }
+    .roof { position:absolute; left:50%; top:6px; width:min(820px, 96vw); transform:translateX(-50%); z-index:3; pointer-events:none; will-change:transform; filter:drop-shadow(0 14px 14px rgba(40,30,20,.25)); }
+    canvas#scroll { position:absolute; inset:0; width:100%; height:100%; display:block; z-index:2; }
+    .mount { position:absolute; bottom:-6px; z-index:1; pointer-events:none; opacity:.55; }
+    .mount.l { left:-40px; width:min(420px, 46vw); } .mount.r { right:-60px; width:min(480px, 50vw); }
+    .birds { position:absolute; right:12%; bottom:11%; z-index:1; width:90px; opacity:.6; pointer-events:none; }
+    .cap { position:relative; z-index:6; display:flex; align-items:center; justify-content:space-between; gap:12px 24px; flex-wrap:wrap; padding:0 clamp(18px,4vw,56px) 58px; }
+    .cap p { margin:0; font-size:clamp(18px,2.1vw,25px); line-height:1.25; font-weight:600; }
+    .cap p span { color:var(--ink2); font-weight:500; }
+    .cap a { font:600 19px 'Cormorant SC',serif; letter-spacing:.06em; border-bottom:1.5px solid var(--ink); padding-bottom:2px; white-space:nowrap; }
+    .back-link { position:fixed; left:12px; bottom:12px; z-index:60; font:12px system-ui,sans-serif; color:#fff; padding:6px 12px; border-radius:999px; background:rgba(60,45,30,.7); }
+    .embed .back-link { display:none !important; }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+  <section class="hero" id="hero">
+    <header class="bar">
+      <a href="#" aria-label="Manisha Baroliya"><img src="assets/logo-wide.webp" alt="Manisha Baroliya" width="360" height="186"></a>
+      <nav>
+        <a href="shelf-library.html#library" target="_top">Work</a>
+        <a href="halcyon-hero.html" target="_top">About</a>
+        <a href="clothing-rail.html" target="_top">Skills</a>
+        <a href="shelf-library.html#social" target="_top">Social</a>
+      </nav>
+      <a class="pill" href="shelf-library.html#social" target="_top">Say hello</a>
+    </header>
+
+    <div class="stage" id="stage">
+      <svg class="mount l" viewBox="0 0 420 160" aria-hidden="true"><defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8a8a80"/><stop offset="1" stop-color="#c9c3b0" stop-opacity=".2"/></linearGradient></defs><path d="M0 160 L0 110 C30 96 52 70 82 64 C104 60 112 78 134 74 C160 66 176 40 210 38 C236 36 250 62 280 78 C320 98 380 120 420 128 L420 160 Z" fill="url(#mg)"/></svg>
+      <svg class="mount r" viewBox="0 0 480 160" aria-hidden="true"><path d="M0 160 L0 130 C60 112 110 84 160 74 C200 66 214 86 250 78 C290 68 310 34 350 30 C392 26 410 64 440 78 L480 92 L480 160 Z" fill="url(#mg)"/></svg>
+      <svg class="birds" viewBox="0 0 90 36" fill="none" stroke="#4a3b2c" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M2 20 q5 -6 10 0 q5 -6 10 0"/><path d="M34 10 q4 -5 8 0 q4 -5 8 0"/><path d="M56 26 q3 -4 6 0 q3 -4 6 0"/><path d="M72 12 q3 -4 6 0 q3 -4 6 0"/></svg>
+
+      <svg class="roof" id="roof" viewBox="0 0 820 170" aria-hidden="true">
+        <defs>
+          <linearGradient id="rg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a6b7c"/><stop offset=".55" stop-color="#3a4756"/><stop offset="1" stop-color="#242c36"/></linearGradient>
+          <pattern id="tiles" width="5" height="14" patternUnits="userSpaceOnUse"><rect width="5" height="14" fill="none"/><path d="M0 0 V14" stroke="rgba(10,16,24,.5)" stroke-width="1.2"/><path d="M2.5 7 H5" stroke="rgba(255,255,255,.07)" stroke-width="1"/></pattern>
+          <linearGradient id="fas" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f36"/><stop offset="1" stop-color="#2a2f36" stop-opacity="0"/></linearGradient>
+          <clipPath id="rc"><path id="rp" d="M10 96 C72 116 160 118 232 74 C248 64 258 56 276 52 L544 52 C562 56 572 64 588 74 C660 118 748 116 810 96 C800 108 790 114 772 120 C716 134 636 132 586 128 L234 128 C184 132 104 134 48 120 C30 114 20 108 10 96 Z"/></clipPath>
+        </defs>
+        <path d="M70 128 L750 128 L738 152 L82 152 Z" fill="url(#fas)"/>
+        <g clip-path="url(#rc)"><rect x="0" y="40" width="820" height="100" fill="url(#rg)"/><rect x="0" y="40" width="820" height="100" fill="url(#tiles)"/></g>
+        <path d="M10 96 C72 116 160 118 232 74 C248 64 258 56 276 52 L544 52 C562 56 572 64 588 74 C660 118 748 116 810 96" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.4"/>
+        <path d="M276 52 C268 40 270 30 282 28 C290 28 296 34 294 41 C292 47 285 48 281 44" fill="#2d3946" stroke="#1d242d" stroke-width="1.2"/>
+        <path d="M544 52 C552 40 550 30 538 28 C530 28 524 34 526 41 C528 47 535 48 539 44" fill="#2d3946" stroke="#1d242d" stroke-width="1.2"/>
+        <path d="M276 52 L544 52" stroke="#1f2730" stroke-width="5" stroke-linecap="round"/>
+        <path d="M232 74 C236 90 240 104 244 126 M588 74 C584 90 580 104 576 126" stroke="rgba(10,16,24,.45)" stroke-width="2" fill="none"/>
+      </svg>
+      <canvas id="scroll" aria-label="A hanging scroll of words that part around your cursor"></canvas>
+    </div>
+
+    <div class="cap">
+      <p>Hi, I’m Manisha, a product designer &amp; UX researcher. <span>Move your cursor through the words.</span></p>
+      <a href="shelf-library.html#library" target="_top">See my work →</a>
+    </div>
+  </section>
+
+  <script>
+  (function () {
+    // A hanging scroll of letters. The cursor parts it like a curtain: below the pointer the letters are pushed
+    // aside (the nearest ones travel furthest, so they bunch at the edges) and the bottom rows curl up and out.
+    var ROWS_TXT = ['PSYCHOLOGYFIRST', 'DESIGNFORPEOPLE', 'UXRESEARCHCRAFT', 'CALMHUMANDESIGN'];
+    var COLS = 15;
+    var stage = document.getElementById('stage'), cv = document.getElementById('scroll'), ctx = cv.getContext('2d'), roof = document.getElementById('roof');
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var W = 0, H = 0, dpr = 1, colW = 24, rowH = 27, left = 0, top = 0, rows = 20;
+    var m = { x: 0, y: 0, on: false, last: -1e9 }, cur = { x: 0, y: 0, amp: 0 }, roofX = 0;
+    function smooth(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
+    function layout() {
+      var r = stage.getBoundingClientRect(); W = r.width; H = r.height; dpr = Math.min(devicePixelRatio || 1, 2);
+      cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      colW = Math.max(18, Math.min(34, W * 0.036)); rowH = colW * 1.04;
+      var rr = roof.getBoundingClientRect(), roofB = rr.top - r.top + rr.height * 0.9;
+      top = Math.max(60, roofB); left = (W - COLS * colW) / 2;
+      rows = Math.max(6, Math.floor((H - top - 8) / rowH));
+      if (!m.on) { cur.x = W / 2; cur.y = top + rows * rowH * 0.3; }
+    }
+    function point(e) { var r = stage.getBoundingClientRect(); m.x = e.clientX - r.left; m.y = e.clientY - r.top; m.on = true; m.last = performance.now(); }
+    addEventListener('pointermove', point); addEventListener('pointerdown', point);
+    document.documentElement.addEventListener('mouseleave', function () { m.on = false; });
+    function frame(now) {
+      requestAnimationFrame(frame);
+      var t = now / 1000, tx, ty, ta;
+      var idle = !m.on || now - m.last > 3200;
+      if (reduce) { tx = W / 2; ty = top + rows * rowH * 0.35; ta = 0.0; }
+      else if (idle) { tx = W / 2 + Math.sin(t * 0.55) * colW * 4.2; ty = top + rows * rowH * (0.34 + 0.12 * Math.sin(t * 0.37)); ta = 0.8; }
+      else { tx = m.x; ty = m.y; ta = 1; }
+      cur.x += (tx - cur.x) * 0.12; cur.y += (ty - cur.y) * 0.12; cur.amp += (ta - cur.amp) * 0.08;
+      roofX += (((cur.x - W / 2) / W) * 34 - roofX) * 0.08; roof.style.transform = 'translateX(calc(-50% + ' + roofX.toFixed(2) + 'px))';
+      ctx.clearRect(0, 0, W, H);
+      ctx.font = '700 ' + (colW * 1.12).toFixed(1) + 'px "Cormorant Garamond", Georgia, serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#4a3b2c';
+      var sig = colW * 3.1, A = cur.amp;
+      for (var j = 0; j < rows; j++) {
+        var jf = j / Math.max(1, rows - 1), line = ROWS_TXT[j % ROWS_TXT.length], y0 = top + (j + 0.5) * rowH;
+        var vy = smooth((y0 - (cur.y - rowH * 1.5)) / (rowH * 8));
+        for (var i = 0; i < COLS; i++) {
+          var x0 = left + (i + 0.5) * colW, d = x0 - cur.x, ad = Math.abs(d);
+          var k = Math.exp(-(d * d) / (2 * sig * sig)), dirn = d >= 0 ? 1 : -1;
+          var push = A * vy * k * colW * 1.45, curl = A * vy * k * Math.pow(jf, 3);
+          var x = x0 + dirn * (push + curl * colW * 1.9);
+          var y = y0 - curl * rowH * 2.1;
+          var rot = dirn * (push / colW) * 0.1 + dirn * curl * 0.5;
+          ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.globalAlpha = 0.9 - 0.18 * Math.min(1, push / colW);
+          ctx.fillText(line[i], 0, 0); ctx.restore();
+        }
+      }
+    }
+    new ResizeObserver(layout).observe(stage);
+    (document.fonts && document.fonts.load ? document.fonts.load('700 20px "Cormorant Garamond"') : Promise.resolve()).then(function () { layout(); requestAnimationFrame(frame); });
+  })();
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+</body>
+</html>
