@@ -788,13 +788,13 @@
             <div class="inside"><div class="in">
               <p class="hand" style="font-size:21px;margin-bottom:8px">find me here →</p>
               <div class="tix">
-                <a href="#" style="--r:-2deg"><span class="ic" style="background:linear-gradient(45deg,#f9a825,#e1306c,#7b1fa2)">IG</span>Instagram<small>↗</small></a>
-                <a href="#" style="--r:1.5deg"><span class="ic" style="background:#0a66c2">in</span>LinkedIn<small>↗</small></a>
-                <a href="#" style="--r:-1deg"><span class="ic" style="background:#1769ff">Bē</span>Behance<small>↗</small></a>
-                <a href="#" style="--r:2deg"><span class="ic" style="background:#ea4c89">Dr</span>Dribbble<small>↗</small></a>
-                <a href="#" style="--r:-1.5deg"><span class="ic" style="background:#e60023">Pi</span>Pinterest<small>↗</small></a>
+                <a href="https://www.instagram.com/offical_manisha_baroliya/" target="_blank" rel="noopener" style="--r:-2deg"><span class="ic" style="background:linear-gradient(45deg,#f9a825,#e1306c,#7b1fa2)">IG</span>Instagram<small>↗</small></a>
+                <a href="https://www.linkedin.com/in/manisha-baroliya-488016265/" target="_blank" rel="noopener" style="--r:1.5deg"><span class="ic" style="background:#0a66c2">in</span>LinkedIn<small>↗</small></a>
+                <a href="https://www.behance.net/manishabarol2023" target="_blank" rel="noopener" style="--r:-1deg"><span class="ic" style="background:#1769ff">Bē</span>Behance<small>↗</small></a>
+                <a href="https://dribbble.com/manisha_baroliya" target="_blank" rel="noopener" style="--r:2deg"><span class="ic" style="background:#ea4c89">Dr</span>Dribbble<small>↗</small></a>
+                <a href="https://in.pinterest.com/uxdesignermanisha/" target="_blank" rel="noopener" style="--r:-1.5deg"><span class="ic" style="background:#e60023">Pi</span>Pinterest<small>↗</small></a>
               </div>
-              <p class="hand" style="font-size:17px;margin-top:auto">or the whole social tree ✿</p>
+              <p class="hand" style="font-size:17px;margin-top:auto"><a href="#social" data-go="social" style="color:inherit">or the whole social tree ✿</a></p>
             </div></div>
           </div>
 
@@ -1342,30 +1342,25 @@
     const SUBS = {
       home: 'Welcome to my hallway — every locker holds a piece of me. The big one is locked, but you have the key.',
       library: 'My design shelves — hover a cover to peek, click to open.',
-      social: 'My social tree — every sticker on the calendar opens a chat with me on that platform.',
+      social: 'My social tree — every sticker on the calendar opens my profile on that platform.',
     };
 
     // ================= SOCIAL calendar =================
-    // Fill in your handles to switch the stickers on. Empty ones show a "coming soon" note when clicked.
+    // My profiles. Every sticker on the calendar opens the real page in a new tab.
     const SOCIAL = {
-      linkedin: '',   // LinkedIn username, e.g. 'manisha-barol'  → opens your profile (Message button)
-      behance: '',    // Behance username                         → opens your profile (Message button)
-      instagram: '',  // Instagram username                       → opens a DM straight away (ig.me)
-      facebook: '',   // Facebook username                        → opens Messenger chat (m.me)
-      x: '',          // X username                               → opens your profile (Message button)
-      whatsapp: '',   // WhatsApp number, country code + digits only, e.g. '919876543210' → opens a chat with a hello typed in
+      linkedin: 'https://www.linkedin.com/in/manisha-baroliya-488016265/',
+      behance: 'https://www.behance.net/manishabarol2023',
+      instagram: 'https://www.instagram.com/offical_manisha_baroliya/',
+      facebook: 'https://www.facebook.com/uxdesignermanisha/',
+      x: 'https://x.com/Manisha_Offical',
+      dribbble: 'https://dribbble.com/manisha_baroliya',
+      uilive: 'https://ui.live/profile/Manishabaroliya',
+      pinterest: 'https://in.pinterest.com/uxdesignermanisha/',
+      github: 'https://github.com/manisha22stylewithmini-spec',
+      muzli: 'https://me.muz.li/manisha_baroliya',
     };
-    const HELLO = encodeURIComponent('Hi Manisha! I found your portfolio and wanted to say hi 👋');
-    const CHAT = {
-      linkedin: (h) => `https://www.linkedin.com/in/${h}/`, behance: (h) => `https://www.behance.net/${h}`,
-      instagram: (h) => `https://ig.me/m/${h}`, facebook: (h) => `https://m.me/${h}`,
-      x: (h) => `https://x.com/${h}`, whatsapp: (n) => `https://wa.me/${n}?text=${HELLO}`,
-    };
-    const NAMES = { linkedin: 'LinkedIn', behance: 'Behance', instagram: 'Instagram', facebook: 'Messenger', x: 'X', whatsapp: 'WhatsApp' };
-    const soc = (p, cls, inner) => {
-      const h = SOCIAL[p];
-      return `<a class="soc ${cls}" data-soc="${p}" href="${h ? CHAT[p](h) : '#'}" ${h ? 'target="_blank" rel="noopener"' : ''} aria-label="Chat with Manisha on ${NAMES[p]}">${inner}</a>`;
-    };
+    const NAMES = { linkedin: 'LinkedIn', behance: 'Behance', instagram: 'Instagram', facebook: 'Facebook', x: 'X', dribbble: 'Dribbble', uilive: 'UI.Live', pinterest: 'Pinterest', github: 'GitHub', muzli: 'Muzli' };
+    const soc = (p, cls, inner) => `<a class="soc ${cls}" data-soc="${p}" href="${SOCIAL[p]}" target="_blank" rel="noopener" aria-label="Manisha on ${NAMES[p]}">${inner}</a>`;
     const IG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>';
     // what sits on which square of the grid (by position, so it works for any month)
     const STICKERS_AT = {
@@ -1374,13 +1369,17 @@
       6: '<div class="cnote">Plan the<br>next launch!</div>',
       9: soc('instagram', 'soc-pola', `<span class="ph">${IG}</span><b>DM me!</b>`),
       12: soc('behance', 'soc-fill soc-mono', '<b>Behance<br>case<br>studies!</b><small>see my work ↗</small>'),
-      16: soc('whatsapp', 'soc-mono', '<b>Quick hi<br>on<br>WhatsApp!</b>') + '<span class="emoji" style="right:-4%;bottom:-10%">💬</span>',
+      3: soc('pinterest', 'soc-fill soc-mono', '<b>Pinterest<br>boards</b><small>get inspired ↗</small>'),
+      16: soc('dribbble', 'soc-fill soc-mono', '<b>Dribbble<br>shots!</b><small>see my work ↗</small>') + '<span class="emoji" style="right:-4%;bottom:-10%">🏀</span>',
+      20: soc('github', 'soc-fill soc-mono', '<b>GitHub<br>code<br>&amp; ideas</b><small>peek inside ↗</small>'),
+      26: soc('uilive', 'soc-fill soc-mono', '<b>UI.Live<br>profile</b><small>my UI work ↗</small>'),
+      27: soc('muzli', 'soc-fill soc-mono', '<b>Muzli<br>profile</b><small>my picks ↗</small>'),
       18: '<div class="cnote" style="background:#f7c7c7;color:#fff">Figma<br>jam!</div><span class="emoji" style="left:30%;bottom:-8%">🎨</span>',
-      22: soc('facebook', 'soc-mono', '<b>Messenger<br>me!</b>') + '<span class="emoji" style="left:28%;bottom:-10%">🥳</span>',
+      22: soc('facebook', 'soc-mono', '<b>Facebook<br>say hi!</b>') + '<span class="emoji" style="left:28%;bottom:-10%">🥳</span>',
       24: soc('x', '', '<span class="soc-ring">𝕏</span><small>slide into my DMs</small>') + '<span class="emoji" style="left:6%;bottom:4%">👀</span>',
       29: '<div class="cnote">Coffee<br>chats ☕</div>',
     };
-    const FILLS = { 1: '#0a3d91', 12: '#b8a3f0' };
+    const FILLS = { 1: '#0a3d91', 12: '#b8a3f0', 3: '#e60023', 16: '#ea4c89', 20: '#24292f', 26: '#0f8a5f', 27: '#6c3cf0' };
     let calOffset = 0;
     const renderCal = () => {
       const now = new Date(), view = new Date(now.getFullYear(), now.getMonth() + calOffset, 1);
@@ -1396,20 +1395,13 @@
       }
       const grid = document.getElementById('calGrid');
       grid.innerHTML = html;
-      grid.querySelectorAll('.soc[href="#"]').forEach((a) => a.addEventListener('click', (e) => {
-        e.preventDefault();
-        const t = document.createElement('div'); t.className = 'cal-toast';
-        t.textContent = `${NAMES[a.dataset.soc]} link coming soon — add the handle in SOCIAL`;
-        document.body.appendChild(t); setTimeout(() => t.remove(), 2700);
-      }));
     };
     document.getElementById('calPrev').addEventListener('click', () => { calOffset--; renderCal(); });
     document.getElementById('calNext').addEventListener('click', () => { calOffset++; renderCal(); });
     renderCal();
-    // sidebar profile card: opens a LinkedIn chat with me in a new tab (LinkedIn asks visitors to sign in if needed);
-    // until a username is set it falls back to the social calendar
+    // sidebar profile card: opens my LinkedIn profile in a new tab
     const li = document.getElementById('liChat');
-    if (SOCIAL.linkedin) { li.href = CHAT.linkedin(SOCIAL.linkedin); li.target = '_blank'; li.rel = 'noopener'; delete li.dataset.go; }
+    li.href = SOCIAL.linkedin; li.target = '_blank'; li.rel = 'noopener'; delete li.dataset.go;
     // the white pill under the active tab of the tablet view switch
     const moveVsPill = () => {
       const on = document.querySelector('.view-switch a.on'), pill = document.querySelector('.vs-pill');

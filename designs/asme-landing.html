@@ -160,8 +160,8 @@
           </div>
 
           <div className="absolute z-20 right-4 md:right-auto md:left-10 bottom-6 md:bottom-10 flex flex-col gap-3">
-            {[Instagram, Linkedin, Globe].map((I, i) => (
-              <a key={i} href={SOCIAL} target="_top" className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"><I size={20} /></a>
+            {[[Instagram, 'https://www.instagram.com/offical_manisha_baroliya/', 'Instagram'], [Linkedin, 'https://www.linkedin.com/in/manisha-baroliya-488016265/', 'LinkedIn'], [Globe, 'shelf-library.html#social', 'All my links']].map(([I, href, label], i) => (
+              <a key={i} href={href} aria-label={label} target={i < 2 ? '_blank' : '_top'} rel="noopener" className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"><I size={20} /></a>
             ))}
           </div>
         </div>
