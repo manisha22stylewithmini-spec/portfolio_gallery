@@ -199,6 +199,15 @@
     .book:hover .tip { opacity: 1; transform: translate(-50%, 0); }
 
     /* ---------- grid view ---------- */
+    .deck { position: relative; width: 100%; height: clamp(520px, calc(100vh - 250px), 820px); overflow: hidden; touch-action: none; user-select: none; outline: none; border-radius: 16px; background: radial-gradient(ellipse 70% 60% at 50% 45%, #fff, var(--soft)); box-shadow: inset 0 0 0 1px var(--hair); }
+    .deck[hidden] { display: none; }
+    .td-scene { position: absolute; inset: 0; transform-style: preserve-3d; }
+    .td-card { position: absolute; left: 50%; top: var(--td-top); width: var(--td-w); height: var(--td-h); margin-left: calc(var(--td-w) / -2); transform-origin: 50% 100%; transform-style: preserve-3d; backface-visibility: visible; will-change: transform; border-radius: 4px; overflow: hidden; cursor: pointer; background: #e9e7e2; box-shadow: 0 0 0 1px rgba(0,0,0,.1); }
+    .td-card img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; pointer-events: none; }
+    .td-card::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: #000; opacity: var(--td-shade, 0); }
+    .td-cap { position: absolute; left: 0; right: 0; bottom: 14px; display: flex; flex-direction: column; align-items: center; gap: 2px; pointer-events: none; font-family: 'Inter', sans-serif; }
+    .td-cap b { font-size: 15px; font-weight: 600; color: var(--ink); } .td-cap span { font-size: 12px; color: var(--muted); }
+    .td-cap a { pointer-events: auto; margin-top: 6px; font-size: 12px; font-weight: 500; color: #fff; background: var(--ink); padding: 6px 14px; border-radius: 999px; text-decoration: none; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 30px 22px; padding: 28px 4px 16px; }
     .grid .book { width: 100%; }
     .grid .book::after { display: none; }
@@ -644,7 +653,7 @@
       </div>
 
       <div class="bar lib-only">
-        <div class="tabs"><span class="pill"></span><button class="on" data-v="shelves">Shelves</button><button data-v="all">All designs</button></div>
+        <div class="tabs"><span class="pill"></span><button class="on" data-v="shelves">Shelves</button><button data-v="all">All designs</button><button data-v="deck">Deck</button></div>
         <label class="search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
           <input id="q" placeholder="Search in My library" />
@@ -654,6 +663,7 @@
       <div class="lib-only">
         <div id="shelves"></div>
         <div id="all" class="grid" hidden></div>
+        <div id="deck" class="deck" hidden role="region" aria-roledescription="carousel" aria-label="Design deck" tabindex="0"><div class="td-scene"></div><div class="td-cap"><b></b><span></span><a href="#">Open design →</a></div></div>
         <div id="empty" class="empty" hidden>No designs match that search.</div>
       </div>
 
@@ -999,10 +1009,83 @@
     const all = document.getElementById('all'), empty = document.getElementById('empty'), q = document.getElementById('q');
     const pill = document.querySelector('.tabs .pill'), tabBtns = [...document.querySelectorAll('.tabs button')];
     const movePill = () => { const b = tabBtns.find((x) => x.classList.contains('on')); pill.style.width = b.offsetWidth + 'px'; pill.style.transform = `translateX(${b.offsetLeft - 3}px)`; };
+    // ---- Deck view: standing cards tip forward one by one (port of Tumble Deck Showcase, vanilla JS) ----
+    const deckEl = document.getElementById('deck'), scene = deckEl.querySelector('.td-scene'), cap = deckEl.querySelector('.td-cap');
+    const cards = T.map((d) => ({ src: 'posters/' + d.f + '.jpg', t: d.t, k: d.k, f: d.f }));
+    const nC = cards.length, DEPTH = 5, POOL = DEPTH + 5, ASPECT = 0.75, PER_CARD = 240;
+    const c01 = (v) => v < 0 ? 0 : v > 1 ? 1 : v, wrapN = (k, n) => ((k % n) + n) % n;
+    const fallAngle = (t) => { const u = c01(t), land = 0.78; if (u <= land) { const k = u / land; return -90 * k * k * k; } const k = (u - land) / (1 - land); return -90 + 6 * Math.sin(Math.PI * k) * (1 - k); };
+    const deckAdvance = (pos) => { const i = Math.floor(pos), f = pos - i, k = c01((f - 0.28) / 0.6); return i + k * k * (3 - 2 * k); };
+    const cardPose = (k, pos) => {
+      const t = pos - k, lift = (k - Math.floor(pos) + 3) * 0.6;
+      if (t >= 1) return { angle: -90, z: 0, lift, opacity: t < 3 ? 1 : 0, flat: true };
+      if (t > 0) return { angle: fallAngle(t), z: 0, lift, opacity: 1, flat: false };
+      const rel = k - deckAdvance(pos); return { angle: 0, z: -Math.max(rel, 0), lift: 0, opacity: c01(DEPTH + 1 - rel), flat: false };
+    };
+    const slots = [], slotK = [], dstate = { pos: 0 }, geo = { h: 200, gap: 44 };
+    for (let j = 0; j < POOL; j++) { const el = document.createElement('div'); el.className = 'td-card'; const im = document.createElement('img'); im.alt = ''; im.draggable = false; el.appendChild(im); scene.appendChild(el); slots.push({ el, im }); }
+    let lastFront = -1;
+    const deckPaint = () => {
+      const pos = dstate.pos, base = Math.floor(pos) - 2;
+      slots.forEach((sl, j) => {
+        const k = base + wrapN(j - base, POOL);
+        if (slotK[j] !== k) { slotK[j] = k; sl.im.src = cards[wrapN(k, nC)].src; }
+        const p = cardPose(k, pos);
+        sl.el.style.transform = `translate3d(0, ${-p.lift}px, ${p.z * geo.gap}px) rotateX(${p.angle}deg)`;
+        sl.el.style.opacity = p.opacity; sl.el.style.visibility = p.opacity > 0 ? 'visible' : 'hidden';
+        sl.el.style.zIndex = k + 1000;
+        sl.el.style.setProperty('--td-shade', p.flat ? 0.06 : (-p.angle / 90) * 0.06);
+      });
+      const fi = wrapN(Math.round(pos), nC);
+      if (fi !== lastFront) { lastFront = fi; const c = cards[fi]; cap.querySelector('b').textContent = c.t; cap.querySelector('span').textContent = c.k; cap.querySelector('a').href = c.f + '.html'; }
+    };
+    function deckFit() {
+      const W0 = deckEl.clientWidth, H0 = deckEl.clientHeight; if (!W0) return;
+      const h = Math.max(60, Math.min(W0 * (W0 < 420 ? 0.76 : 0.5) / ASPECT, H0 * 0.42, 560)), w = h * ASPECT, top = H0 / 2 - 0.62 * h - 44;
+      geo.h = h; geo.gap = 0.24 * h;
+      scene.style.perspective = `${6 * h}px`; scene.style.perspectiveOrigin = `50% ${top - 1.66 * h}px`;
+      deckEl.style.setProperty('--td-w', w + 'px'); deckEl.style.setProperty('--td-h', h + 'px'); deckEl.style.setProperty('--td-top', top + 'px');
+      deckPaint();
+    }
+    new ResizeObserver(deckFit).observe(deckEl);
+    {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let target = 0, running = false, idle, last = 0, dragged = false, drag = null;
+      const follow = (now) => {
+        const dt = Math.min(0.05, (now - last) / 1000); last = now;
+        dstate.pos += (target - dstate.pos) * (1 - Math.exp(-dt * 9));
+        if (Math.abs(target - dstate.pos) < 2e-3) { dstate.pos = target; running = false; } else requestAnimationFrame(follow);
+        deckPaint();
+      };
+      const push = (to) => {
+        target = Math.max(Math.round(dstate.pos) - 3, Math.min(Math.round(dstate.pos) + 3, to));
+        if (reduce) { dstate.pos = target; deckPaint(); } else if (!running) { running = true; last = performance.now(); requestAnimationFrame(follow); }
+      };
+      const settle = (bias = 0) => push(bias > 0 ? Math.floor(target + 0.7) : bias < 0 ? Math.ceil(target - 0.7) : Math.round(target));
+      const step = (dir) => push(Math.round(target) + dir);
+      deckEl.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const d = (Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY) * (e.deltaMode === 1 ? 16 : 1);
+        push(target + d / PER_CARD); clearTimeout(idle); idle = setTimeout(() => settle(Math.sign(d)), 140);
+      }, { passive: false });
+      deckEl.addEventListener('pointerdown', (e) => { if (e.button !== 0 || e.target.closest('.td-cap a')) return; drag = { id: e.pointerId, y: e.clientY, travel: 0, last: 0 }; dragged = false; clearTimeout(idle); });
+      deckEl.addEventListener('pointermove', (e) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        const dy = drag.y - e.clientY; drag.y = e.clientY; drag.travel += Math.abs(dy); if (dy) drag.last = Math.sign(dy);
+        if (drag.travel > 6 && !dragged) { dragged = true; deckEl.setPointerCapture(e.pointerId); }
+        if (dragged && !reduce) push(target + dy / (geo.h * 1.1));
+      });
+      const up = (e) => { if (!drag || e.pointerId !== drag.id) return; if (dragged) settle(drag.last); drag = null; };
+      deckEl.addEventListener('pointerup', up); deckEl.addEventListener('pointercancel', up);
+      deckEl.addEventListener('click', (e) => { if (!dragged && !e.target.closest('.td-cap a')) step(1); });
+      deckEl.addEventListener('keydown', (e) => {
+        if (['ArrowRight', 'ArrowDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); step(1); } else if (['ArrowLeft', 'ArrowUp'].includes(e.key)) { e.preventDefault(); step(-1); }
+      });
+    }
     let view = 'shelves';
     const render = () => {
       const term = q.value.trim().toLowerCase();
-      shelvesEl.hidden = view !== 'shelves' || !!term; all.hidden = view !== 'all' && !term;
+      shelvesEl.hidden = view !== 'shelves' || !!term; all.hidden = view !== 'all' && !term; deckEl.hidden = view !== 'deck' || !!term; if (!deckEl.hidden) requestAnimationFrame(deckFit);
       let n = 0;
       all.querySelectorAll('.book').forEach((b) => { const ok = !term || b.dataset.t.includes(term); b.hidden = !ok; if (ok) n++; });
       empty.hidden = !term || n > 0;
