@@ -653,7 +653,7 @@
       </div>
 
       <div class="bar lib-only">
-        <div class="tabs"><span class="pill"></span><button class="on" data-v="shelves">Shelves</button><button data-v="all">All designs</button><button data-v="deck">Deck</button></div>
+        <div class="tabs"><span class="pill"></span><button class="on" data-v="shelves">Shelves</button><button data-v="all">All designs</button><button data-v="deck">Deck</button><button data-v="portfolio">Portfolio</button></div>
         <label class="search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
           <input id="q" placeholder="Search in My library" />
@@ -663,6 +663,7 @@
       <div class="lib-only">
         <div id="shelves"></div>
         <div id="all" class="grid" hidden></div>
+        <div id="portfolio" class="grid" hidden></div>
         <div id="deck" class="deck" hidden role="region" aria-roledescription="carousel" aria-label="Design deck" tabindex="0"><div class="td-scene"></div><div class="td-cap"><b></b><span></span><a href="#">Open design →</a></div></div>
         <div id="empty" class="empty" hidden>No designs match that search.</div>
       </div>
@@ -883,7 +884,7 @@
       ['flowpath-hero','Products People Understand','#000000,#ff7a3d','Dropdown','hero'],['measured-hero','Manisha, Measured','#0a0a0a,#334155','Mask','hero'],
       ['mentality-hero','Hi, I\'m Manisha','#0b0a14,#ff3fa4','Light','hero'],['fearless-vision','Design That Feels Human','#ffffff,#C6F135','Motion','character'],
       ['mainframe-aria','Hey, I\'m Manisha','#f2f2f2,#111','Scrub','hero'],['vortxlab','Moonlit Journey','#111,#4b5563','Clip-path','scroll'],['goldfish-hero','Calm & Curious','#000,#b45309','Video','hero'],['garden-hero','Research x Design','#04120f,#2f6d4f','Video','hero'],['meadow-hero','Room to Breathe','#0e1a0f,#b7e07a','Video','hero'],['scene-hero','Set The Scene','#0b1a14,#ffd9a0','Video','hero'],['petals-hero','Made to Last','#2a1a08,#d9453d','Video','hero'],['scroll-hero','Part The Words','#ece5d3,#34404d','Cursor','character'],['robot-hero','Meet My Robot','#0b0b11,#7c4dff','3D','character'],['character-hero','Hi, I\'m Manisha','#0d1540,#ffb066','Cursor','character'],
-      ['stellar-ai','Calm Products','#fff,#a1a1aa','Tabs','hero'],['asme-landing','Design With Calm','#000,#3a3a46','Scroll','hero'],
+      ['portfolio-spray','Spray My Work','#e3231c,#f1f0ec','Physics','portfolio'],['stellar-ai','Calm Products','#fff,#a1a1aa','Tabs','hero'],['asme-landing','Design With Calm','#000,#3a3a46','Scroll','hero'],
       ['novaai-scroll','Clear. Human.','#0a0a0a,#5a4a2a','Scrub','scroll'],['synapsex','Mind And Pixels','#000,#3b2f45','Scramble','character'],
       ['prmpt-archive','Turn The Page','#000,#444','Grid','character'],
       
@@ -926,6 +927,7 @@
       </section>`).join('');
     document.getElementById('sShelves').textContent = SHELVES.length;
     document.getElementById('sHero').textContent = SHELVES[0].items.length + SHELVES[1].items.length;
+    document.getElementById('portfolio').innerHTML = T.filter((d) => d.c === 'portfolio').map((d) => cover(d).replace(/<\/a>$/, `<p>${d.t}<br><small>${d.k}</small></p></a>`)).join('');
     document.getElementById('all').innerHTML = T.map((d) => cover(d).replace(/<\/a>$/, `<p>${d.t}<br><small>${d.k}</small></p></a>`)).join('');
 
     // continue card
@@ -1010,6 +1012,7 @@
     const pill = document.querySelector('.tabs .pill'), tabBtns = [...document.querySelectorAll('.tabs button')];
     const movePill = () => { const b = tabBtns.find((x) => x.classList.contains('on')); pill.style.width = b.offsetWidth + 'px'; pill.style.transform = `translateX(${b.offsetLeft - 3}px)`; };
     // ---- Deck view: standing cards tip forward one by one (port of Tumble Deck Showcase, vanilla JS) ----
+    const portEl = document.getElementById('portfolio');
     const deckEl = document.getElementById('deck'), scene = deckEl.querySelector('.td-scene'), cap = deckEl.querySelector('.td-cap');
     const cards = T.map((d) => ({ src: 'posters/' + d.f + '.jpg', t: d.t, k: d.k, f: d.f }));
     const nC = cards.length, DEPTH = 5, POOL = DEPTH + 5, ASPECT = 0.75, PER_CARD = 240;
@@ -1085,7 +1088,7 @@
     let view = 'shelves';
     const render = () => {
       const term = q.value.trim().toLowerCase();
-      shelvesEl.hidden = view !== 'shelves' || !!term; all.hidden = view !== 'all' && !term; deckEl.hidden = view !== 'deck' || !!term; if (!deckEl.hidden) requestAnimationFrame(deckFit);
+      shelvesEl.hidden = view !== 'shelves' || !!term; all.hidden = view !== 'all' && !term; deckEl.hidden = view !== 'deck' || !!term; portEl.hidden = view !== 'portfolio' || !!term; if (!deckEl.hidden) requestAnimationFrame(deckFit);
       let n = 0;
       all.querySelectorAll('.book').forEach((b) => { const ok = !term || b.dataset.t.includes(term); b.hidden = !ok; if (ok) n++; });
       empty.hidden = !term || n > 0;
