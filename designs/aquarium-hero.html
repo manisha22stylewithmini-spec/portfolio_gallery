@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
+  if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manisha Baroliya — Product designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+  <style>
+    :root { --deep: #0b4757; --ink: #06303b; --soft: #2c6878; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #7fd3e3; }
+    body { font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased; color: var(--ink); }
+    a { color: inherit; text-decoration: none; }
+    .hero { position: relative; min-height: 100vh; min-height: 100svh; overflow: hidden; user-select: none; background: #7fd3e3; }
+    canvas#tank { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; display: block; }
+
+    header.bar { position: relative; z-index: 5; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px clamp(18px, 4vw, 56px); }
+    .bar img { height: 58px; width: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0,60,80,.18)); }
+    .bar nav { display: none; gap: 6px; padding: 5px; border-radius: 999px; background: rgba(255,255,255,.4); border: 1px solid rgba(255,255,255,.6); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+    .bar nav a { font: 500 13px 'Inter'; color: var(--deep); padding: 8px 16px; border-radius: 999px; transition: background .2s; }
+    .bar nav a:hover { background: rgba(255,255,255,.6); }
+    @media (min-width: 820px) { .bar nav { display: flex; position: absolute; left: 50%; transform: translateX(-50%); } }
+    .hello { font: 500 13px 'Inter'; color: #fff; background: var(--deep); padding: 11px 18px; border-radius: 999px; box-shadow: 0 10px 24px -12px rgba(0,60,80,.7); transition: transform .15s; }
+    .hello:hover { transform: translateY(-1px); }
+
+    .stage { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 90px 20px 70px; pointer-events: none; text-align: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px; font: 500 12px 'Inter'; color: var(--deep); background: rgba(255,255,255,.45); border: 1px solid rgba(255,255,255,.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    .eyebrow i { width: 7px; height: 7px; border-radius: 50%; background: #ff8022; box-shadow: 0 0 0 3px rgba(255,128,34,.25); }
+    h1 { margin: 18px 0 0; font-weight: 300; font-size: clamp(36px, 6.2vw, 76px); line-height: 1.02; letter-spacing: -.045em; color: var(--deep); text-shadow: 0 1px 0 rgba(255,255,255,.4); max-width: 13em; }
+    h1 em { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; letter-spacing: -.02em; }
+    .sub { margin: 14px 0 0; max-width: 34em; font-size: clamp(14px, 1.5vw, 16px); line-height: 1.5; color: rgba(11,71,87,.82); }
+    .msg { position: absolute; left: 50%; top: 0; max-width: 80%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 6px 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,.7); background: rgba(255,255,255,.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); font-size: 14px; color: var(--ink); box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 8px 20px -10px rgba(0,70,90,.6); pointer-events: none; animation: floatup 2.1s cubic-bezier(.3,.1,.4,1) forwards; }
+    @keyframes floatup { 0% { transform: translate(-50%, 0) scale(.6); opacity: 0; } 12% { opacity: 1; transform: translate(-50%, -18px) scale(1); } 80% { opacity: 1; } 100% { transform: translate(-50%, -150px) scale(1.15); opacity: 0; } }
+    .chips { pointer-events: auto; position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 26px; }
+    .chips button { position: relative; font: 500 13.5px 'Inter'; padding: 10px 16px !important; color: var(--deep); background: rgba(255,255,255,.35); border: 1px solid rgba(255,255,255,.6); padding: 7px 13px; border-radius: 999px; cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background .2s; }
+    .chips button:hover { background: rgba(255,255,255,.6); }
+    .reply { pointer-events: auto; margin: 14px 0 0; min-height: 22px; font-size: 14px; color: var(--deep); opacity: 0; transform: translateY(6px); transition: opacity .4s, transform .4s; }
+    .reply.on { opacity: 1; transform: none; }
+    .reply a { font-weight: 600; border-bottom: 1.5px solid currentColor; }
+    .hint { margin: 10px 0 0; font-size: 12.5px; color: rgba(11,71,87,.7); }
+    .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 60; font: 12px system-ui, sans-serif; color: #fff; padding: 6px 12px; border-radius: 999px; background: rgba(11,71,87,.75); }
+    .embed .back-link { display: none !important; }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+  <section class="hero" id="hero">
+    <canvas id="tank" aria-hidden="true"></canvas>
+    <header class="bar">
+      <a href="#" aria-label="Manisha Baroliya"><img src="assets/logo-nobg-light.png" alt="Manisha Baroliya" width="900" height="427"></a>
+      <nav>
+        <a href="shelf-library.html#library" target="_top">Work</a>
+        <a href="halcyon-hero.html" target="_top">About</a>
+        <a href="clothing-rail.html" target="_top">Skills</a>
+        <a href="shelf-library.html#social" target="_top">Social</a>
+      </nav>
+      <a class="hello" href="shelf-library.html#social" target="_top">Say hello</a>
+    </header>
+
+    <div class="stage">
+      <span class="eyebrow"><i></i>Open to new projects</span>
+      <h1 id="title">Hi, I’m <em>Manisha.</em> I design calm products people understand.</h1>
+      <p class="sub">Product designer and UX researcher with a psychology background. Pick a question, and watch the fish come and listen.</p>
+      <div class="chips" id="chips">
+        <button type="button">How do you research?</button>
+        <button type="button">Show me 3D work</button>
+        <button type="button">Can I hire you?</button>
+      </div>
+      <p class="reply" id="reply" aria-live="polite"></p>
+      <p class="hint">Move through the water, or tap it.</p>
+    </div>
+  </section>
+
+  <script>
+  (function () {
+    // Pixel aquarium: the water, light and fish are drawn at a quarter resolution and scaled up without smoothing.
+    // Fish school with their own kind, avoid the walls, flee the pointer, gather round the caret while you type,
+    // and all swim into the box when you send.
+    var PX = 4;
+    var clamp = function (v, a, b) { a = a === undefined ? 0 : a; b = b === undefined ? 1 : b; return Math.min(b, Math.max(a, v)); };
+    var BAYER = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5].map(function (v) { return v / 16 - 0.5; });
+    var SPECIES = [
+      { body: [255, 128, 34], belly: [255, 170, 80], fin: [214, 82, 16], stripe: [255, 255, 255], len: 13, tall: 0.5, school: 3, speed: 1 },
+      { body: [36, 92, 220], belly: [70, 140, 240], fin: [255, 214, 40], len: 14, tall: 0.55, school: 4, speed: 1.05 },
+      { body: [255, 214, 32], belly: [255, 236, 110], fin: [240, 180, 0], len: 10, tall: 0.62, school: 4, speed: 1.1 },
+      { body: [170, 206, 228], belly: [222, 240, 250], fin: [120, 160, 190], len: 7, tall: 0.38, school: 10, speed: 1.35 }
+    ];
+    var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var hero = document.getElementById('hero'), cv = document.getElementById('tank'), ctx = cv.getContext('2d');
+    var reply = document.getElementById('reply');
+    var FISH = innerWidth < 700 ? 22 : 34;
+
+    function spawnFish(n, W, H) {
+      var out = [], s = 0;
+      while (out.length < n) {
+        var sp = SPECIES[s % SPECIES.length], cx = 40 + Math.random() * (W - 80), cy = 40 + Math.random() * (H - 90), dir = Math.random() < 0.5 ? -1 : 1;
+        for (var k = 0; k < sp.school && out.length < n; k++)
+          out.push({ x: cx + (Math.random() - 0.5) * 60, y: cy + (Math.random() - 0.5) * 40, vx: dir * (0.6 + Math.random() * 0.5), vy: (Math.random() - 0.5) * 0.3, s: s % SPECIES.length, size: 0.85 + Math.random() * 0.3, phase: Math.random() * 6.28, dart: 0, gone: 0 });
+        s++;
+      }
+      return out;
+    }
+
+    function paintFish(buf, w, h, f) {
+      var sp = SPECIES[f.s], L = sp.len * f.size, T = L * sp.tall, cx = f.x / PX, cy = f.y / PX;
+      var facing = f.vx >= 0 ? 1 : -1;
+      var tilt = clamp(Math.atan2(f.vy, Math.abs(f.vx) + 0.001), -0.6, 0.6) * facing;
+      var ca = Math.cos(-tilt), sa = Math.sin(-tilt), wag = Math.sin(f.phase) * 0.35, R = Math.ceil(L * 0.75), alpha = 1 - f.gone;
+      if (alpha <= 0.02) return;
+      for (var py = Math.floor(cy - R); py <= cy + R; py++) {
+        if (py < 0 || py >= h) continue;
+        for (var px = Math.floor(cx - R); px <= cx + R; px++) {
+          if (px < 0 || px >= w) continue;
+          var dx = (px + 0.5 - cx) * facing, dy = py + 0.5 - cy;
+          var u = dx * ca - dy * sa * facing, v = dx * sa * facing + dy * ca;
+          var col = null, bu = u / (L * 0.5), bv = v / (T * 0.5);
+          if (bu * bu + bv * bv <= 1) {
+            col = v > T * 0.12 ? sp.belly : v < -T * 0.22 ? sp.fin : sp.body;
+            if (sp.stripe && (Math.abs(u - L * 0.12) < 0.9 || Math.abs(u + L * 0.18) < 0.8)) col = sp.stripe;
+            if (Math.abs(u - L * 0.3) < 0.75 && Math.abs(v + T * 0.08) < 0.75) col = [18, 22, 30];
+          } else {
+            var tu = -u - L * 0.42, tv = v - wag * tu;
+            if (tu > 0 && tu < L * 0.32 && Math.abs(tv) < tu * 0.95 + 0.4) col = sp.fin;
+            else if (u > -L * 0.15 && u < L * 0.15 && v < -T * 0.45 && v > -T * 0.45 - (L * 0.15 - Math.abs(u)) * 0.9) col = sp.fin;
+          }
+          if (!col) continue;
+          var i = (py * w + px) * 4;
+          buf[i] += (col[0] - buf[i]) * alpha; buf[i + 1] += (col[1] - buf[i + 1]) * alpha; buf[i + 2] += (col[2] - buf[i + 2]) * alpha;
+        }
+      }
+    }
+
+    var w = { fish: [], bubbles: [], ripples: [], ptr: { x: -999, y: -999, on: false }, caret: { x: 0, y: 0, t: -99999 }, gulp: { x: 0, y: 0, t: -99999 }, W: 0, H: 0 };
+    var low = document.createElement('canvas'), lctx = low.getContext('2d', { willReadFrequently: true }), img = null;
+    function size() {
+      var dpr = Math.min(2, devicePixelRatio || 1);
+      if (!hero.clientWidth || !hero.clientHeight) return; // not laid out yet; the ResizeObserver calls again
+      w.W = hero.clientWidth; w.H = hero.clientHeight;
+      cv.width = Math.round(w.W * dpr); cv.height = Math.round(w.H * dpr);
+      low.width = Math.ceil(w.W / PX); low.height = Math.ceil(w.H / PX);
+      img = lctx.createImageData(low.width, low.height);
+      if (!w.fish.length) w.fish = spawnFish(FISH, w.W, w.H);
+    }
+    size(); new ResizeObserver(size).observe(hero);
+
+    function step(dt, now) {
+      var fish = w.fish, ptr = w.ptr, caret = w.caret, gulp = w.gulp, W = w.W, H = w.H;
+      var typing = now - caret.t < 1600, gulping = now - gulp.t < 1400, k = dt * 60;
+      for (var i = 0; i < fish.length; i++) {
+        var f = fish[i], sp = SPECIES[f.s], ax = 0, ay = 0, cx = 0, cy = 0, avx = 0, avy = 0, n = 0;
+        for (var j = 0; j < fish.length; j++) {
+          if (i === j) continue;
+          var o = fish[j], dx = o.x - f.x, dy = o.y - f.y, d2 = dx * dx + dy * dy, minD = (sp.len + SPECIES[o.s].len) * PX * 0.56;
+          if (d2 < minD * minD && d2 > 0.01) { var dd = Math.sqrt(d2); ax -= (dx / dd) * (minD - dd) * 0.012; ay -= (dy / dd) * (minD - dd) * 0.012; }
+          if (o.s === f.s && d2 < 4900) { cx += o.x; cy += o.y; avx += o.vx; avy += o.vy; n++; }
+        }
+        if (n) { ax += (cx / n - f.x) * 0.0005 + (avx / n - f.vx) * 0.022; ay += (cy / n - f.y) * 0.0005 + (avy / n - f.vy) * 0.022; }
+        var ts = now / 1000, hx = W * (0.5 + 0.38 * Math.sin(ts * 0.07 + f.s * 1.9)), hy = H * (0.46 + 0.28 * Math.cos(ts * 0.09 + f.s * 2.7));
+        ax += (hx - f.x) * 0.00035; ay += (hy - f.y) * 0.00035;
+        f.phase += (0.18 + Math.hypot(f.vx, f.vy) * 0.12) * k;
+        ax += Math.sin(now * 0.0007 + i * 1.7) * 0.012; ay += Math.cos(now * 0.0009 + i * 2.3) * 0.008;
+        var m = 36;
+        if (f.x < m) ax += (m - f.x) * 0.006;
+        if (f.x > W - m) ax -= (f.x - (W - m)) * 0.006;
+        if (f.y < m + 60) ay += (m + 60 - f.y) * 0.006; // keep clear of the header
+        if (f.y > H - m - 30) ay -= (f.y - (H - m - 30)) * 0.008;
+        if (ptr.on && !gulping) {
+          var pdx = f.x - ptr.x, pdy = f.y - ptr.y, pd = Math.hypot(pdx, pdy);
+          if (pd < 110 && pd > 0.1) { var p = (110 - pd) / 110; ax += (pdx / pd) * p * 0.6; ay += (pdy / pd) * p * 0.6; f.dart = Math.max(f.dart, p); }
+        }
+        for (var r = 0; r < w.ripples.length; r++) {
+          var rp = w.ripples[r], age = (now - rp.t0) / 1000;
+          if (age > 0.6) continue;
+          var rdx = f.x - rp.x, rdy = f.y - rp.y, rd = Math.hypot(rdx, rdy) || 1;
+          if (rd < 160) { ax += (rdx / rd) * 0.5 * (1 - rd / 160); ay += (rdy / rd) * 0.5 * (1 - rd / 160); f.dart = 1; }
+        }
+        if (typing && !gulping) {
+          var tdx = caret.x - f.x, tdy = caret.y - f.y, td = Math.hypot(tdx, tdy) || 1, want = 46 + (i % 5) * 9;
+          var pull = (td - want) * 0.0016 * (1 - (now - caret.t) / 1600);
+          ax += (tdx / td) * pull; ay += (tdy / td) * pull;
+        }
+        if (gulping) {
+          var gdx = gulp.x - f.x, gdy = gulp.y - f.y, gd = Math.hypot(gdx, gdy) || 1;
+          ax += (gdx / gd) * 0.32; ay += (gdy / gd) * 0.32;
+          if (gd < 26) f.gone = Math.min(1, f.gone + 0.12 * k);
+        } else if (f.gone > 0) {
+          f.gone = Math.max(0, f.gone - 0.03 * k);
+          if (f.gone > 0.9) { f.x = Math.random() < 0.5 ? -20 : W + 20; f.y = 110 + Math.random() * (H - 200); f.vx = f.x < 0 ? 1 : -1; }
+        }
+        f.dart = Math.max(0, f.dart - 0.02 * k);
+        var maxV = (reduced ? 0.6 : 1.25) * sp.speed * (1 + f.dart * 2.2 + (gulping ? 1.6 : 0));
+        f.vx += ax * k; f.vy += ay * k;
+        var v = Math.hypot(f.vx, f.vy), minV = 0.35 * sp.speed;
+        if (v > maxV) { f.vx *= maxV / v; f.vy *= maxV / v; } else if (v < minV) { f.vx *= minV / Math.max(v, 0.01); f.vy *= minV / Math.max(v, 0.01); }
+        f.vy *= 0.985; f.x += f.vx * k; f.y += f.vy * k;
+      }
+      if (Math.random() < 0.05 * k) w.bubbles.push({ x: W * (0.06 + Math.random() * 0.88), y: H - 20, r: 1 + Math.round(Math.random()), v: 0.35 + Math.random() * 0.4, wob: Math.random() * 6 });
+      w.bubbles = w.bubbles.filter(function (b) { b.y -= b.v * k; b.wob += 0.08 * k; return b.y > -10; });
+      w.ripples = w.ripples.filter(function (rp) { return now - rp.t0 < 1200; });
+    }
+
+    var t0 = performance.now();
+    function draw(now) {
+      if (!img) return;
+      var lw = low.width, lh = low.height, d = img.data, t = (now - t0) / 1000, x, y, i;
+      for (y = 0; y < lh; y++) {
+        var gy = y / lh;
+        for (x = 0; x < lw; x++) {
+          i = (y * lw + x) * 4;
+          var c1 = Math.sin(x * 0.21 + t * 0.9 + Math.sin(y * 0.17 + t * 0.6) * 1.6) + Math.sin(y * 0.19 - t * 0.7 + Math.sin(x * 0.13 - t * 0.5) * 1.4);
+          var caustic = c1 > 1.25 ? (reduced ? 0.6 : 1) * (1 - gy * 0.7) : 0;
+          var rays = Math.pow(Math.max(0, Math.sin((x - y * 0.55) * 0.09 + t * 0.15)), 6) * (1 - gy) * 0.5;
+          var g = clamp(gy + BAYER[(y & 3) * 4 + (x & 3)] * 0.09), level = Math.round(g * 6) / 6;
+          var rr = 168 - 120 * level, gg = 236 - 62 * level, bb = 242 - 46 * level, glow = caustic * 0.22 + rays * 0.35;
+          d[i] = rr + (255 - rr) * glow; d[i + 1] = gg + (255 - gg) * glow; d[i + 2] = bb + (255 - bb) * glow; d[i + 3] = 255;
+        }
+      }
+      var sandTop = lh - 6;
+      for (y = sandTop; y < lh; y++) for (x = 0; x < lw; x++) {
+        i = (y * lw + x) * 4;
+        var bump = Math.sin(x * 0.3) * 0.8 + Math.sin(x * 0.11) * 1.4;
+        if (y < sandTop + 2 + bump) continue;
+        var shade = ((x * 7 + y * 13) % 5 === 0 ? 18 : 0) + (y - sandTop) * 3;
+        d[i] = 236 - shade; d[i + 1] = 214 - shade; d[i + 2] = 170 - shade;
+      }
+      for (var s = 0; s < lw; s += 11) {
+        var base = s + ((s * 7) % 5), tall = 8 + ((s * 13) % 9);
+        for (var kk = 0; kk < tall; kk++) {
+          x = Math.round(base + Math.sin(t * 1.3 + s + kk * 0.35) * (kk * 0.12)); y = sandTop - kk + 2;
+          if (x < 0 || x >= lw || y < 0) continue;
+          i = (y * lw + x) * 4; var dark = kk % 3 === 0;
+          d[i] = dark ? 34 : 52; d[i + 1] = dark ? 130 : 160; d[i + 2] = dark ? 96 : 110;
+        }
+      }
+      w.bubbles.forEach(function (b) {
+        var bx = Math.round((b.x + Math.sin(b.wob) * 3) / PX), by = Math.round(b.y / PX);
+        for (var yy = -b.r; yy <= b.r; yy++) for (var xx = -b.r; xx <= b.r; xx++) {
+          var X = bx + xx, Y = by + yy;
+          if (X < 0 || Y < 0 || X >= lw || Y >= lh) continue;
+          var r2 = xx * xx + yy * yy;
+          if (r2 > b.r * b.r + 0.5) continue;
+          var j = (Y * lw + X) * 4, kq = (r2 >= b.r * b.r - 0.5 || b.r === 1) ? 0.75 : 0.25;
+          d[j] += (255 - d[j]) * kq; d[j + 1] += (255 - d[j + 1]) * kq; d[j + 2] += (255 - d[j + 2]) * kq;
+        }
+      });
+      w.ripples.forEach(function (rp) {
+        var age = (now - rp.t0) / 1000, rad = (age * 140) / PX, a = 0.6 * (1 - age / 1.2), cx = rp.x / PX, cy = rp.y / PX, steps = Math.max(12, Math.round(rad * 6));
+        for (var q = 0; q < steps; q++) {
+          var ang = (q / steps) * Math.PI * 2, X = Math.round(cx + Math.cos(ang) * rad), Y = Math.round(cy + Math.sin(ang) * rad * 0.8);
+          if (X < 0 || Y < 0 || X >= lw || Y >= lh) continue;
+          var j = (Y * lw + X) * 4;
+          d[j] += (255 - d[j]) * a; d[j + 1] += (255 - d[j + 1]) * a; d[j + 2] += (255 - d[j + 2]) * a;
+        }
+      });
+      w.fish.forEach(function (f) { paintFish(d, lw, lh, f); });
+      lctx.putImageData(img, 0, 0);
+      ctx.imageSmoothingEnabled = false;
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      ctx.drawImage(low, 0, 0, lw * PX * (cv.width / w.W), lh * PX * (cv.height / w.H));
+    }
+
+    var visible = true;
+    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }, { threshold: 0.05 }).observe(hero);
+    var last = performance.now();
+    function frame(now) {
+      var dt = Math.min(0.05, (now - last) / 1000); last = now;
+      if (visible && !document.hidden) { step(dt, now); draw(now); }
+      requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+
+    // the pointer in the water
+    function local(e) { var b = hero.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; }
+    hero.addEventListener('pointermove', function (e) { var p = local(e); w.ptr.x = p.x; w.ptr.y = p.y; w.ptr.on = true; });
+    hero.addEventListener('pointerleave', function () { w.ptr.on = false; });
+    hero.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('form, a, button, input')) return;
+      var p = local(e); w.ripples.push({ x: p.x, y: p.y, t0: performance.now() });
+    });
+
+    // a question chip: the fish gather round it, a bubble rises, then they swim into it
+    function at(el) { var r = el.getBoundingClientRect(), b = hero.getBoundingClientRect(); return { x: r.left - b.left + r.width / 2, y: r.top - b.top + r.height / 2 }; }
+    function gather(el) {
+      var c = at(el); w.caret = { x: c.x, y: c.y, t: performance.now() };
+      w.bubbles.push({ x: c.x + (Math.random() - 0.5) * 20, y: c.y - 14, r: 1 + Math.round(Math.random()), v: 0.5 + Math.random() * 0.4, wob: Math.random() * 6 });
+    }
+    // a small answer, pointing to the right corner of the portfolio
+    var ANSWERS = [
+      [/research|psycholog|user|interview|test/i, 'I start with people: interviews, testing and a psychology lens.', 'measured-hero.html', 'See my research hero'],
+      [/3d|robot|three|motion|anim/i, 'I love motion and 3D. Meet my robot.', 'robot-hero.html', 'Open it'],
+      [/hire|contact|email|work with|available|freelance|job/i, 'Yes, I’m open to new projects. Let’s talk.', 'shelf-library.html#social', 'Say hello'],
+      [/skill|tool|figma|stack/i, 'Figma, research, design systems and prototyping.', 'clothing-rail.html', 'See my skills'],
+      [/about|who|background|you/i, 'Product designer, 3+ years, 20+ live designs, psychology at heart.', 'halcyon-hero.html', 'More about me']
+    ];
+    function answer(text) {
+      var a = ANSWERS.find(function (x) { return x[0].test(text); }) || [null, 'Good question. The answer is somewhere in my library of 30 designs.', 'shelf-library.html#library', 'Browse my work'];
+      reply.classList.remove('on');
+      setTimeout(function () { reply.innerHTML = a[1] + ' <a href="' + a[2] + '" target="_top">' + a[3] + ' →</a>'; reply.classList.add('on'); }, 900);
+    }
+
+    var chips = document.getElementById('chips'), busy = false;
+    chips.addEventListener('pointerover', function (e) { var bt = e.target.closest('button'); if (bt) gather(bt); });
+    chips.addEventListener('click', function (e) {
+      var bt = e.target.closest('button'); if (!bt || busy) return; busy = true;
+      var n = 0; (function tick() { gather(bt); if (++n < 8) setTimeout(tick, 70); })();
+      setTimeout(function () {
+        var c = at(bt); w.gulp = { x: c.x, y: c.y, t: performance.now() };
+        var m = document.createElement('div'); m.className = 'msg'; m.textContent = bt.textContent;
+        m.style.left = (bt.offsetLeft + bt.offsetWidth / 2) + 'px'; chips.appendChild(m); setTimeout(function () { m.remove(); }, 2200);
+        answer(bt.textContent); busy = false;
+      }, 650);
+    });
+  })();
+  </script>
+  <script data-embed-hook>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed")</script>
+</body>
+</html>
