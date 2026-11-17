@@ -117,9 +117,6 @@
     <div class="meta"><span>Manisha Baroliya · <b>UX/UI &amp; product designer</b></span><span>3+ years · <b>20+ live designs</b></span></div>
     <h1 id="h1"><span id="h1t">PULL GENTLY<span class="dot">.</span></span></h1>
 
-    <div class="kana l" aria-hidden="true">ひとで</div>
-    <div class="kana r" aria-hidden="true">きらきら</div>
-    <div class="stamp" id="stamp" aria-hidden="true"><i>海</i><b>ほし</b></div>
 
     <canvas id="cv"></canvas>
     <div id="stage" tabindex="0" role="img" aria-label="Hoshi the starfish. Drag one of his arms to stretch it, or focus and hold the arrow keys."></div>
@@ -161,7 +158,7 @@
   const POOL = 5;
   const $ = id => document.getElementById(id);
   const hero = $('hero'), cv = $('cv'), ctx = cv.getContext('2d'), stage = $('stage');
-  const hint = $('hint'), tip = $('tip'), stamp = $('stamp'), h1 = $('h1');
+  const hint = $('hint'), tip = $('tip'), h1 = $('h1');
   const moodEl = $('mood'), cmEl = $('cm'), fillEl = $('fill'), bestEl = $('bestm'), flavEl = $('flav');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -171,7 +168,7 @@
 
   // ---------- state ----------
   let W = 0, H = 0, dpr = 1, R = 100, cx = 0, cy = 0, Lmax = 100;
-  const N = 240, ARMS = 5, ARM_N = N / ARMS, YS = 0.9;   // YS: slight tilt so he lies on the sand
+  const N = 240, ARMS = 5, ARM_N = N / ARMS, YS = 0.62;   // YS: he lies on the plate, seen at an angle
   let rest = [], ang = [], armOf = [], gOf = [];
   const off = [], vel = [], tgt = [];
   for (let i = 0; i < N; i++) { off.push({x:0,y:0}); vel.push({x:0,y:0}); tgt.push({x:0,y:0}); }
@@ -183,6 +180,7 @@
   let look = {x:0, y:0};
   let clock = performance.now(), last = clock;
   let snapUntil = 0, wobbleUntil = 0, giggleUntil = 0, wiggleUntil = 0, pulledThisGrab = 0;
+  let dizzyUntil = 0, winkUntil = 0, loveUntil = 0, proudUntil = 0, idleAt = performance.now(), hoverSince = 0;
   const pool = [];
 
   // freckles fixed to the body: (vertex, how far out along it)
@@ -197,11 +195,17 @@
     cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
     fitTitle();
     const titleBottom = h1.offsetTop + h1.offsetHeight;
-    if (W < 760) { R = Math.min(W*0.46, H*0.26); cy = titleBottom + R*1.15; }
+    if (W < 760) { R = Math.min((W - 20)/2.66, H*0.24); cy = titleBottom + R*1.15; }
     else {
-      R = Math.min(W*0.2, H*0.38, 360, (H - titleBottom - 12)/1.95);
-      cy = Math.max(titleBottom + R*1.0, H*0.58);
-      if (cy + R*0.95 > H) cy = H - R*0.95;
+      R = Math.min(W*0.2, H*0.4, 360, (H - titleBottom - 16)/1.62);
+      cy = Math.max(titleBottom + R*0.72, H*0.58);
+      if (cy + R*0.9 > H) cy = H - R*0.9;
+      // on narrower screens keep the plate above the side panels instead of under them
+      const pan = document.querySelector('.panel'), panTop = pan.offsetTop, panLeft = pan.offsetLeft;
+      if (W/2 + 1.32*R > panLeft - 8) {
+        R = Math.min(R, (panTop - 10 - titleBottom)/1.52);
+        cy = Math.min(Math.max(titleBottom + R*0.72, cy), panTop - 10 - R*0.8);
+      }
     }
     cx = W/2; Lmax = R*1.05;
     rest = []; ang = []; armOf = []; gOf = [];
@@ -214,10 +218,9 @@
       armOf.push(Math.round(k/ARM_N) % ARMS); gOf.push(g);
     }
     for (let i = 0; i < N; i++) { off[i].x = off[i].y = vel[i].x = vel[i].y = 0; }
-    Object.assign(stage.style, { left: (cx - R*1.3) + 'px', top: (cy - R*1.2) + 'px', width: (R*2.6) + 'px', height: (R*2.3) + 'px' });
+    Object.assign(stage.style, { left: (cx - R*1.35) + 'px', top: (cy - R*0.95) + 'px', width: (R*2.7) + 'px', height: (R*1.9) + 'px' });
     hero.style.setProperty('--gy', cy + 'px');
-    stamp.style.left = Math.max(40, cx - R*1.3) + 'px'; stamp.style.top = (cy - R*0.75) + 'px';
-    hint.style.left = Math.min(W - 130, cx + R*0.7) + 'px'; hint.style.top = Math.max(titleBottom + 8, cy - R*1.12) + 'px';
+    hint.style.left = Math.min(W - 130, cx + R*0.7) + 'px'; hint.style.top = Math.max(titleBottom + 8, cy - R*0.85) + 'px';
     return true;
   }
   function fitTitle() {
@@ -275,11 +278,12 @@
   stage.addEventListener('pointermove', e => {
     const p = local(e); look = p;
     if (grab.on && !grab.kb && e.pointerId === grab.id) { grab.x = p.x; grab.y = p.y; return; }
-    hover = inBody(p.x, p.y);
+    const was = hover; hover = inBody(p.x, p.y); if (hover && !was) hoverSince = clock;
     stage.style.cursor = hover ? 'grab' : 'default';
   });
   stage.addEventListener('pointerleave', () => { if (!grab.on) hover = false; });
-  hero.addEventListener('pointermove', e => { look = local(e); });
+  hero.addEventListener('pointermove', e => { look = local(e); idleAt = clock; });
+  ['pointerdown', 'keydown', 'click'].forEach(ev => addEventListener(ev, () => { idleAt = clock; }, true));
   const end = e => { if (grab.on && !grab.kb && (!e || e.pointerId === grab.id)) release(false); };
   stage.addEventListener('pointerup', end);
   stage.addEventListener('pointercancel', end);
@@ -300,7 +304,7 @@
     if (!grab.on) return;
     grab.on = false; grab.kb = false;
     stage.style.cursor = hover ? 'grab' : 'default';
-    if (snapped) { snapUntil = clock + 1400; splash(22); }
+    if (snapped) { snapUntil = clock + 700; dizzyUntil = clock + 2300; splash(22); }
     else if (pulledThisGrab > 2) { wobbleUntil = clock + 1500; splash(9); }
     else giggleUntil = clock + 1100;
   }
@@ -331,7 +335,7 @@
     document.documentElement.style.setProperty('--acc', f.acc); hero.style.setProperty('--glow', f.body);
     [...swEl.children].forEach((b, j) => b.setAttribute('aria-pressed', j === i));
     flavEl.innerHTML = `${f.deep}<em>${f.jp}</em><span>· ${f.name} Hoshi</span>`;
-    if (!quiet) { bubbles(26); giggleUntil = clock + 900; }
+    if (!quiet) { bubbles(26); winkUntil = clock + 1300; }
   }
   const boxEl = $('box'), build = $('build'), topBox = $('topBox');
   function renderPool() {
@@ -343,7 +347,8 @@
     if (pool.length >= POOL) { pool.length = 0; renderPool(); return; }
     pool.push(fl); renderPool();
     popText(pool.length >= POOL ? 'いっぱい!' : '+1', cx, cy - R*1.1);
-    bubbles(10); giggleUntil = clock + 900;
+    bubbles(10);
+    if (pool.length >= POOL) proudUntil = clock + 2000; else loveUntil = clock + 1400;
   }
   build.addEventListener('click', addToPool);
   swEl.addEventListener('click', renderPool);
@@ -424,12 +429,20 @@
     bodyC = mix(bodyC, hex(FL[fl].body), 0.07);
   }
 
+  let forced = null;   // test hook only
   function currentMood(t) {
+    if (forced) return forced;
     if (snapUntil > t) return 'ow';
+    if (dizzyUntil > t && !grab.on) return 'dizzy';
     if (grab.on) { const cm = toCm(L); return cm < 1 ? 'startled' : cm > 15 ? 'ow' : 'squished'; }
-    if (wiggleUntil > t) return 'wiggly';
+    if (wiggleUntil > t) return 'waving';
+    if (proudUntil > t) return 'proud';
+    if (loveUntil > t) return 'in love';
+    if (winkUntil > t) return 'cheeky';
     if (wobbleUntil > t) return 'wobbly';
-    if (giggleUntil > t || hover) return 'delighted';
+    if (giggleUntil > t) return 'delighted';
+    if (hover) return t - hoverSince > 2500 ? 'shy' : 'delighted';
+    if (t - idleAt > 9000) return 'sleepy';
     return 'chill';
   }
 
@@ -444,16 +457,25 @@
     const B = bodyC, deep = B.map(v => v*v/255*0.78), light = mix(B, [255,250,235], 0.45);
     const ccx = cx + ax, ccy = cy + ay;
 
-    // wet sand under him
-    ctx.save(); ctx.translate(cx, cy + R*0.12); ctx.scale(1, 0.62);
-    const ws = ctx.createRadialGradient(0, 0, R*0.3, 0, 0, R*1.8);
-    ws.addColorStop(0, 'rgba(150,115,75,.2)'); ws.addColorStop(1, 'rgba(150,115,75,0)');
-    ctx.fillStyle = ws; ctx.fillRect(-R*2, -R*2, R*4, R*4); ctx.restore();
-    // a few grains of sand
-    ctx.fillStyle = 'rgba(140,105,65,.22)';
-    for (let i = 0; i < 40; i++) { const a = i*2.399, d = R*(0.95 + (i%7)*0.12); ctx.beginPath(); ctx.arc(cx + Math.cos(a)*d*1.25, cy + R*0.1 + Math.sin(a)*d*0.55, 0.8 + (i%3)*0.5, 0, 7); ctx.fill(); }
-    // contact shadow
-    soft(R*0.1, 'rgba(90,55,25,.35)', () => { ctx.translate(R*0.04, R*0.09); ctx.fill(bodyPath); });
+    // the navy plate he lies on (same plate as Pon the mochi)
+    const px = cx, py = cy + 0.1*R, prx = 1.32*R, pry = 0.6*R;
+    soft(R*0.16, 'rgba(25,30,55,.33)', () => { ctx.beginPath(); ctx.ellipse(px, py + 0.16*R, prx*0.95, pry*0.85, 0, 0, 7); ctx.fill(); });
+    ctx.beginPath(); ctx.ellipse(px, py + 0.07*R, prx*0.97, pry*0.97, 0, 0, 7); ctx.fillStyle = '#1b2236'; ctx.fill();
+    let pg = ctx.createLinearGradient(0, py - pry, 0, py + pry);
+    pg.addColorStop(0, '#6b7b9e'); pg.addColorStop(.45, '#36425f'); pg.addColorStop(1, '#222b42');
+    ctx.beginPath(); ctx.ellipse(px, py, prx, pry, 0, 0, 7); ctx.fillStyle = pg; ctx.fill();
+    pg = ctx.createLinearGradient(0, py - pry*0.8, 0, py + pry*0.8);
+    pg.addColorStop(0, '#222a40'); pg.addColorStop(1, '#3d4a6a');
+    ctx.beginPath(); ctx.ellipse(px, py - 0.01*R, prx*0.84, pry*0.76, 0, 0, 7); ctx.fillStyle = pg; ctx.fill();
+    ctx.save(); ctx.lineCap = 'round';
+    ctx.strokeStyle = 'rgba(214,226,255,.6)'; ctx.lineWidth = Math.max(1.2, R*0.012);
+    ctx.beginPath(); ctx.ellipse(px, py, prx*0.995, pry*0.99, 0, Math.PI*0.12, Math.PI*0.88); ctx.stroke();
+    ctx.strokeStyle = 'rgba(214,226,255,.25)'; ctx.lineWidth = Math.max(1, R*0.006);
+    ctx.beginPath(); ctx.ellipse(px, py - 0.01*R, prx*0.84, pry*0.76, 0, Math.PI*1.1, Math.PI*1.9); ctx.stroke();
+    ctx.restore();
+    soft(R*0.06, 'rgba(255,255,255,.35)', () => { ctx.beginPath(); ctx.ellipse(px - prx*0.62, py - pry*0.4, prx*0.16, pry*0.12, -0.3, 0, 7); ctx.fill(); });
+    // his shadow on the plate
+    soft(R*0.09, 'rgba(8,12,28,.5)', () => { ctx.translate(R*0.03, R*0.07); ctx.fill(bodyPath); });
 
     // body base: lighter heart, deeper arm tips
     const bg = ctx.createRadialGradient(ccx, ccy, R*0.05, ccx, ccy, R*1.25);
@@ -517,62 +539,164 @@
     else tip.classList.remove('on');
   }
 
+  // every mood is a mix of eyes, mouth, brows, blush and a small extra
+  const FACES = {
+    chill:     { eyes:'round',  mouth:'smile',  blush:.4 },
+    delighted: { eyes:'happy',  mouth:'open',   blush:.6 },
+    shy:       { eyes:'down',   mouth:'wavy',   blush:.95, lines:true },
+    sleepy:    { eyes:'closed', mouth:'tiny',   blush:.35, extra:'zzz' },
+    startled:  { eyes:'big',    mouth:'o',      blush:.35, brows:'up' },
+    squished:  { eyes:'chev',   mouth:'o',      blush:.6, brows:'worried', lines:true, extra:'sweat' },
+    ow:        { eyes:'chev',   mouth:'bigO',   blush:.7, brows:'worried', lines:true, extra:'tear' },
+    dizzy:     { eyes:'spiral', mouth:'wavy',   blush:.45, extra:'stars' },
+    wobbly:    { eyes:'wavy',   mouth:'wavy',   blush:.5 },
+    waving:    { eyes:'happy',  mouth:'open',   blush:.7, brows:'up' },
+    cheeky:    { eyes:'wink',   mouth:'tongue', blush:.65 },
+    'in love': { eyes:'heart',  mouth:'open',   blush:.85, extra:'hearts' },
+    proud:     { eyes:'star',   mouth:'grin',   blush:.6, brows:'up', extra:'sparkle' },
+  };
+  function heartPath(x, y, s) {
+    ctx.beginPath(); ctx.moveTo(x, y + s*0.7);
+    ctx.bezierCurveTo(x - s*1.3, y - s*0.1, x - s*0.6, y - s*1.05, x, y - s*0.35);
+    ctx.bezierCurveTo(x + s*0.6, y - s*1.05, x + s*1.3, y - s*0.1, x, y + s*0.7);
+    ctx.closePath();
+  }
+  function starPath(x, y, ro, ri, rot = 0) {
+    ctx.beginPath();
+    for (let k = 0; k < 10; k++) { const a = rot - Math.PI/2 + k*Math.PI/5, r = k % 2 ? ri : ro; k ? ctx.lineTo(x + Math.cos(a)*r, y + Math.sin(a)*r) : ctx.moveTo(x + Math.cos(a)*r, y + Math.sin(a)*r); }
+    ctx.closePath();
+  }
   function drawFace(t, fx0, fy0) {
     const m = currentMood(t);
     if (m !== mood) { mood = m; moodEl.textContent = m; moodEl.classList.remove('bump'); void moodEl.offsetWidth; moodEl.classList.add('bump'); }
+    const F = FACES[m] || FACES.chill;
     const S = R*0.68, fx = fx0 + D.x*0.04, fy = fy0 + D.y*0.03 + S*0.02;
-    const ex = 0.3*S, lw = Math.max(2, S*0.05), ink = '#2a160c';
+    const ex = 0.3*S, lw = Math.max(2, S*0.05), ink = '#2a160c', r = 0.11*S, ey = fy - 0.02*S;
     ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = ink; ctx.fillStyle = ink; ctx.lineWidth = lw;
-    const strong = m !== 'chill' && m !== 'startled';
+
+    // blush, with little lines when flustered
     for (const s of [-1, 1]) {
-      soft(S*0.07, `rgba(255,80,110,${strong ? .6 : .4})`, () => { ctx.beginPath(); ctx.ellipse(fx + s*0.5*S, fy + 0.17*S, S*0.11, S*0.065, 0, 0, 7); ctx.fill(); });
-      if (m === 'squished' || m === 'ow') {
+      soft(S*0.07, `rgba(255,80,110,${F.blush})`, () => { ctx.beginPath(); ctx.ellipse(fx + s*0.5*S, fy + 0.17*S, S*0.11*(0.8 + F.blush*0.3), S*0.065, 0, 0, 7); ctx.fill(); });
+      if (F.lines) {
         ctx.save(); ctx.strokeStyle = 'rgba(190,40,70,.55)'; ctx.lineWidth = Math.max(1, S*0.014);
         for (let j = -1; j <= 1; j++) { const x = fx + s*0.5*S + j*S*0.04; ctx.beginPath(); ctx.moveTo(x - S*0.015, fy + 0.21*S); ctx.lineTo(x + S*0.015, fy + 0.13*S); ctx.stroke(); }
         ctx.restore();
       }
     }
-    const r = 0.11*S;
+
+    // eyes
     for (const s of [-1, 1]) {
-      const x = fx + s*ex, y = fy - 0.02*S;
-      if (m === 'startled' || m === 'chill') {
-        // round glossy eyes, looking at the pointer
-        const rr = m === 'startled' ? r*1.25 : r;
-        ctx.save(); ctx.fillStyle = '#fff'; ctx.lineWidth = lw*0.7;
-        ctx.beginPath(); ctx.arc(x, y, rr, 0, 7); ctx.fill(); ctx.stroke();
-        const dx = look.x - x, dy = look.y - y, dl = Math.hypot(dx, dy) || 1, pr = rr*0.3;
+      const x = fx + s*ex, y = ey;
+      let kind = F.eyes;
+      if (kind === 'wink') kind = s < 0 ? 'round' : 'happy';
+      if (kind === 'round' || kind === 'big') {
+        const rr = kind === 'big' ? r*1.3 : r;
         const blink = m === 'chill' && (t % 4200) < 130;
-        ctx.fillStyle = ink;
-        if (blink) { ctx.fillStyle = rgb(bodyC); ctx.beginPath(); ctx.arc(x, y, rr*1.1, 0, 7); ctx.fill(); ctx.beginPath(); ctx.moveTo(x - rr, y); ctx.lineTo(x + rr, y); ctx.stroke(); }
+        ctx.save(); ctx.lineWidth = lw*0.7;
+        if (blink) { ctx.beginPath(); ctx.moveTo(x - rr, y); ctx.lineTo(x + rr, y); ctx.stroke(); }
         else {
-          ctx.beginPath(); ctx.arc(x + dx/dl*pr, y + dy/dl*pr, rr*0.62, 0, 7); ctx.fill();
-          ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x + dx/dl*pr - rr*0.22, y + dy/dl*pr - rr*0.25, rr*0.2, 0, 7); ctx.fill();
+          ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x, y, rr, 0, 7); ctx.fill(); ctx.stroke();
+          const dx = look.x - x, dy = look.y - y, dl = Math.hypot(dx, dy) || 1, pr = rr*0.3;
+          const pupil = kind === 'big' ? 0.42 : 0.62;
+          ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(x + dx/dl*pr, y + dy/dl*pr, rr*pupil, 0, 7); ctx.fill();
+          ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x + dx/dl*pr - rr*0.2, y + dy/dl*pr - rr*0.22, rr*0.18, 0, 7); ctx.fill();
         }
         ctx.restore();
-      } else if (m === 'delighted' || m === 'wiggly') {
+      } else if (kind === 'happy') {
         ctx.beginPath(); ctx.arc(x, y + r*0.55, r, Math.PI*1.12, Math.PI*1.88); ctx.stroke();
-      } else if (m === 'wobbly') {
+      } else if (kind === 'down') {      // shy: eyes squeezed, looking away
+        ctx.beginPath(); ctx.arc(x + r*0.15, y + r*0.55, r*0.85, Math.PI*1.15, Math.PI*1.85); ctx.stroke();
+      } else if (kind === 'closed') {    // asleep: soft lids that rise and fall
+        const b = Math.sin(t/700)*r*0.06;
+        ctx.beginPath(); ctx.arc(x, y - r*0.35 + b, r, Math.PI*0.18, Math.PI*0.82); ctx.stroke();
+      } else if (kind === 'chev') {
+        const w = r*0.85, h2 = r*0.8;
+        ctx.beginPath(); ctx.moveTo(x - s*w, y - h2); ctx.lineTo(x + s*w*0.6, y); ctx.lineTo(x - s*w, y + h2); ctx.stroke();
+      } else if (kind === 'spiral') {
+        ctx.save(); ctx.lineWidth = lw*0.7; ctx.beginPath();
+        for (let k = 0; k <= 40; k++) { const u = k/40, a = u*Math.PI*5 + t/120*s, rr = r*1.1*u; k ? ctx.lineTo(x + Math.cos(a)*rr, y + Math.sin(a)*rr) : ctx.moveTo(x, y); }
+        ctx.stroke(); ctx.restore();
+      } else if (kind === 'wavy') {
         ctx.beginPath();
         for (let j = 0; j <= 12; j++) { const u = j/12, X = x - r + u*2*r, Y = y + Math.sin(u*Math.PI*3 + t/90)*r*0.25; j ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
         ctx.stroke();
-      } else {
-        const w = r*0.85, h2 = r*0.8;
-        ctx.beginPath(); ctx.moveTo(x - s*w, y - h2); ctx.lineTo(x + s*w*0.6, y); ctx.lineTo(x - s*w, y + h2); ctx.stroke();
+      } else if (kind === 'heart') {
+        const beat = 1 + 0.12*Math.max(0, Math.sin(t/140));
+        ctx.save(); ctx.fillStyle = '#ff4d6d'; heartPath(x, y, r*1.05*beat); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.beginPath(); ctx.arc(x - r*0.45*beat, y - r*0.3*beat, r*0.18, 0, 7); ctx.fill(); ctx.restore();
+      } else if (kind === 'star') {
+        ctx.save(); ctx.fillStyle = '#ffc93c'; ctx.strokeStyle = ink; ctx.lineWidth = lw*0.55;
+        starPath(x, y, r*1.25, r*0.55, Math.sin(t/300)*0.15); ctx.fill(); ctx.stroke(); ctx.restore();
       }
     }
-    const my = fy + 0.17*S;
-    if (m === 'chill') {
-      ctx.beginPath(); ctx.arc(fx, my - 0.03*S, 0.06*S, 0.15*Math.PI, 0.85*Math.PI); ctx.stroke();
-    } else if (m === 'delighted' || m === 'wiggly') {
-      ctx.beginPath(); ctx.moveTo(fx - 0.09*S, my - 0.02*S); ctx.arc(fx, my - 0.02*S, 0.09*S, 0, Math.PI); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = '#ff6f8c'; ctx.beginPath(); ctx.ellipse(fx, my + 0.04*S, 0.045*S, 0.024*S, 0, 0, 7); ctx.fill();
-    } else if (m === 'startled' || m === 'squished') {
-      ctx.lineWidth = lw*0.85; ctx.beginPath(); ctx.ellipse(fx, my, 0.034*S, 0.044*S, 0, 0, 7); ctx.stroke();
-    } else if (m === 'ow') {
-      ctx.beginPath(); ctx.ellipse(fx, my + 0.01*S, 0.055*S, 0.075*S, 0, 0, 7); ctx.fill();
-      ctx.fillStyle = '#ff6f8c'; ctx.beginPath(); ctx.ellipse(fx, my + 0.055*S, 0.032*S, 0.017*S, 0, 0, 7); ctx.fill();
-    } else {
-      ctx.beginPath(); for (let j = 0; j <= 10; j++) { const u = j/10, X = fx - 0.07*S + u*0.14*S, Y = my + Math.sin(u*Math.PI*2 + t/80)*0.018*S; j ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); } ctx.stroke();
+
+    // brows
+    if (F.brows) {
+      ctx.save(); ctx.lineWidth = lw*0.75;
+      for (const s of [-1, 1]) {
+        const x = fx + s*ex, y = ey - r*(F.eyes === 'big' ? 1.9 : 1.55);
+        ctx.beginPath();
+        if (F.brows === 'up') { ctx.arc(x, y + r*0.5, r*0.75, Math.PI*1.25, Math.PI*1.75); }
+        else { ctx.moveTo(x - s*r*0.7, y + r*0.2); ctx.lineTo(x + s*r*0.5, y - r*0.25); }   // worried: inner ends raised
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // mouth
+    const my = fy + 0.17*S, wav = (w, amp, sp) => { ctx.beginPath(); for (let j = 0; j <= 10; j++) { const u = j/10, X = fx - w + u*2*w, Y = my + Math.sin(u*Math.PI*2 + t/sp)*amp; j ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); } ctx.stroke(); };
+    switch (F.mouth) {
+      case 'smile': ctx.beginPath(); ctx.arc(fx, my - 0.03*S, 0.06*S, 0.15*Math.PI, 0.85*Math.PI); ctx.stroke(); break;
+      case 'open': case 'grin': {
+        const w = F.mouth === 'grin' ? 0.12*S : 0.09*S;
+        ctx.beginPath(); ctx.moveTo(fx - w, my - 0.02*S); ctx.arc(fx, my - 0.02*S, w, 0, Math.PI); ctx.closePath(); ctx.fill();
+        if (F.mouth === 'grin') { ctx.fillStyle = '#fff'; ctx.fillRect(fx - w*0.7, my - 0.02*S, w*1.4, w*0.22); }
+        ctx.fillStyle = '#ff6f8c'; ctx.beginPath(); ctx.ellipse(fx, my + w*0.45, w*0.5, w*0.26, 0, 0, 7); ctx.fill();
+        break;
+      }
+      case 'o': ctx.save(); ctx.lineWidth = lw*0.85; ctx.beginPath(); ctx.ellipse(fx, my, 0.034*S, 0.044*S, 0, 0, 7); ctx.stroke(); ctx.restore(); break;
+      case 'tiny': { const b = 1 + 0.25*Math.sin(t/700); ctx.beginPath(); ctx.ellipse(fx, my, 0.018*S*b, 0.022*S*b, 0, 0, 7); ctx.fill(); break; }
+      case 'bigO':
+        ctx.beginPath(); ctx.ellipse(fx, my + 0.01*S, 0.055*S, 0.075*S, 0, 0, 7); ctx.fill();
+        ctx.fillStyle = '#ff6f8c'; ctx.beginPath(); ctx.ellipse(fx, my + 0.055*S, 0.032*S, 0.017*S, 0, 0, 7); ctx.fill(); break;
+      case 'wavy': wav(0.07*S, 0.018*S, 80); break;
+      case 'tongue':
+        ctx.beginPath(); ctx.arc(fx, my - 0.03*S, 0.07*S, 0.12*Math.PI, 0.88*Math.PI); ctx.stroke();
+        ctx.fillStyle = '#ff6f8c'; ctx.beginPath(); ctx.ellipse(fx + 0.02*S, my + 0.045*S, 0.035*S, 0.045*S, 0.2, 0, Math.PI); ctx.fill();
+        ctx.strokeStyle = 'rgba(180,40,70,.6)'; ctx.lineWidth = Math.max(1, S*0.01); ctx.beginPath(); ctx.moveTo(fx + 0.02*S, my + 0.045*S); ctx.lineTo(fx + 0.02*S, my + 0.075*S); ctx.stroke();
+        break;
+    }
+
+    // extras
+    const top = fy - 0.45*S;
+    if (F.extra === 'sweat' && toCm(L) > 6) {
+      ctx.save(); const x = fx + ex + r*1.6, y = ey - r*1.2 + (t/12 % (r*1.5));
+      ctx.fillStyle = 'rgba(130,200,240,.9)'; ctx.beginPath(); ctx.moveTo(x, y - r*0.7); ctx.quadraticCurveTo(x + r*0.5, y, x, y + r*0.35); ctx.quadraticCurveTo(x - r*0.5, y, x, y - r*0.7); ctx.fill(); ctx.restore();
+    } else if (F.extra === 'tear') {
+      ctx.save(); ctx.fillStyle = 'rgba(130,200,240,.9)';
+      for (const s of [-1, 1]) { const x = fx + s*ex, y = ey + r*0.9 + (t/9 % (r*1.6)); ctx.beginPath(); ctx.ellipse(x, y, r*0.22, r*0.32, 0, 0, 7); ctx.fill(); }
+      ctx.restore();
+    } else if (F.extra === 'zzz') {
+      ctx.save(); ctx.fillStyle = ink; ctx.textAlign = 'center';
+      for (let k = 0; k < 3; k++) {
+        const ph = ((t/1400) + k/3) % 1;
+        ctx.globalAlpha = Math.sin(ph*Math.PI);
+        ctx.font = `700 ${Math.round(S*(0.09 + ph*0.08))}px Manrope, sans-serif`;
+        ctx.fillText('z', fx + ex + S*0.18 + ph*S*0.25, top - ph*S*0.35);
+      }
+      ctx.restore();
+    } else if (F.extra === 'stars') {
+      ctx.save(); ctx.fillStyle = '#ffc93c';
+      for (let k = 0; k < 3; k++) { const a = t/400 + k*Math.PI*2/3; starPath(fx + Math.cos(a)*S*0.42, top + Math.sin(a)*S*0.1, r*0.45, r*0.2, a); ctx.fill(); }
+      ctx.restore();
+    } else if (F.extra === 'hearts') {
+      ctx.save(); ctx.fillStyle = '#ff4d6d';
+      for (let k = 0; k < 3; k++) { const ph = ((t/1200) + k/3) % 1; ctx.globalAlpha = Math.sin(ph*Math.PI); heartPath(fx + (k - 1)*S*0.32 + Math.sin(ph*6)*r*0.4, top - ph*S*0.4, r*0.45); ctx.fill(); }
+      ctx.restore();
+    } else if (F.extra === 'sparkle') {
+      ctx.save(); ctx.fillStyle = '#fff6c9';
+      for (let k = 0; k < 4; k++) { const a = k*Math.PI/2 + t/600, tw = 0.6 + 0.4*Math.sin(t/150 + k*2); starPath(fx + Math.cos(a)*S*0.55, fy + Math.sin(a)*S*0.3 - S*0.05, r*0.5*tw, r*0.12*tw, 0); ctx.fill(); }
+      ctx.restore();
     }
     ctx.restore();
   }
@@ -600,7 +724,7 @@
   if (document.fonts) document.fonts.ready.then(() => { ready = size(); });
   requestAnimationFrame(frame);
   // ?test lets an automated check step frames while the tab is in the background
-  if (/[?&]test\b/.test(location.search)) window.__pon = { run(ms) { let t = last; for (let k = 0; k < ms/16; k++) { t += 16; if (!ready) ready = size(); step(t, 16); draw(t); panel(); last = t; } }, state: () => ({ mood, L, best, sq }) };
+  if (/[?&]test\b/.test(location.search)) window.__pon = { run(ms) { let t = last; for (let k = 0; k < ms/16; k++) { t += 16; if (!ready) ready = size(); step(t, 16); draw(t); panel(); last = t; } }, state: () => ({ mood, L, best, sq }), force: m => { forced = m; } };
 })();
 </script>
 </body>
