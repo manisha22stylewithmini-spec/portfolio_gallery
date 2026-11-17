@@ -1,0 +1,607 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>/* When a preview opens this file as an inline data: page there is no folder to resolve assets/, posters/ or links from, and the preview blocks localhost: point them at the published site. (No effect on localhost, file:// or the live site.) */
+  if (!/^(https?|file):$/.test(location.protocol)) document.write('<base href="https://portfolio-gallery-peach.vercel.app/designs/">');</script>
+  <script>if (/[?&]embed\b/.test(location.search)) document.documentElement.classList.add("embed");</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manisha Baroliya — Product designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Manrope:wght@400;500;600;700&family=Zen+Maru+Gothic:wght@500;700&family=Yomogi&display=swap" rel="stylesheet">
+  <style>
+    :root { --bg: #f2e6d2; --ink: #1d1712; --mute: #8d7f6c; --line: #e0d2bb; --acc: #e0542a; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--bg); }
+    body { font-family: 'Manrope', system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; color: inherit; }
+    @property --glow { syntax: '<color>'; inherits: true; initial-value: #ff8a5c; }
+    .hero { background: radial-gradient(ellipse 70vmin 52vmin at 50% var(--gy, 64%), color-mix(in srgb, var(--glow) 38%, transparent), transparent 75%), radial-gradient(ellipse 120vmax 40vmin at 50% 115%, rgba(120,190,205,.28), transparent 70%); transition: --glow .6s; position: relative; min-height: 100vh; min-height: 100svh; overflow: hidden; user-select: none; -webkit-user-select: none; }
+    canvas#cv { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 2; pointer-events: none; display: block; }
+    #stage { position: absolute; z-index: 3; touch-action: none; outline: none; border-radius: 40%; }
+    #stage:focus-visible { box-shadow: 0 0 0 2px var(--acc) inset; }
+
+    header { position: relative; z-index: 6; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 14px clamp(16px, 3vw, 44px) 0; }
+    header img { height: 46px; width: auto; display: block; }
+    header nav { display: flex; gap: clamp(14px, 2.4vw, 34px); }
+    header nav a, header nav button { font: 600 12.5px 'Manrope'; background: none; border: 0; padding: 6px 0; cursor: pointer; position: relative; }
+    header nav a::after, header nav button::after { content: ''; position: absolute; left: 0; right: 0; bottom: 2px; height: 1.5px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform .25s; }
+    header nav a:hover::after, header nav button:hover::after { transform: scaleX(1); }
+    .boxbtn { justify-self: end; font: 600 12.5px 'Manrope'; color: #fff; background: var(--ink); border: 0; border-radius: 999px; padding: 10px 16px; cursor: pointer; transition: transform .15s; }
+    .boxbtn:hover { transform: translateY(-1px); }
+    .meta { position: relative; z-index: 6; display: flex; justify-content: space-between; padding: 14px clamp(16px, 3vw, 44px) 0; font: 600 9.5px 'Manrope'; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+    .meta b { color: var(--ink); font-weight: 700; }
+
+    h1 { position: relative; z-index: 1; margin: 2px 0 0; padding: 0 clamp(16px, 3vw, 44px); font-family: 'Archivo', sans-serif; font-weight: 900; font-variation-settings: 'wdth' 125; font-stretch: 125%; line-height: .86; letter-spacing: -.01em; white-space: nowrap; font-size: 12vw; }
+    h1 .dot { color: var(--ink); } #h1t { display: inline-block; }
+
+    .kana { position: absolute; z-index: 1; top: 37%; writing-mode: vertical-rl; font: 500 clamp(18px, 2vw, 26px) 'Zen Maru Gothic'; letter-spacing: .25em; color: var(--acc); opacity: .45; transition: color .5s; }
+    .kana.l { left: clamp(16px, 3.6vw, 52px); } .kana.r { right: clamp(16px, 3.6vw, 52px); }
+    .stamp { position: absolute; z-index: 1; width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--acc); color: var(--acc); display: grid; place-items: center; transform: translate(-50%, -50%) rotate(-8deg); transition: color .5s, border-color .5s; }
+    .stamp b { writing-mode: vertical-rl; font: 700 17px 'Zen Maru Gothic'; line-height: 1; }
+    .stamp i { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); font: 700 7px 'Zen Maru Gothic'; font-style: normal; }
+
+    .hint { white-space: nowrap; position: absolute; z-index: 4; pointer-events: none; color: var(--acc); transition: opacity .6s, color .5s; }
+    .hint .jp { font: 400 clamp(18px, 1.8vw, 24px) 'Yomogi'; display: block; transform: rotate(4deg); }
+    .hint .en { font: 400 11px 'Yomogi'; color: var(--mute); display: block; margin: -2px 0 0 4px; transform: rotate(4deg); }
+    .hint svg { position: absolute; left: -6px; top: 46px; width: 34px; height: 30px; }
+    .hint.gone { opacity: 0; }
+
+    .tip { position: absolute; z-index: 4; left: 0; top: 0; pointer-events: none; opacity: 0; transition: opacity .2s; }
+    .tip i { position: absolute; left: -7px; top: -7px; width: 14px; height: 14px; border-radius: 50%; background: var(--acc); box-shadow: 0 0 0 2.5px #fff; }
+    .tip span { position: absolute; left: 14px; top: -24px; font: 700 8.5px 'Manrope'; letter-spacing: .14em; color: #fff; background: var(--ink); padding: 4px 7px; border-radius: 999px; white-space: nowrap; }
+    .tip.on { opacity: 1; }
+
+    .pop { position: absolute; z-index: 5; pointer-events: none; font: 700 clamp(20px, 2.4vw, 32px) 'Zen Maru Gothic'; color: var(--acc); animation: pop 1s cubic-bezier(.2,.8,.3,1) forwards; }
+    @keyframes pop { 0% { transform: translate(-50%, 0) scale(.5) rotate(-8deg); opacity: 0; } 20% { opacity: 1; transform: translate(-50%, -14px) scale(1.1) rotate(-4deg); } 100% { opacity: 0; transform: translate(-50%, -60px) scale(1) rotate(4deg); } }
+
+    .intro { position: absolute; z-index: 4; left: clamp(16px, 3vw, 44px); bottom: clamp(18px, 4vh, 36px); max-width: 270px; }
+    .intro h2 { margin: 0 0 12px; font: 800 clamp(16px, 1.35vw, 19px)/1.1 'Archivo'; font-variation-settings: 'wdth' 110; letter-spacing: -.01em; }
+    .intro p { margin: 0 0 10px; font-size: 11.5px; line-height: 1.6; color: var(--mute); }
+
+    .panel { position: absolute; z-index: 4; right: clamp(16px, 3vw, 44px); bottom: clamp(18px, 4vh, 36px); width: 284px; }
+    .row { display: flex; justify-content: space-between; align-items: baseline; }
+    .lbl { font: 600 8.5px 'Manrope'; letter-spacing: .16em; text-transform: uppercase; color: var(--mute); }
+    .mood { font: 800 18px 'Archivo'; font-variation-settings: 'wdth' 110; }
+    .mood.bump { animation: bump .35s; }
+    @keyframes bump { 40% { transform: scale(1.12); } }
+    .sep { height: 1px; background: var(--line); margin: 10px 0 14px; }
+    .cm { font: 600 9.5px 'Manrope'; font-variant-numeric: tabular-nums; }
+    .bar { position: relative; height: 6px; border-radius: 4px; background: #e2ddd2; margin: 8px 0 18px; }
+    .bar .fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 4px; background: var(--acc); transition: background .5s; }
+    .bar .best { position: absolute; top: -4px; width: 2px; height: 14px; background: var(--ink); border-radius: 2px; left: 0; transition: left .3s; }
+    .sw { display: flex; gap: 9px; margin: 8px 0 6px; }
+    .sw button { width: 25px; height: 25px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: var(--c); box-shadow: inset 0 -3px 5px rgba(0,0,0,.08), 0 0 0 1px rgba(0,0,0,.04); transition: transform .15s, box-shadow .2s; }
+    .sw button:hover { transform: translateY(-2px); }
+    .sw button[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--ink); }
+    .flav { font: 700 9.5px 'Manrope'; }
+    .flav em { font-style: normal; font-family: 'Zen Maru Gothic'; color: var(--acc); margin: 0 3px 0 5px; transition: color .5s; }
+    .flav span { color: var(--mute); font-weight: 600; }
+    .box { display: flex; gap: 5px; align-items: center; margin: 14px 0 0; min-height: 14px; }
+    .box i { width: 15px; height: 15px; clip-path: polygon(50% 0,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); background: #ddcfb8; transition: background .3s, border-color .3s, transform .3s; }
+    .box i.on { background: var(--c); transform: scale(1.15) rotate(-8deg); }
+    .box small { margin-left: 6px; font: 600 9.5px 'Manrope'; color: var(--mute); }
+    .build { margin-top: 10px; font: 700 10.5px 'Manrope'; color: #fff; background: var(--ink); border: 0; border-radius: 999px; padding: 11px 16px; cursor: pointer; transition: transform .15s; }
+    .build:hover { transform: translateY(-1px); }
+    .build:active { transform: scale(.97); }
+
+    .back-link { position: fixed; left: 12px; bottom: 12px; z-index: 60; font: 12px system-ui, sans-serif; color: #fff; padding: 6px 12px; border-radius: 999px; background: rgba(29,23,18,.78); }
+    .embed .back-link { display: none !important; }
+
+    @media (max-width: 760px) {
+      header { grid-template-columns: auto 1fr; }
+      header nav { display: none; }
+      header img { height: 38px; }
+      .meta span:last-child { display: none; }
+      .kana, .intro { display: none; }
+      .panel { left: 16px; right: 16px; width: auto; bottom: 52px; }
+      .stamp { width: 48px; height: 48px; } .stamp b { font-size: 13px; } .stamp i { left: 6px; }
+    }
+    @media (max-width: 760px) and (max-height: 700px) { .box { display: none; } }
+  </style>
+</head>
+<body>
+  <a class="back-link" href="shelf-library.html#library">&larr; Library</a>
+  <section class="hero" id="hero">
+    <header>
+      <a href="shelf-library.html#library" aria-label="Manisha Baroliya — library"><img src="assets/logo-nobg-light.png" alt="Manisha Baroliya"></a>
+      <nav>
+        <button type="button" id="navCase">Surprise me</button>
+        <button type="button" id="navPound">Say hi</button>
+        <a href="shelf-library.html#library">My work</a>
+      </nav>
+      <a class="boxbtn" id="topBox" href="shelf-library.html#social">Say hello →</a>
+    </header>
+    <div class="meta"><span>Manisha Baroliya · <b>UX/UI &amp; product designer</b></span><span>3+ years · <b>20+ live designs</b></span></div>
+    <h1 id="h1"><span id="h1t">PULL GENTLY<span class="dot">.</span></span></h1>
+
+    <div class="kana l" aria-hidden="true">ひとで</div>
+    <div class="kana r" aria-hidden="true">きらきら</div>
+    <div class="stamp" id="stamp" aria-hidden="true"><i>海</i><b>ほし</b></div>
+
+    <canvas id="cv"></canvas>
+    <div id="stage" tabindex="0" role="img" aria-label="Hoshi the starfish. Drag one of his arms to stretch it, or focus and hold the arrow keys."></div>
+    <div class="hint" id="hint" aria-hidden="true">
+      <span class="jp">ひっぱって!</span><span class="en">grab an arm</span>
+      <svg viewBox="0 0 34 30" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M30 3 C 22 6, 12 12, 6 24"/><path d="M4 16 L6 25 L14 21"/></svg>
+    </div>
+    <div class="tip" id="tip"><i></i><span>STRETCH</span></div>
+
+    <div class="intro">
+      <h2>Hi, I'm Manisha. I design products that stretch to fit people.</h2>
+      <p>UX/UI and product designer with a psychology background: 3+ years, 20+ live designs and 10+ SaaS and B2B platforms.</p>
+      <p>Meet Hoshi. Like good products, he bends when you pull and springs back calm. Give him a tug.</p>
+    </div>
+
+    <aside class="panel" id="panel" aria-live="polite">
+      <div class="row"><span class="lbl">Hoshi is feeling</span><span class="mood" id="mood">chill</span></div>
+      <div class="sep"></div>
+      <div class="row"><span class="lbl">Stretch</span><span class="cm" id="cm">0 cm · best 0 cm</span></div>
+      <div class="bar"><div class="fill" id="fill"></div><div class="best" id="bestm"></div></div>
+      <div class="lbl">Pick a skill</div>
+      <div class="sw" id="sw"></div>
+      <div class="flav" id="flav"></div>
+      <div class="box" id="box"></div>
+      <button class="build" type="button" id="build">Build my toolkit of five →</button>
+    </aside>
+  </section>
+
+<script>
+(() => {
+  const FL = [
+    { name:'Coral',    jp:'珊瑚', deep:'UX research', body:'#ff8a5c', acc:'#e0542a', sw:'#ff8a5c' },
+    { name:'Sakura',   jp:'桜',   deep:'UI design', body:'#ff86ad', acc:'#d93a72', sw:'#ff86ad' },
+    { name:'Ocean',    jp:'海',   deep:'Product strategy', body:'#5fa6f2', acc:'#2a6fc9', sw:'#5fa6f2' },
+    { name:'Murasaki', jp:'紫',   deep:'Psychology', body:'#a07ff0', acc:'#6a46cf', sw:'#a07ff0' },
+    { name:'Taiyō',    jp:'太陽', deep:'Prototyping', body:'#ffc443', acc:'#c98a00', sw:'#ffc443' },
+    { name:'Shinju',   jp:'真珠', deep:'Design systems', body:'#f2e4d4', acc:'#9a8167', sw:'#f4ebe0' },
+  ];
+  const POOL = 5;
+  const $ = id => document.getElementById(id);
+  const hero = $('hero'), cv = $('cv'), ctx = cv.getContext('2d'), stage = $('stage');
+  const hint = $('hint'), tip = $('tip'), stamp = $('stamp'), h1 = $('h1');
+  const moodEl = $('mood'), cmEl = $('cm'), fillEl = $('fill'), bestEl = $('bestm'), flavEl = $('flav');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const hex = h => [1,3,5].map(i => parseInt(h.slice(i, i+2), 16));
+  const rgb = (c, a = 1) => `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+  const mix = (c, d, t) => c.map((v, i) => v + (d[i] - v) * t);
+
+  // ---------- state ----------
+  let W = 0, H = 0, dpr = 1, R = 100, cx = 0, cy = 0, Lmax = 100;
+  const N = 240, ARMS = 5, ARM_N = N / ARMS, YS = 0.9;   // YS: slight tilt so he lies on the sand
+  let rest = [], ang = [], armOf = [], gOf = [];
+  const off = [], vel = [], tgt = [];
+  for (let i = 0; i < N; i++) { off.push({x:0,y:0}); vel.push({x:0,y:0}); tgt.push({x:0,y:0}); }
+  let fl = 0, bodyC = hex(FL[0].body);
+  const grab = { on:false, x:0, y:0, kb:false, kx:0, ky:0, id:null };
+  let D = {x:0, y:0}, L = 0, idx = 0, best = 0, everPulled = false, hover = false;
+  let sq = 0, sqv = 0;
+  let mood = '', parts = [], bodyPath = null, pts = [];
+  let look = {x:0, y:0};
+  let clock = performance.now(), last = clock;
+  let snapUntil = 0, wobbleUntil = 0, giggleUntil = 0, wiggleUntil = 0, pulledThisGrab = 0;
+  const pool = [];
+
+  // freckles fixed to the body: (vertex, how far out along it)
+  const freckles = [];
+  for (let i = 0; i < 70; i++) freckles.push({ i: Math.floor(Math.random()*N), f: 0.25 + Math.random()*0.65, r: .006 + Math.random()*.01, a: .12 + Math.random()*.18 });
+
+  // ---------- layout ----------
+  function size() {
+    const w = hero.clientWidth, h = hero.clientHeight;
+    if (!w || !h) return false;
+    W = w; H = h; dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.width = Math.round(W*dpr); cv.height = Math.round(H*dpr);
+    fitTitle();
+    const titleBottom = h1.offsetTop + h1.offsetHeight;
+    if (W < 760) { R = Math.min(W*0.46, H*0.26); cy = titleBottom + R*1.15; }
+    else {
+      R = Math.min(W*0.2, H*0.38, 360, (H - titleBottom - 12)/1.95);
+      cy = Math.max(titleBottom + R*1.0, H*0.58);
+      if (cy + R*0.95 > H) cy = H - R*0.95;
+    }
+    cx = W/2; Lmax = R*1.05;
+    rest = []; ang = []; armOf = []; gOf = [];
+    for (let k = 0; k < N; k++) {
+      const t = (k/N)*Math.PI*2 - Math.PI/2;
+      const g = Math.pow((1 + Math.cos(ARMS*(t + Math.PI/2)))/2, 1.2);
+      const r = R*(0.47 + 0.53*g);
+      rest.push({ x: Math.cos(t)*r, y: Math.sin(t)*r*YS });
+      ang.push(Math.atan2(Math.sin(t)*r*YS, Math.cos(t)*r));
+      armOf.push(Math.round(k/ARM_N) % ARMS); gOf.push(g);
+    }
+    for (let i = 0; i < N; i++) { off[i].x = off[i].y = vel[i].x = vel[i].y = 0; }
+    Object.assign(stage.style, { left: (cx - R*1.3) + 'px', top: (cy - R*1.2) + 'px', width: (R*2.6) + 'px', height: (R*2.3) + 'px' });
+    hero.style.setProperty('--gy', cy + 'px');
+    stamp.style.left = Math.max(40, cx - R*1.3) + 'px'; stamp.style.top = (cy - R*0.75) + 'px';
+    hint.style.left = Math.min(W - 130, cx + R*0.7) + 'px'; hint.style.top = Math.max(titleBottom + 8, cy - R*1.12) + 'px';
+    return true;
+  }
+  function fitTitle() {
+    h1.style.fontSize = '100px';
+    const pad = parseFloat(getComputedStyle(h1).paddingLeft)*2;
+    const want = (hero.clientWidth - pad) / $('h1t').offsetWidth * 100 * 0.995;
+    h1.style.fontSize = Math.min(want, hero.clientHeight*0.22) + 'px';
+  }
+
+  // ---------- geometry ----------
+  function sway(t) {
+    const wig = wiggleUntil > t ? Math.min(1, (wiggleUntil - t)/400) : 0;
+    return { amp: reduce ? 0 : 0.035 + 0.2*wig, spd: wig ? 160 : 900 };
+  }
+  // rest position of vertex i at time t: arms sway and curl a little; squish flattens him
+  function restPos(i, t) {
+    const sw = sway(t), g = gOf[i], a = armOf[i];
+    const rot = sw.amp*Math.sin(t/sw.spd + a*1.25)*g;
+    const curl = 1 + (reduce ? 0 : 0.025*Math.sin(t/1100 + a*2.1))*g;
+    const sx = 1 + 0.07*sq, sy = 1 - 0.07*sq;
+    const x = rest[i].x*curl*sx, y = rest[i].y*curl*sy;
+    const c = Math.cos(rot), s = Math.sin(rot);
+    return { x: cx + x*c - y*s/YS, y: cy + (x*s*YS + y*c) };
+  }
+  function smoothPath(p) {
+    const path = new Path2D(), n = p.length;
+    const m = (a, b) => ({ x: (a.x + b.x)/2, y: (a.y + b.y)/2 });
+    let s = m(p[n-1], p[0]); path.moveTo(s.x, s.y);
+    for (let i = 0; i < n; i++) { const q = p[i], e = m(q, p[(i+1)%n]); path.quadraticCurveTo(q.x, q.y, e.x, e.y); }
+    path.closePath(); return path;
+  }
+  function inBody(x, y) {
+    if (!bodyPath) return false;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return ctx.isPointInPath(bodyPath, x*dpr, y*dpr);
+  }
+  function soft(blur, color, draw) {
+    ctx.save();
+    ctx.shadowColor = color; ctx.shadowBlur = blur*dpr;
+    ctx.shadowOffsetX = 10000*dpr; ctx.translate(-10000, 0);
+    ctx.fillStyle = ctx.strokeStyle = '#000';
+    draw(); ctx.restore();
+  }
+
+  // ---------- interaction ----------
+  const local = e => { const r = hero.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  stage.addEventListener('pointerdown', e => {
+    const p = local(e);
+    if (!inBody(p.x, p.y)) return;
+    e.preventDefault();
+    try { stage.setPointerCapture(e.pointerId); } catch (_) {}
+    Object.assign(grab, { on:true, kb:false, x:p.x, y:p.y, id:e.pointerId });
+    pulledThisGrab = 0; stage.style.cursor = 'grabbing';
+  });
+  stage.addEventListener('pointermove', e => {
+    const p = local(e); look = p;
+    if (grab.on && !grab.kb && e.pointerId === grab.id) { grab.x = p.x; grab.y = p.y; return; }
+    hover = inBody(p.x, p.y);
+    stage.style.cursor = hover ? 'grab' : 'default';
+  });
+  stage.addEventListener('pointerleave', () => { if (!grab.on) hover = false; });
+  hero.addEventListener('pointermove', e => { look = local(e); });
+  const end = e => { if (grab.on && !grab.kb && (!e || e.pointerId === grab.id)) release(false); };
+  stage.addEventListener('pointerup', end);
+  stage.addEventListener('pointercancel', end);
+  stage.addEventListener('lostpointercapture', end);
+
+  const keys = new Set(), dirs = { ArrowLeft:[-1,0], ArrowRight:[1,0], ArrowUp:[0,-1], ArrowDown:[0,1] };
+  stage.addEventListener('keydown', e => {
+    if (!dirs[e.key]) return;
+    e.preventDefault();
+    if (!keys.size && !grab.on) { Object.assign(grab, { on:true, kb:true, kx:0, ky:0 }); pulledThisGrab = 0; }
+    keys.add(e.key);
+  });
+  stage.addEventListener('keyup', e => { keys.delete(e.key); if (!keys.size && grab.kb) release(false); });
+  stage.addEventListener('blur', () => { keys.clear(); if (grab.kb) release(false); });
+
+  const toCm = l => l / R * 18;
+  function release(snapped) {
+    if (!grab.on) return;
+    grab.on = false; grab.kb = false;
+    stage.style.cursor = hover ? 'grab' : 'default';
+    if (snapped) { snapUntil = clock + 1400; splash(22); }
+    else if (pulledThisGrab > 2) { wobbleUntil = clock + 1500; splash(9); }
+    else giggleUntil = clock + 1100;
+  }
+  function splash(n) {
+    const p = pts[idx] || { x: cx, y: cy };
+    for (let i = 0; i < n; i++) {
+      const a = Math.random()*Math.PI*2, s = 1 + Math.random()*3.2;
+      parts.push({ k:'drop', x:p.x, y:p.y, vx:Math.cos(a)*s, vy:Math.sin(a)*s - 2, r:1.2 + Math.random()*2.4, life:45 + Math.random()*25, g:.12 });
+    }
+  }
+  function bubbles(n) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random()*Math.PI*2, d = Math.random()*R*0.8;
+      parts.push({ k:'bub', x: cx + Math.cos(a)*d, y: cy + Math.sin(a)*d*YS, vx:0, vy:-(0.6 + Math.random()*1.2), r: 2 + Math.random()*6, life: 70 + Math.random()*60, g: -0.01, ph: Math.random()*6 });
+    }
+  }
+
+  // ---------- colours, tide pool, nav ----------
+  const swEl = $('sw');
+  FL.forEach((f, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.style.setProperty('--c', f.sw); b.title = f.deep; b.setAttribute('aria-label', `Show ${f.deep}`);
+    b.addEventListener('click', () => setColour(i));
+    swEl.appendChild(b);
+  });
+  function setColour(i, quiet) {
+    fl = i; const f = FL[i];
+    document.documentElement.style.setProperty('--acc', f.acc); hero.style.setProperty('--glow', f.body);
+    [...swEl.children].forEach((b, j) => b.setAttribute('aria-pressed', j === i));
+    flavEl.innerHTML = `${f.deep}<em>${f.jp}</em><span>· ${f.name} Hoshi</span>`;
+    if (!quiet) { bubbles(26); giggleUntil = clock + 900; }
+  }
+  const boxEl = $('box'), build = $('build'), topBox = $('topBox');
+  function renderPool() {
+    boxEl.innerHTML = Array.from({length:POOL}, (_, i) => pool[i] != null ? `<i class="on" style="--c:${FL[pool[i]].sw}" title="${FL[pool[i]].deep}"></i>` : '<i></i>').join('') +
+      (pool.length ? `<small>${pool.length} skill${pool.length > 1 ? 's' : ''}</small>` : '');
+    build.textContent = pool.length >= POOL ? 'Toolkit full ✓ · start over' : pool.length ? `Add ${FL[fl].deep} · ${pool.length}/${POOL} →` : 'Build my toolkit of five →';
+  }
+  function addToPool() {
+    if (pool.length >= POOL) { pool.length = 0; renderPool(); return; }
+    pool.push(fl); renderPool();
+    popText(pool.length >= POOL ? 'いっぱい!' : '+1', cx, cy - R*1.1);
+    bubbles(10); giggleUntil = clock + 900;
+  }
+  build.addEventListener('click', addToPool);
+  swEl.addEventListener('click', renderPool);
+
+  function popText(txt, x, y) {
+    const s = document.createElement('div'); s.className = 'pop'; s.textContent = txt;
+    s.style.left = x + 'px'; s.style.top = y + 'px';
+    hero.appendChild(s); setTimeout(() => s.remove(), 1000);
+  }
+  $('navPound').addEventListener('click', () => {
+    wiggleUntil = clock + 2200; bubbles(14);
+    popText('やあ! hi!', cx, cy - R*1.15);
+  });
+  $('navCase').addEventListener('click', () => { let n; do { n = Math.floor(Math.random()*FL.length); } while (n === fl); setColour(n); renderPool(); });
+
+  // ---------- simulation ----------
+  function nearest(a) {
+    let bi = 0, bd = 9;
+    for (let i = 0; i < N; i++) { let d = Math.abs(ang[i] - a); if (d > Math.PI) d = 2*Math.PI - d; if (d < bd) { bd = d; bi = i; } }
+    return bi;
+  }
+  function step(t, dt) {
+    clock = t;
+    const n = Math.max(1, Math.min(4, Math.round(dt/16.7)));
+    let pressing = false;
+    if (grab.on) {
+      if (grab.kb) for (const k of keys) { grab.kx += dirs[k][0]*6*n; grab.ky += dirs[k][1]*6*n; }
+      let px, py;
+      if (grab.kb) {
+        if (!grab.kx && !grab.ky) { px = cx; py = cy; }
+        else { const i0 = nearest(Math.atan2(grab.ky, grab.kx)), e0 = restPos(i0, t); px = e0.x + grab.kx; py = e0.y + grab.ky; }
+      } else { px = grab.x; py = grab.y; }
+      idx = nearest(Math.atan2(py - cy, px - cx));
+      const e = restPos(idx, t);
+      const dp = Math.hypot(px - cx, py - cy), de = Math.hypot(e.x - cx, e.y - cy);
+      if (dp <= de) { D.x *= .6; D.y *= .6; L = Math.hypot(D.x, D.y); pressing = true; }
+      else {
+        const vx = px - e.x, vy = py - e.y, m = Math.hypot(vx, vy);
+        L = Lmax*(1 - Math.exp(-m/Lmax));
+        D = { x: vx/m*L, y: vy/m*L };
+        pressing = toCm(L) < 1;
+        if (m > Lmax*1.75) { best = Math.max(best, toCm(L)); release(true); }
+      }
+      const cm = toCm(L);
+      pulledThisGrab = Math.max(pulledThisGrab, cm);
+      best = Math.max(best, cm);
+      if (cm > 3 && !everPulled) { everPulled = true; hint.classList.add('gone'); }
+    }
+    if (!grab.on) { D.x = 0; D.y = 0; L = 0; }
+
+    const ln = Math.min(1, L/Lmax), sig = 0.34 - 0.12*ln;
+    for (let i = 0; i < N; i++) {
+      if (!grab.on) { tgt[i].x = tgt[i].y = 0; continue; }
+      let d = Math.abs(i - idx); d = Math.min(d, N - d) * (Math.PI*2/N);
+      const w = Math.exp(-((d/sig)**2));
+      tgt[i].x = D.x*(w*0.96 + 0.04) - rest[i].x*0.05*ln*(1 - w);
+      tgt[i].y = D.y*(w*0.96 + 0.04) - rest[i].y*0.05*ln*(1 - w);
+    }
+    const k = grab.on ? 0.3 : 0.09, c = grab.on ? 0.4 : 0.07, lap = grab.on ? 0.1 : 0.18;
+    const sqT = pressing ? 1 : 0;
+    for (let s = 0; s < n; s++) {
+      for (let i = 0; i < N; i++) {
+        const o = off[i], v = vel[i], a = off[(i + N - 1) % N], b = off[(i + 1) % N];
+        v.x += k*(tgt[i].x - o.x) - c*v.x + lap*(a.x + b.x - 2*o.x);
+        v.y += k*(tgt[i].y - o.y) - c*v.y + lap*(a.y + b.y - 2*o.y);
+      }
+      for (let i = 0; i < N; i++) { off[i].x += vel[i].x; off[i].y += vel[i].y; }
+      sqv += (sqT - sq)*0.16 - sqv*(pressing ? 0.3 : 0.11);
+      sq += sqv;
+    }
+    sq = Math.max(-0.6, Math.min(1.6, sq));
+
+    for (const p of parts) for (let s = 0; s < n; s++) {
+      p.vy += p.g; p.x += p.vx; p.y += p.vy; p.life--;
+      if (p.k === 'bub') p.x += Math.sin(p.life/9 + p.ph)*0.35;
+    }
+    parts = parts.filter(p => p.life > 0 && p.y < H + 20 && p.y > -20);
+    bodyC = mix(bodyC, hex(FL[fl].body), 0.07);
+  }
+
+  function currentMood(t) {
+    if (snapUntil > t) return 'ow';
+    if (grab.on) { const cm = toCm(L); return cm < 1 ? 'startled' : cm > 15 ? 'ow' : 'squished'; }
+    if (wiggleUntil > t) return 'wiggly';
+    if (wobbleUntil > t) return 'wobbly';
+    if (giggleUntil > t || hover) return 'delighted';
+    return 'chill';
+  }
+
+  // ---------- drawing ----------
+  function draw(t) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    pts = []; let ax = 0, ay = 0;
+    for (let i = 0; i < N; i++) { const p = restPos(i, t); p.x += off[i].x; p.y += off[i].y; pts.push(p); ax += off[i].x; ay += off[i].y; }
+    ax /= N; ay /= N;
+    bodyPath = smoothPath(pts);
+    const B = bodyC, deep = B.map(v => v*v/255*0.78), light = mix(B, [255,250,235], 0.45);
+    const ccx = cx + ax, ccy = cy + ay;
+
+    // wet sand under him
+    ctx.save(); ctx.translate(cx, cy + R*0.12); ctx.scale(1, 0.62);
+    const ws = ctx.createRadialGradient(0, 0, R*0.3, 0, 0, R*1.8);
+    ws.addColorStop(0, 'rgba(150,115,75,.2)'); ws.addColorStop(1, 'rgba(150,115,75,0)');
+    ctx.fillStyle = ws; ctx.fillRect(-R*2, -R*2, R*4, R*4); ctx.restore();
+    // a few grains of sand
+    ctx.fillStyle = 'rgba(140,105,65,.22)';
+    for (let i = 0; i < 40; i++) { const a = i*2.399, d = R*(0.95 + (i%7)*0.12); ctx.beginPath(); ctx.arc(cx + Math.cos(a)*d*1.25, cy + R*0.1 + Math.sin(a)*d*0.55, 0.8 + (i%3)*0.5, 0, 7); ctx.fill(); }
+    // contact shadow
+    soft(R*0.1, 'rgba(90,55,25,.35)', () => { ctx.translate(R*0.04, R*0.09); ctx.fill(bodyPath); });
+
+    // body base: lighter heart, deeper arm tips
+    const bg = ctx.createRadialGradient(ccx, ccy, R*0.05, ccx, ccy, R*1.25);
+    bg.addColorStop(0, rgb(mix(B, [255,245,225], 0.28))); bg.addColorStop(0.45, rgb(B)); bg.addColorStop(1, rgb(mix(B, deep, 0.55)));
+    ctx.fillStyle = bg; ctx.fill(bodyPath);
+
+    ctx.save(); ctx.clip(bodyPath);
+    // volume: darker rim inside the silhouette
+    soft(R*0.08, rgb(deep, .7), () => { ctx.lineWidth = R*0.12; ctx.stroke(bodyPath); });
+    // raised spine on every arm (and on any spot being pulled)
+    const spines = [];
+    for (let a = 0; a < ARMS; a++) spines.push(a*ARM_N);
+    if (grab.on && L > R*0.08) { const dd = Math.min(...spines.map(s => Math.min(Math.abs(s - idx), N - Math.abs(s - idx)))); if (dd > ARM_N*0.2) spines.push(idx); }
+    for (const si of spines) {
+      const p = pts[si];
+      soft(R*0.07, rgb(light, .55), () => { ctx.lineWidth = R*0.13; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(ccx, ccy); ctx.lineTo(ccx + (p.x - ccx)*0.88, ccy + (p.y - ccy)*0.88); ctx.stroke(); });
+    }
+    // top-left light, bottom-right shade
+    soft(R*0.3, 'rgba(255,255,255,.32)', () => { ctx.beginPath(); ctx.ellipse(ccx - R*0.3, ccy - R*0.35, R*0.55, R*0.35, -0.5, 0, 7); ctx.fill(); });
+    soft(R*0.3, rgb(deep, .25), () => { ctx.beginPath(); ctx.ellipse(ccx + R*0.4, ccy + R*0.45, R*0.6, R*0.3, -0.5, 0, 7); ctx.fill(); });
+    // freckles
+    for (const f of freckles) {
+      const p = pts[f.i];
+      ctx.fillStyle = rgb(deep, f.a);
+      ctx.beginPath(); ctx.arc(ccx + (p.x - ccx)*f.f, ccy + (p.y - ccy)*f.f, f.r*R, 0, 7); ctx.fill();
+    }
+    // tubercles: a bumpy row down each spine and one either side
+    const side = Math.round(ARM_N*0.17);
+    for (const si of spines) {
+      const rows = [[si, 0.5, 0.92, 6], [(si + side) % N, 0.55, 0.88, 5], [(si - side + N) % N, 0.55, 0.88, 5]];
+      for (const [vi, f0, f1, cnt] of rows) {
+        const p = pts[vi];
+        for (let j = 0; j < cnt; j++) {
+          const f = f0 + (f1 - f0)*j/(cnt - 1), x = ccx + (p.x - ccx)*f, y = ccy + (p.y - ccy)*f;
+          const r = R*(vi === si ? 0.034 : 0.026)*(1.15 - f*0.6);
+          ctx.fillStyle = rgb(deep, .35); ctx.beginPath(); ctx.arc(x + r*0.25, y + r*0.35, r, 0, 7); ctx.fill();
+          const bgr = ctx.createRadialGradient(x - r*0.35, y - r*0.4, r*0.1, x, y, r);
+          bgr.addColorStop(0, '#fffaf0'); bgr.addColorStop(0.5, rgb(light)); bgr.addColorStop(1, rgb(mix(light, B, 0.5)));
+          ctx.fillStyle = bgr; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+        }
+      }
+    }
+    ctx.restore();
+    // crisp sheen along the upper edge
+    ctx.save(); ctx.lineWidth = Math.max(1, R*0.008); ctx.strokeStyle = 'rgba(255,255,255,.35)'; ctx.stroke(bodyPath); ctx.restore();
+
+    drawFace(t, ccx, ccy);
+
+    for (const p of parts) {
+      const a = Math.min(1, p.life/30);
+      if (p.k === 'bub') {
+        ctx.strokeStyle = `rgba(255,255,255,${0.85*a})`; ctx.lineWidth = 1.2; ctx.fillStyle = `rgba(160,215,235,${0.25*a})`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = `rgba(255,255,255,${0.9*a})`; ctx.beginPath(); ctx.arc(p.x - p.r*0.35, p.y - p.r*0.35, p.r*0.22, 0, 7); ctx.fill();
+      } else {
+        ctx.fillStyle = `rgba(120,195,220,${0.75*a})`; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill();
+      }
+    }
+
+    if (grab.on && toCm(L) > 1.5) { const p = pts[idx]; tip.style.transform = `translate(${p.x}px, ${p.y}px)`; tip.classList.add('on'); }
+    else tip.classList.remove('on');
+  }
+
+  function drawFace(t, fx0, fy0) {
+    const m = currentMood(t);
+    if (m !== mood) { mood = m; moodEl.textContent = m; moodEl.classList.remove('bump'); void moodEl.offsetWidth; moodEl.classList.add('bump'); }
+    const S = R*0.68, fx = fx0 + D.x*0.04, fy = fy0 + D.y*0.03 + S*0.02;
+    const ex = 0.3*S, lw = Math.max(2, S*0.05), ink = '#2a160c';
+    ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = ink; ctx.fillStyle = ink; ctx.lineWidth = lw;
+    const strong = m !== 'chill' && m !== 'startled';
+    for (const s of [-1, 1]) {
+      soft(S*0.07, `rgba(255,80,110,${strong ? .6 : .4})`, () => { ctx.beginPath(); ctx.ellipse(fx + s*0.5*S, fy + 0.17*S, S*0.11, S*0.065, 0, 0, 7); ctx.fill(); });
+      if (m === 'squished' || m === 'ow') {
+        ctx.save(); ctx.strokeStyle = 'rgba(190,40,70,.55)'; ctx.lineWidth = Math.max(1, S*0.014);
+        for (let j = -1; j <= 1; j++) { const x = fx + s*0.5*S + j*S*0.04; ctx.beginPath(); ctx.moveTo(x - S*0.015, fy + 0.21*S); ctx.lineTo(x + S*0.015, fy + 0.13*S); ctx.stroke(); }
+        ctx.restore();
+      }
+    }
+    const r = 0.11*S;
+    for (const s of [-1, 1]) {
+      const x = fx + s*ex, y = fy - 0.02*S;
+      if (m === 'startled' || m === 'chill') {
+        // round glossy eyes, looking at the pointer
+        const rr = m === 'startled' ? r*1.25 : r;
+        ctx.save(); ctx.fillStyle = '#fff'; ctx.lineWidth = lw*0.7;
+        ctx.beginPath(); ctx.arc(x, y, rr, 0, 7); ctx.fill(); ctx.stroke();
+        const dx = look.x - x, dy = look.y - y, dl = Math.hypot(dx, dy) || 1, pr = rr*0.3;
+        const blink = m === 'chill' && (t % 4200) < 130;
+        ctx.fillStyle = ink;
+        if (blink) { ctx.fillStyle = rgb(bodyC); ctx.beginPath(); ctx.arc(x, y, rr*1.1, 0, 7); ctx.fill(); ctx.beginPath(); ctx.moveTo(x - rr, y); ctx.lineTo(x + rr, y); ctx.stroke(); }
+        else {
+          ctx.beginPath(); ctx.arc(x + dx/dl*pr, y + dy/dl*pr, rr*0.62, 0, 7); ctx.fill();
+          ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x + dx/dl*pr - rr*0.22, y + dy/dl*pr - rr*0.25, rr*0.2, 0, 7); ctx.fill();
+        }
+        ctx.restore();
+      } else if (m === 'delighted' || m === 'wiggly') {
+        ctx.beginPath(); ctx.arc(x, y + r*0.55, r, Math.PI*1.12, Math.PI*1.88); ctx.stroke();
+      } else if (m === 'wobbly') {
+        ctx.beginPath();
+        for (let j = 0; j <= 12; j++) { const u = j/12, X = x - r + u*2*r, Y = y + Math.sin(u*Math.PI*3 + t/90)*r*0.25; j ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
+        ctx.stroke();
+      } else {
+        const w = r*0.85, h2 = r*0.8;
+        ctx.beginPath(); ctx.moveTo(x - s*w, y - h2); ctx.lineTo(x + s*w*0.6, y); ctx.lineTo(x - s*w, y + h2); ctx.stroke();
+      }
+    }
+    const my = fy + 0.17*S;
+    if (m === 'chill') {
+      ctx.beginPath(); ctx.arc(fx, my - 0.03*S, 0.06*S, 0.15*Math.PI, 0.85*Math.PI); ctx.stroke();
+    } else if (m === 'delighted' || m === 'wiggly') {
+      ctx.beginPath(); ctx.moveTo(fx - 0.09*S, my - 0.02*S); ctx.arc(fx, my - 0.02*S, 0.09*S, 0, Math.PI); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#ff6f8c'; ctx.beginPath(); ctx.ellipse(fx, my + 0.04*S, 0.045*S, 0.024*S, 0, 0, 7); ctx.fill();
+    } else if (m === 'startled' || m === 'squished') {
+      ctx.lineWidth = lw*0.85; ctx.beginPath(); ctx.ellipse(fx, my, 0.034*S, 0.044*S, 0, 0, 7); ctx.stroke();
+    } else if (m === 'ow') {
+      ctx.beginPath(); ctx.ellipse(fx, my + 0.01*S, 0.055*S, 0.075*S, 0, 0, 7); ctx.fill();
+      ctx.fillStyle = '#ff6f8c'; ctx.beginPath(); ctx.ellipse(fx, my + 0.055*S, 0.032*S, 0.017*S, 0, 0, 7); ctx.fill();
+    } else {
+      ctx.beginPath(); for (let j = 0; j <= 10; j++) { const u = j/10, X = fx - 0.07*S + u*0.14*S, Y = my + Math.sin(u*Math.PI*2 + t/80)*0.018*S; j ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); } ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // ---------- panel ----------
+  let lastTxt = '';
+  function panel() {
+    const txt = `${Math.round(toCm(L))} cm · best ${Math.round(best)} cm`;
+    if (txt !== lastTxt) { cmEl.textContent = txt; lastTxt = txt; }
+    fillEl.style.width = Math.min(100, toCm(L)/20*100) + '%';
+    bestEl.style.left = Math.min(100, best/20*100) + '%';
+    bestEl.style.opacity = best > 0 ? 1 : 0;
+  }
+
+  // ---------- loop ----------
+  let ready = false;
+  function frame(t) {
+    if (!ready) ready = size();
+    if (ready) { const dt = Math.min(64, t - last); step(t, dt); draw(t); panel(); }
+    last = t;
+    requestAnimationFrame(frame);
+  }
+  setColour(0, true); renderPool();
+  addEventListener('resize', () => { ready = size(); });
+  if (document.fonts) document.fonts.ready.then(() => { ready = size(); });
+  requestAnimationFrame(frame);
+  // ?test lets an automated check step frames while the tab is in the background
+  if (/[?&]test\b/.test(location.search)) window.__pon = { run(ms) { let t = last; for (let k = 0; k < ms/16; k++) { t += 16; if (!ready) ready = size(); step(t, 16); draw(t); panel(); last = t; } }, state: () => ({ mood, L, best, sq }) };
+})();
+</script>
+</body>
+</html>
